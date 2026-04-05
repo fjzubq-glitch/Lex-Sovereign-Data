@@ -34,28 +34,9 @@
 ═══════════════════════════════════════════════════ */
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
-:root {
-  --ink:      #040e1c;
-  --abyss:    #030b16;
-  --deep:     #08182c;
-  --mid:      #0c2038;
-  --card:     #091e35;
   --rim:      rgba(247,231,206,0.09);
   --rim-md:   rgba(247,231,206,0.16);
   --rim-hi:   rgba(247,231,206,0.32);
-  --sapp:     #1460b0;
-  --cobalt:   #1e78d8;
-  --sky:      #4aa8f4;
-  --frost:    #a0d4f8;
-  --pale:     #c4dcf2;
-  --muted:    #4e7090;
-  --white:    #edf4fc;
-  --gold:     #b88830;
-  --gold2:    #cca044;
-  --gold3:    #e0bc6a;
-  --gold-p:   #f0d898;
-  --green:    #22a86e;
-  --amber:    #d89030;
   --bonewhite: #f0ead6;
   --beige:    #f5f5dc;
   --goldc:    #f7e7ce;
@@ -142,9 +123,9 @@ body::after {
 ═══════════════════════════════════════════════════ */
 #pg-search {
   background:
-    radial-gradient(ellipse 100% 60% at 50% 0%, rgba(18,70,148,0.2) 0%, transparent 60%),
-    radial-gradient(ellipse 50% 40% at 15% 60%, rgba(10,40,100,0.12) 0%, transparent 55%),
-    radial-gradient(ellipse 50% 40% at 85% 60%, rgba(10,40,100,0.12) 0%, transparent 55%),
+    radial-gradient(ellipse 100% 60% at 50% 0%, rgba(247,231,206,0.05) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 15% 60%, rgba(8,24,44,0.12) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 40% at 85% 60%, rgba(8,24,44,0.12) 0%, transparent 55%),
     var(--abyss);
 }
 
@@ -159,8 +140,8 @@ body::after {
 @keyframes gridDrift { from{transform:translate(0,0)} to{transform:translate(80px,80px)} }
 
 .orb { position: absolute; border-radius: 50%; pointer-events: none; filter: blur(80px); }
-.orb1 { width:600px; height:600px; background:radial-gradient(circle,rgba(20,80,180,0.14),transparent 70%); top:-100px; left:50%; animation: o1 12s ease-in-out infinite; }
-.orb2 { width:300px; height:300px; background:radial-gradient(circle,rgba(192,160,68,0.08),transparent 70%); bottom:100px; right:10%; animation: o2 16s ease-in-out infinite reverse; }
+.orb1 { width:600px; height:600px; background:radial-gradient(circle,rgba(247,231,206,0.04),transparent 70%); top:-100px; left:50%; animation: o1 12s ease-in-out infinite; }
+.orb2 { width:300px; height:300px; background:radial-gradient(circle,rgba(247,231,206,0.03),transparent 70%); bottom:100px; right:10%; animation: o2 16s ease-in-out infinite reverse; }
 @keyframes o1 { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(-30px)} }
 @keyframes o2 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-20px)} }
 
@@ -278,7 +259,7 @@ body::after {
 /* ═══════════════════════════════════════════════════
    PAGE 2 — LEXPODCAST
 ═══════════════════════════════════════════════════ */
-#pg-podcast { background: radial-gradient(ellipse 80% 40% at 20% 0%, rgba(12,60,130,0.15) 0%, transparent 55%), var(--deep); padding-top:62px; }
+#pg-podcast { background: radial-gradient(ellipse 80% 40% at 20% 0%, rgba(247,231,206,0.03) 0%, transparent 55%), var(--abyss); padding-top:62px; }
 
 .pg-hdr { padding:64px 52px 52px; border-bottom:1px solid var(--rim); max-width:1120px; margin:0 auto; display:flex; align-items:flex-end; justify-content:space-between; gap:24px; }
 .pg-eye { display:flex; align-items:center; gap:10px; font-size:0.62rem; letter-spacing:3px; text-transform:uppercase; color:var(--muted); margin-bottom:14px; }
@@ -418,7 +399,12 @@ body::after {
     <button class="ntab" data-p="podcast" onclick="go('podcast')"><span class="ntab-ic">🎙</span> LexPodcast</button>
     <button class="ntab" data-p="tools" onclick="go('tools')"><span class="ntab-ic">⚙</span> Herramientas <span class="nbadge">Beta</span></button>
   </div>
-  <div><button class="nav-cta">Acceder →</button></div>
+  <div>
+    <button class="nav-cta mr-4" onclick="toggleConfig()">
+      <i data-lucide="settings" class="w-4 h-4"></i>
+    </button>
+    <button class="nav-cta">Acceder →</button>
+  </div>
 </nav>
 
 <!-- ════ PAGE 1 — BUSCADOR ════ -->
@@ -1059,6 +1045,57 @@ body::after {
   <button class="ap-x" onclick="stopAudio()">✕</button>
 </div>
 
+<!-- CONFIG MODAL -->
+<div id="modal-config" class="fixed inset-0 z-[1000] hidden items-center justify-center p-4 bg-abyss/80 backdrop-blur-md">
+  <div class="bg-card w-full max-w-lg rounded-2xl border border-goldchampagne/20 shadow-2xl p-8 flex flex-col gap-6">
+    <div class="flex justify-between items-center">
+      <h2 class="text-2xl font-serif text-bonewhite">Cerebro <span class="text-goldchampagne italic">Soberano</span></h2>
+      <button onclick="toggleConfig()" class="text-beige/40 hover:text-bonewhite">✕</button>
+    </div>
+    <div class="grid grid-cols-2 gap-4">
+      <div class="col-span-2 text-[10px] uppercase tracking-widest text-goldchampagne/60 border-b border-white/5 pb-2">Google (Gemini 2.0 Flash)</div>
+      <input id="g1" type="password" placeholder="Key 1" class="bg-white/5 border border-white/10 rounded-lg p-3 text-xs text-bonewhite outline-none focus:border-goldchampagne/40">
+      <input id="g2" type="password" placeholder="Key 2" class="bg-white/5 border border-white/10 rounded-lg p-3 text-xs text-bonewhite outline-none focus:border-goldchampagne/40">
+      <input id="g3" type="password" placeholder="Key 3" class="bg-white/5 border border-white/10 rounded-lg p-3 text-xs text-bonewhite outline-none focus:border-goldchampagne/40">
+      <input id="g4" type="password" placeholder="Key 4" class="bg-white/5 border border-white/10 rounded-lg p-3 text-xs text-bonewhite outline-none focus:border-goldchampagne/40">
+      <input id="g5" type="password" placeholder="Key 5" class="bg-white/5 border border-white/10 rounded-lg p-3 text-xs text-bonewhite outline-none focus:border-goldchampagne/40">
+      <input id="g6" type="password" placeholder="Key 6" class="bg-white/5 border border-white/10 rounded-lg p-3 text-xs text-bonewhite outline-none focus:border-goldchampagne/40">
+      
+      <div class="col-span-2 text-[10px] uppercase tracking-widest text-goldchampagne/60 border-b border-white/5 pb-2 mt-2">Extra Engines</div>
+      <input id="groq" type="password" placeholder="Groq API Key" class="bg-white/5 border border-white/10 rounded-lg p-3 text-xs text-bonewhite outline-none focus:border-goldchampagne/40">
+      <input id="openrouter" type="password" placeholder="OpenRouter API Key" class="bg-white/5 border border-white/10 rounded-lg p-3 text-xs text-bonewhite outline-none focus:border-goldchampagne/40">
+    </div>
+    <div class="flex flex-col gap-2">
+      <p class="text-[10px] text-beige/40">Las llaves se guardan localmente en tu navegador. PBC Activado.</p>
+      <button onclick="saveKeys()" class="w-full bg-goldchampagne text-abyss font-bold py-3 rounded-xl hover:scale-[1.02] transition-transform">GUARDAR CONFIGURACIÓN</button>
+    </div>
+  </div>
+</div>
+
+<!-- STUDY MODE MODAL -->
+<div id="modal-study" class="fixed inset-0 z-[1000] hidden items-center justify-center p-4 bg-abyss/80 backdrop-blur-md">
+  <div class="bg-card w-full max-w-2xl max-h-[85vh] rounded-2xl border border-goldchampagne/20 shadow-2xl flex flex-col">
+    <div class="flex justify-between items-center p-6 border-b border-white/5">
+      <div class="flex items-center gap-3">
+        <div class="w-10 h-10 rounded-full bg-goldchampagne/10 flex items-center justify-center">
+           <i data-lucide="graduation-cap" class="text-goldchampagne"></i>
+        </div>
+        <div>
+          <h2 class="text-xl font-serif text-bonewhite">Modo <span class="text-goldchampagne italic">Estudio</span></h2>
+          <p class="text-[10px] uppercase tracking-widest text-beige/40">Tutor UBA • Comisiones 7355/8046</p>
+        </div>
+      </div>
+      <button onclick="document.getElementById('modal-study').classList.add('hidden');" class="text-beige/40 hover:text-bonewhite">✕</button>
+    </div>
+    <div id="study-content" class="flex-1 overflow-y-auto p-8 custom-scrollbar">
+       <!-- AI Content -->
+    </div>
+    <div class="p-6 border-t border-white/5 text-center">
+       <p class="text-[9px] text-beige/20 uppercase tracking-widest">Soberanía de Datos • LexSearch Argentina 2026</p>
+    </div>
+  </div>
+</div>
+
 <script>
 /* ── Navigation ── */
 let cur = 'search';
@@ -1137,11 +1174,153 @@ function render(res,q){
     const tags=r.tags.map(t=>`<span class="rc-tag">${t}</span>`).join('');
     // Check if title (without "Ley ..." prefix or similar) exists in holdings
     const hasHolding = HOLDINGS.some(h => r.title.toLowerCase().includes(h.split('_').pop().replace('.md','').toLowerCase()));
-    const holdingBtn = hasHolding ? `<button class="pill pb" style="margin-top:10px; font-size:0.65rem; border-color:var(--gold3); color:var(--gold3)" onclick="alert('Abriendo Holding de: ${esc(r.title)}')">View Holding</button>` : '';
+    const holdingBtn = hasHolding ? `<button class="pill pb border-goldchampagne/20 text-goldchampagne" onclick="alert('Abriendo Holding de: ${esc(r.title)}')">View Holding</button>` : '';
 
-    return `<div class="rc"><div class="rc-ico">${r.icon}</div><div class="rc-body"><div class="rc-type">${esc(r.type)}</div><div class="rc-title">${hl(r.title,q)}</div><div class="rc-snip">${hl(r.snip,q)}</div><div class="rc-tags">${tags}</div>${holdingBtn}</div><div class="rc-arr">↗</div></div>`;
+    return `<div class="rc">
+      <div class="rc-ico">${r.icon}</div>
+      <div class="rc-body">
+        <div class="rc-type">${esc(r.type)}</div>
+        <div class="rc-title">${hl(r.title,q)}</div>
+        <div class="rc-snip">${hl(r.snip,q)}</div>
+        <div class="rc-tags">${tags}</div>
+        <div class="flex gap-3 mt-4">
+          ${holdingBtn}
+          <button class="pill pb border-goldchampagne/20 text-goldchampagne hover:bg-goldchampagne/10" 
+            onclick="openStudyMode('${esc(r.title)}: ${esc(r.snip)}')">
+            <i data-lucide="graduation-cap" class="w-3 h-3 mr-1"></i> Modo Estudio
+          </button>
+        </div>
+      </div>
+      <div class="rc-arr">↗</div>
+    </div>`;
   }).join('');
   box.innerHTML=header+cards;
+  lucide.createIcons();
+}
+
+/* ── MODALES (Config & Study) ── */
+function toggleConfig() {
+  const m = document.getElementById('modal-config');
+  m.classList.toggle('hidden');
+  m.classList.toggle('flex');
+}
+
+function saveKeys() {
+  const keys = {
+    g: [
+      document.getElementById('g1').value, document.getElementById('g2').value,
+      document.getElementById('g3').value, document.getElementById('g4').value,
+      document.getElementById('g5').value, document.getElementById('g6').value
+    ],
+    groq: document.getElementById('groq').value,
+    openrouter: document.getElementById('openrouter').value
+  };
+  localStorage.setItem('lex_api_keys', JSON.stringify(keys));
+  alert('Llaves guardadas correctamente.');
+  toggleConfig();
+}
+
+function loadKeys() {
+  const data = localStorage.getItem('lex_api_keys');
+  if(!data) return;
+  const keys = JSON.parse(data);
+  keys.g.forEach((k, i) => { if(document.getElementById('g'+(i+1))) document.getElementById('g'+(i+1)).value = k; });
+  if(document.getElementById('groq')) document.getElementById('groq').value = keys.groq;
+  if(document.getElementById('openrouter')) document.getElementById('openrouter').value = keys.openrouter;
+}
+
+window.addEventListener('DOMContentLoaded', loadKeys);
+
+async function openStudyMode(context) {
+  const m = document.getElementById('modal-study');
+  const content = document.getElementById('study-content');
+  m.classList.remove('hidden');
+  m.classList.add('flex');
+  content.innerHTML = '<div class="animate-pulse text-beige">Consultando al Tutor UBA...</div>';
+
+  const prompt = `Sos un Tutor de la Facultad de Derecho de la UBA para las comisiones 7355 (Borda) y 8046 (Corvalán). Analizá el siguiente texto legal o fallo: ${context}. 
+  Tu respuesta DEBE tener esta estructura estricta en HTML (usando clases de Tailwind):
+  <div class="space-y-6">
+    <section>
+      <h4 class="text-goldchampagne font-bold uppercase text-[10px] tracking-widest mb-2">[Resumen en Lenguaje Llano]</h4>
+      <p class="text-bonewhite text-sm leading-relaxed">...</p>
+    </section>
+    <section>
+      <h4 class="text-goldchampagne font-bold uppercase text-[10px] tracking-widest mb-2">[Ejemplo Práctico]</h4>
+      <p class="text-beige text-sm leading-relaxed italic">...</p>
+    </section>
+    <section>
+      <h4 class="text-goldchampagne font-bold uppercase text-[10px] tracking-widest mb-2">[Tip para el Parcial]</h4>
+      <div class="bg-goldchampagne/10 border border-goldchampagne/20 p-4 rounded-lg text-goldchampagne text-sm">...</div>
+    </section>
+    <section>
+      <h4 class="text-goldchampagne font-bold uppercase text-[10px] tracking-widest mb-2">[Relaciones Jurídicas]</h4>
+      <p class="text-beige text-sm leading-relaxed">...</p>
+    </section>
+  </div>`;
+
+  try {
+    const res = await callSovereignAI(prompt);
+    content.innerHTML = res;
+  } catch (e) {
+    content.innerHTML = `<div class="text-red-400">Error: ${e.message}. Verificalas llaves en configuración.</div>`;
+  }
+}
+
+async function callSovereignAI(prompt) {
+  const data = localStorage.getItem('lex_api_keys');
+  if(!data) throw new Error("No hay llaves configuradas");
+  const keys = JSON.parse(data);
+  
+  // Flatten and filter keys
+  let pool = [];
+  keys.g.forEach(k => { if(k) pool.push({ type: 'google', key: k }); });
+  if(keys.groq) pool.push({ type: 'groq', key: keys.groq });
+  if(keys.openrouter) pool.push({ type: 'openrouter', key: keys.openrouter });
+
+  if(pool.length === 0) throw new Error("Configurá al menos una API Key");
+
+  for (let i = 0; i < pool.length; i++) {
+    const engine = pool[i];
+    try {
+      if (engine.type === 'google') {
+        const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${engine.key}`;
+        const r = await fetch(url, {
+          method: 'POST',
+          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+        });
+        if (r.status === 429) continue;
+        const json = await r.json();
+        return json.candidates[0].content.parts[0].text;
+      }
+      
+      if (engine.type === 'groq') {
+        const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${engine.key}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ model: 'llama-3.3-70b-versatile', messages: [{ role: 'user', content: prompt }] })
+        });
+        if (r.status === 429) continue;
+        const json = await r.json();
+        return json.choices[0].message.content;
+      }
+
+      if (engine.type === 'openrouter') {
+        const r = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+          method: 'POST',
+          headers: { 'Authorization': `Bearer ${engine.key}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ model: 'google/gemini-2.0-flash-001', messages: [{ role: 'user', content: prompt }] })
+        });
+        if (r.status === 429) continue;
+        const json = await r.json();
+        return json.choices[0].message.content;
+      }
+    } catch (err) {
+      console.warn(`Engine ${engine.type} failed, trying next...`);
+      continue;
+    }
+  }
+  throw new Error("Todas las APIs fallaron (Rate Limit o Error de Red)");
 }
 
 
