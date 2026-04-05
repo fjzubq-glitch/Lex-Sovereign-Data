@@ -128,36 +128,55 @@ body::after {
 .rc-title { font-family:var(--lora); font-size:0.92rem; font-weight:500; color:var(--pale); margin-bottom:6px; line-height:1.35; }
 .rc-snip { font-size:0.76rem; color:var(--muted); line-height:1.65; }
 
-/* LUXURY CARD PLAYER */
-.audio-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 24px; }
-.l-card-p { background: rgba(9, 30, 53, 0.6); backdrop-filter: blur(20px); border: 1px solid rgba(247, 231, 206, 0.15); border-radius: 20px; padding: 20px; transition: all 0.4s var(--spring); position: relative; overflow: hidden; }
-.l-card-p:hover { transform: translateY(-6px); border-color: rgba(247, 231, 206, 0.4); box-shadow: 0 20px 40px rgba(0,0,0,0.4); }
-.l-card-img { width: 100%; height: 160px; object-fit: cover; border-radius: 14px; margin-bottom: 16px; opacity: 0.8; transition: opacity 0.3s; }
-.l-card-p:hover .l-card-img { opacity: 1; }
-.l-card-tt { font-family: var(--serif); font-size: 1.25rem; color: var(--gold-p); margin-bottom: 4px; }
-.l-card-st { font-family: var(--ui); font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 16px; }
-.l-prog-bg { background: rgba(255,255,255,0.05); height: 5px; border-radius: 10px; cursor: pointer; position: relative; margin-bottom: 12px; }
-.l-prog-bar { background: var(--gold3); height: 100%; border-radius: 10px; width: 0%; transition: width 0.1s linear; box-shadow: 0 0 10px var(--gold); }
-.l-ctrls { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
-.l-play-btn { background: none; border: 1px solid var(--rim-hi); color: var(--gold3); width: 40px; height: 40px; border-radius: 50%; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; font-size: 1rem; }
-.l-play-btn:hover { background: var(--gold); color: white; border-color: transparent; }
-.l-time { font-size: 10px; color: var(--muted); font-family: var(--ui); letter-spacing: 0.5px; }
+/* LUXURY CARD V2 (Shadcn-Inspired) */
+.audio-card { 
+  background: rgba(9, 30, 53, 0.6); 
+  backdrop-filter: blur(20px); 
+  border: 1px solid rgba(247, 231, 206, 0.15); 
+  border-radius: 24px; 
+  padding: 20px; 
+  transition: all 0.4s var(--spring); 
+  position: relative; 
+  overflow: hidden; 
+}
+.audio-card:hover { 
+  transform: translateY(-6px) scale(1.02); 
+  border-color: rgba(247, 231, 206, 0.4); 
+  box-shadow: 0 25px 50px rgba(0,0,0,0.5); 
+}
+.card-img { 
+  width: 100%; height: 180px; object-fit: cover; border-radius: 16px; margin-bottom: 20px; 
+  opacity: 0.85; transition: opacity 0.3s; 
+}
+.audio-card:hover .card-img { opacity: 1; }
+.card-title { font-family: var(--serif); font-size: 1.35rem; color: var(--gold-p); margin-bottom: 6px; line-height: 1.2; }
+.card-meta { font-family: var(--ui); font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 20px; display: flex; justify-content: space-between; }
+.prog-container { background: rgba(255,255,255,0.05); height: 6px; border-radius: 10px; cursor: pointer; position: relative; margin-bottom: 16px; }
+.prog-fill { background: #f7e7ce; height: 100%; border-radius: 10px; width: 0%; transition: width 0.1s linear; box-shadow: 0 0 12px rgba(247, 231, 206, 0.4); }
+.card-ctrls { display: flex; align-items: center; justify-content: space-between; }
+.btn-play { 
+  background: none; border: 1px solid rgba(247, 231, 206, 0.2); color: var(--gold3); 
+  width: 44px; height: 44px; border-radius: 50%; cursor: pointer; 
+  display: flex; align-items: center; justify-content: center; 
+  transition: all 0.2s; font-size: 1.1rem; 
+}
+.btn-play:hover { background: var(--gold); color: var(--abyss); border-color: transparent; transform: scale(1.1); }
+.card-time { font-size: 0.65rem; color: var(--muted); font-family: var(--ui); font-weight: 500; }
 
-/* Status Styles */
-.ap { display:none !important; } /* Hidden as cards have internal players */
+.audio-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 32px; }
 
-/* Shake & Config Icon */
-#btn-config { background:none; border:none; color:var(--muted); cursor:pointer; font-size:1.1rem; opacity:0.4; transition:all 0.3s; margin-right:15px; }
-#btn-config:hover { opacity:1; color:var(--gold3); transform:scale(1.1) rotate(15deg); }
-@keyframes shake { 0%,100%{transform:translateX(0)} 25%{transform:translateX(-5px)} 75%{transform:translateX(5px)} }
-.shake { animation: shake 0.2s ease-in-out 0s 2; color: #ff4444 !important; opacity:1 !important; }
+/* SUBJECT TITLES */
+.subject-header { 
+  font-family: var(--serif); font-size: 1.8rem; margin: 60px 0 30px; color: var(--white); 
+  display: flex; align-items: center; gap: 15px; 
+}
+.subject-header::after { content:''; flex:1; height:1px; background: linear-gradient(90deg, var(--rim-hi), transparent); }
 
 /* REVEAL */
 .reveal { opacity:0; transform:translateY(18px); transition:opacity 0.65s var(--spring),transform 0.65s var(--spring); }
 .reveal.vis { opacity:1; transform:translateY(0); }
-@keyframes fadeUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
 
-/* MODALS */
+/* MODALS & OTHERS */
 .lmodal { position:fixed; inset:0; z-index:1000; background:rgba(4,14,28,0.95); backdrop-filter:blur(20px); display:none; align-items:center; justify-content:center; padding:20px; }
 .lmodal.on { display:flex; }
 .lcard { background:var(--card); border:1px solid var(--rim-md); border-radius:24px; width:100%; max-width:600px; padding:40px; box-shadow:0 64px 128px rgba(0,0,0,0.6); }
@@ -173,8 +192,8 @@ body::after {
   <div class="nav-brand" onclick="go('search')">Lex<span class="ns">Search</span><sup>Argentina</sup></div>
   <div class="nav-center">
     <button class="ntab on" data-p="search" onclick="go('search')"><span class="ntab-ic">⌕</span> Buscador</button>
-    <button class="ntab" data-p="podcast" onclick="go('podcast')"><span class="ntab-ic">🎙</span> LexPodcast</button>
-    <button class="ntab" data-p="tools" onclick="go('tools')"><span class="ntab-ic">⚙</span> Herramientas</button>
+    <button class="ntab" data-p="podcast" onclick="go('podcast')"><span class="ntab-ic">🎙</span> Podcast</button>
+    <button class="ntab" data-p="tools" onclick="go('tools')"><span class="ntab-ic">🏛</span> Aula Magna</button>
   </div>
   <div style="display:flex; align-items:center;">
     <button id="btn-config" onclick="gatekeeper()">⚙</button>
@@ -200,30 +219,44 @@ body::after {
 
 <!-- PODCAST -->
 <div class="page" id="pg-podcast">
-  <div style="max-width:1200px; margin:0 auto; padding:120px 52px;">
-    <header style="margin-bottom:80px; text-align:left;">
-      <h1 style="font-family:var(--serif); font-size:4.5rem; color:var(--gold-p); line-height:1; margin-bottom:20px;">Audios <span style="font-style:italic">Soberanos</span></h1>
-      <p style="font-family:var(--ui); color:var(--muted); letter-spacing:1px; text-transform:uppercase; font-size:0.8rem;">19 Activos de Inteligencia Colectiva — UBA FM</p>
+  <div style="max-width:1400px; margin:0 auto; padding:120px 52px;">
+    <header style="margin-bottom:60px;">
+      <h1 style="font-family:var(--serif); font-size:4.5rem; color:var(--gold-p); line-height:1; margin-bottom:15px;">Lex<span style="font-style:italic">Podcast</span></h1>
+      <p style="font-family:var(--ui); color:var(--muted); letter-spacing:1px; text-transform:uppercase; font-size:0.8rem;">Resúmenes de fallos y doctrina en audio</p>
     </header>
     
-    <div style="margin-bottom:100px;">
-      <h2 style="font-family:var(--serif); font-size:2.2rem; margin-bottom:40px; color:var(--white); border-left:4px solid var(--gold); padding-left:20px;">🎙️ Lex-Podcast: Resúmenes de Fallos</h2>
-      <div id="podcast-grid" class="audio-grid reveal"></div>
-    </div>
+    <section>
+      <h2 class="subject-header">🏛️ Cátedra: Dr. Corvalán (Administrativo)</h2>
+      <div id="grid-podcast-admin" class="audio-grid reveal"></div>
+    </section>
 
-    <div>
-      <h2 style="font-family:var(--serif); font-size:2.2rem; margin-bottom:40px; color:var(--white); border-left:4px solid var(--sapp); padding-left:20px;">🏛️ Aula Magna: Clases Grabadas</h2>
-      <div id="clases-grid" class="audio-grid reveal"></div>
-    </div>
+    <section>
+      <h2 class="subject-header">📜 Cátedra: Dr. Borda (Contratos)</h2>
+      <div id="grid-podcast-contratos" class="audio-grid reveal"></div>
+    </section>
   </div>
 </div>
 
-<!-- TOOLS -->
+<!-- AULA MAGNA (TOOLS) -->
 <div class="page" id="pg-tools">
-  <div style="max-width:1120px; margin:0 auto; padding:120px 52px; text-align:center;">
-    <h1 style="font-family:var(--serif); font-size:4rem; color:var(--gold3);">Próximamente</h1>
+  <div style="max-width:1400px; margin:0 auto; padding:120px 52px;">
+    <header style="margin-bottom:60px;">
+      <h1 style="font-family:var(--serif); font-size:4.5rem; color:var(--gold-p); line-height:1; margin-bottom:15px;">Aula<span style="font-style:italic">Magna</span></h1>
+      <p style="font-family:var(--ui); color:var(--muted); letter-spacing:1px; text-transform:uppercase; font-size:0.8rem;">Clases magistrales grabadas en vivo</p>
+    </header>
+
+    <section>
+      <h2 class="subject-header">🏛️ Cátedra: Dr. Corvalán (Administrativo)</h2>
+      <div id="grid-clases-admin" class="audio-grid reveal"></div>
+    </section>
+
+    <section>
+      <h2 class="subject-header">📜 Cátedra: Dr. Borda (Contratos)</h2>
+      <div id="grid-clases-contratos" class="audio-grid reveal"></div>
+    </section>
   </div>
 </div>
+
 
 <!-- CONFIG MODAL -->
 <div id="modal-config" class="lmodal">
@@ -253,12 +286,7 @@ body::after {
   </div>
 </div>
 
-<!-- PLAYER -->
-<div class="ap" id="ap">
-  <div class="ap-tr"><div class="ap-nm" id="apNm">—</div><div class="ap-ct">LexSearch Sovereign Shield</div></div>
-  <audio id="apA" controls></audio>
-  <button onclick="stopAudio()" style="background:none; border:none; color:var(--muted); cursor:pointer;">✕</button>
-</div>
+
 
 <script>
 /* ── NAVIGATION ── */
@@ -366,106 +394,154 @@ async function callSovereignAI(p) {
   }
 }
 
-/* ── LUXURY CARD PLAYER ENGINE (19 NODOS) ── */
-const PODCAST_DATA = [
-  {id:'p1', tt:'Admin (12/03)', st:'Derecho Administrativo · .mp4', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1773923327/Derecho_exorbitante_y_principio_de_legalidad_cll8wx.mp4'},
-  {id:'p2', tt:'Admin (16/03)', st:'Derecho Administrativo · .mp4', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1773923339/Jerarqu%C3%ADa_normativa_y_tipos_de_decretos_kttkgm.mp4'},
-  {id:'p3', tt:'Admin (19/03)', st:'Derecho Administrativo · .mp4', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1774060302/Teor%C3%ADa_del_%C3%B3rgano_y_competencia_administrativa_eitrzd.mp4'},
-  {id:'p4', tt:'Admin (26/03)', st:'Derecho Administrativo · .mp4', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1774579694/Organizaci%C3%B3n_administrativa_y_control_de_algoritmos_dzaapv.mp4'},
-  {id:'p5', tt:'Admin (30/03)', st:'Derecho Administrativo · .mp4', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1774957368/Inteligencia_artificial_y_validez_del_acto_administrativo_fqwwfs.mp4'},
-  {id:'p6', tt:'Contratos (12/03)', st:'Derecho de los Contratos · .mp4', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1773923360/Anatom%C3%ADa_y_clasificaci%C3%B3n_de_los_contratos_k4dapl.mp4'},
-  {id:'p7', tt:'Contratos (16/03)', st:'Derecho de los Contratos · .mp4', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1773923370/Clasificaci%C3%B3n_de_contratos_y_claves_para_aprobar_dt8azq.mp4'},
-  {id:'p8', tt:'Contratos (19/03)', st:'Derecho de los Contratos · .mp4', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1774060346/Consentimiento_silencio_y_requisitos_de_la_oferta_ajwwaz.mp4'},
-  {id:'p9', tt:'Contratos (26/03)', st:'Derecho de los Contratos · .mp4', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1774579679/Oferta_aceptaci%C3%B3n_y_perfeccionamiento_del_contrato_wt1usg.mp4'},
-  {id:'p10', tt:'Contratos (06/03)', st:'Derecho de los Contratos · .mp4', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1774957185/Tratativas_precontractuales_y_contratos_preliminares_rjlouu.mp4'}
-];
+/* ── DATABASE SOBERANA (AGRUPADA POR CÁTEDRA) ── */
+const DATABASE = {
+  PODCASTS: {
+    ADMINISTRATIVO: [
+      {id:'pa1', title:'Derecho Exorbitante y Legalidad', episode:1, date:'12/03/26', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1773923327/Derecho_exorbitante_y_principio_de_legalidad_cll8wx.mp4'},
+      {id:'pa2', title:'Jerarquía Normativa y Decretos', episode:2, date:'16/03/26', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1773923339/Jerarqu%C3%ADa_normativa_y_tipos_de_decretos_kttkgm.mp4'},
+      {id:'pa3', title:'Teoría del Órgano y Competencia', episode:3, date:'19/03/26', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1774060302/Teor%C3%ADa_del_%C3%B3rgano_y_competencia_administrativa_eitrzd.mp4'},
+      {id:'pa4', title:'Organización y Control Algorítmico', episode:4, date:'26/03/26', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1774579694/Organizaci%C3%B3n_administrativa_y_control_de_algoritmos_dzaapv.mp4'},
+      {id:'pa5', title:'IA y Acto Administrativo', episode:5, date:'30/03/26', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1774957368/Inteligencia_artificial_y_validez_del_acto_administrativo_fqwwfs.mp4'}
+    ],
+    CONTRATOS: [
+      {id:'pc1', title:'Anatomía y Clasificación', episode:1, date:'12/03/26', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1773923360/Anatom%C3%ADa_y_clasificaci%C3%B3n_de_los_contratos_k4dapl.mp4'},
+      {id:'pc2', title:'Claves para Aprobar Contratos', episode:2, date:'16/03/26', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1773923370/Clasificaci%C3%B3n_de_contratos_y_claves_para_aprobar_dt8azq.mp4'},
+      {id:'pc3', title:'Consentimiento y Oferta', episode:3, date:'19/03/26', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1774060346/Consentimiento_silencio_y_requisitos_de_la_oferta_ajwwaz.mp4'},
+      {id:'pc4', title:'Perfeccionamiento del Contrato', episode:4, date:'26/03/26', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1774579679/Oferta_aceptaci%C3%B3n_y_perfeccionamiento_del_contrato_wt1usg.mp4'},
+      {id:'pc5', title:'Tratativas Precontractuales', episode:5, date:'06/03/26', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1774957185/Tratativas_precontractuales_y_contratos_preliminares_rjlouu.mp4'}
+    ]
+  },
+  CLASES: {
+    ADMINISTRATIVO: [
+      {id:'ca1', title:'Clase Admin I (Corvalán)', episode:1, date:'12/03/26', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1774611936/Administrativo_12_03_26_1_xhercm.mp3'},
+      {id:'ca2', title:'Clase Admin II (Corvalán)', episode:2, date:'19/03/26', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1774611965/administrativo_19_03_26_1_ouijld.mp3'},
+      {id:'ca3', title:'Clase Admin III (Corvalán)', episode:3, date:'26/03/26', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1774611960/Administrativo_26_03_26_1_g5dp5z.mp3'},
+      {id:'ca4', title:'Clase Admin IV (Corvalán)', episode:4, date:'30/03/26', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1774957559/Administrativo_30_03_26_1_mk0ner.mp3'}
+    ],
+    CONTRATOS: [
+      {id:'cc1', title:'Clase Contratos I (Borda)', episode:1, date:'12/03/26', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1774612144/contratos_12_03_26_1_vxbn0p.mp3'},
+      {id:'cc2', title:'Clase Contratos II (Borda)', episode:2, date:'16/03/26', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1774611894/Contratos_16_03_26_1_msa1bi.mp3'},
+      {id:'cc3', title:'Clase Contratos III (Borda)', episode:3, date:'19/03/26', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1774611900/Contratos_19_03_26_1_qlungf.mp3'},
+      {id:'cc4', title:'Clase Contratos IV (Borda)', episode:4, date:'26/03/26', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1774611875/Contratos_26_03_26_1_pkukhv.mp3'},
+      {id:'cc5', title:'Clase Contratos V (Borda)', episode:5, date:'30/03/26', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1774957532/Contratos_30_03_26_1_jepnls.mp3'}
+    ]
+  }
+};
 
-const CLASES_DATA = [
-  {id:'c1', tt:'Contratos (12/03)', st:'Aula Magna · .mp3', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1774612144/contratos_12_03_26_1_vxbn0p.mp3'},
-  {id:'c2', tt:'Contratos (16/03)', st:'Aula Magna · .mp3', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1774611894/Contratos_16_03_26_1_msa1bi.mp3'},
-  {id:'c3', tt:'Contratos (19/03)', st:'Aula Magna · .mp3', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1774611900/Contratos_19_03_26_1_qlungf.mp3'},
-  {id:'c4', tt:'Contratos (26/03)', st:'Aula Magna · .mp3', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1774611875/Contratos_26_03_26_1_pkukhv.mp3'},
-  {id:'c5', tt:'Contratos (30/03)', st:'Aula Magna · .mp3', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1774957532/Contratos_30_03_26_1_jepnls.mp3'},
-  {id:'c6', tt:'Admin (12/03)', st:'Aula Magna · .mp3', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1774611936/Administrativo_12_03_26_1_xhercm.mp3'},
-  {id:'c7', tt:'Admin (19/03)', st:'Aula Magna · .mp3', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1774611965/administrativo_19_03_26_1_ouijld.mp3'},
-  {id:'c8', tt:'Admin (26/03)', st:'Aula Magna · .mp3', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1774611960/Administrativo_26_03_26_1_g5dp5z.mp3'},
-  {id:'c9', tt:'Admin (30/03)', st:'Aula Magna · .mp3', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1774957559/Administrativo_30_03_26_1_mk0ner.mp3'}
-];
-
-const players = {};
-function renderAudioGrids() {
-  const pg = document.getElementById('podcast-grid');
-  const cg = document.getElementById('clases-grid');
-  const img = "https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=400&h=200";
+/* ── GLOBAL PLAYER ENGINE ── */
+const GlobalPlayer = {
+  activeId: null,
+  instances: {},
   
-  const genCard = (x) => {
-    players[x.id] = new Audio(x.url);
-    const p = players[x.id];
-    return `
-      <div class="l-card-p reveal">
-        <img src="${img}" class="l-card-img" alt="Legal Shield">
-        <div class="l-card-tt">${x.tt}</div>
-        <div class="l-card-st">${x.st}</div>
-        <div class="l-prog-bg" onclick="seek(event, '${x.id}')">
-          <div id="bar-${x.id}" class="l-prog-bar"></div>
-        </div>
-        <div class="l-ctrls">
-          <button id="btn-${x.id}" class="l-play-btn" onclick="togglePlay('${x.id}')">▶</button>
-          <div id="time-${x.id}" class="l-time">00:00 / 00:00</div>
-        </div>
-      </div>
-    `;
-  };
-
-  if(pg) pg.innerHTML = PODCAST_DATA.map(genCard).join('');
-  if(cg) cg.innerHTML = CLASES_DATA.map(genCard).join('');
-  
-  // Trackers
-  Object.keys(players).forEach(id => {
-    const a = players[id];
-    a.ontimeupdate = () => {
-      const b = document.getElementById('bar-'+id);
-      const t = document.getElementById('time-'+id);
-      if(b) b.style.width = (a.currentTime / a.duration * 100) + '%';
-      if(t) t.textContent = `${fmt(a.currentTime)} / ${fmt(a.duration || 0)}`;
+  init(id, url) {
+    if (this.instances[id]) return;
+    const a = new Audio(url);
+    a.ontimeupdate = () => this.updateUI(id);
+    a.onended = () => {
+      document.getElementById('btn-'+id).textContent = '▶';
+      document.getElementById('bar-'+id).style.width = '0%';
     };
-  });
-  initRev();
-}
+    this.instances[id] = a;
+  },
+
+  toggle(id) {
+    const a = this.instances[id];
+    const btn = document.getElementById('btn-'+id);
+    
+    if (this.activeId && this.activeId !== id) {
+      this.instances[this.activeId].pause();
+      const oldBtn = document.getElementById('btn-'+this.activeId);
+      if(oldBtn) oldBtn.textContent = '▶';
+    }
+
+    if (a.paused) {
+      a.play();
+      btn.textContent = '⏸';
+      this.activeId = id;
+    } else {
+      a.pause();
+      btn.textContent = '▶';
+    }
+  },
+
+  updateUI(id) {
+    const a = this.instances[id];
+    const bar = document.getElementById('bar-'+id);
+    const time = document.getElementById('time-'+id);
+    if (bar) bar.style.width = (a.currentTime / a.duration * 100) + '%';
+    if (time) time.textContent = `${fmt(a.currentTime)} / ${fmt(a.duration || 0)}`;
+  },
+
+  seek(id, e) {
+    const a = this.instances[id];
+    if (!a) return;
+    const rect = e.currentTarget.getBoundingClientRect();
+    const pct = (e.clientX - rect.left) / rect.width;
+    a.currentTime = pct * (a.duration || 0);
+  }
+};
 
 function fmt(s) {
-  if(isNaN(s)) return "00:00";
+  if(isNaN(s) || !isFinite(s)) return "00:00";
   const m = Math.floor(s/60); const sc = Math.floor(s%60);
   return `${m.toString().padStart(2,'0')}:${sc.toString().padStart(2,'0')}`;
 }
 
-function togglePlay(id) {
-  const a = players[id];
-  const b = document.getElementById('btn-'+id);
-  if(a.paused) {
-    Object.values(players).forEach(p => p.pause());
-    document.querySelectorAll('.l-play-btn').forEach(btn => btn.textContent = '▶');
-    a.play(); b.textContent = '⏸';
-  } else {
-    a.pause(); b.textContent = '▶';
-  }
+function renderCard(item, type) {
+  const isPodcast = type === 'PODCAST';
+  const imgPath = isPodcast 
+    ? 'https://images.unsplash.com/photo-1590602847861-f357a9332bbc?w=400&h=220&fit=crop'
+    : 'https://images.unsplash.com/photo-1589829545856-d10d557cf95f?w=400&h=220&fit=crop';
+  
+  GlobalPlayer.init(item.id, item.url);
+
+  return `
+    <div class="audio-card reveal">
+      <img src="${imgPath}" class="card-img" alt="${item.title}">
+      <div class="card-title">${item.title}</div>
+      <div class="card-meta">
+        <span>Episodio: ${item.episode}</span>
+        <span>${item.date}</span>
+      </div>
+      <div class="prog-container" onclick="GlobalPlayer.seek('${item.id}', event)">
+        <div id="bar-${item.id}" class="prog-fill"></div>
+      </div>
+      <div class="card-ctrls">
+        <button id="btn-${item.id}" class="btn-play" onclick="GlobalPlayer.toggle('${item.id}')">▶</button>
+        <div id="time-${item.id}" class="card-time">00:00 / 00:00</div>
+      </div>
+    </div>
+  `;
 }
 
-function seek(e, id) {
-  const a = players[id];
-  const rect = e.currentTarget.getBoundingClientRect();
-  const x = e.clientX - rect.left;
-  const pct = x / rect.width;
-  a.currentTime = pct * a.duration;
+function renderAll() {
+  // Grids Podcast
+  const gpa = document.getElementById('grid-podcast-admin');
+  const gpc = document.getElementById('grid-podcast-contratos');
+  if(gpa) gpa.innerHTML = DATABASE.PODCASTS.ADMINISTRATIVO.map(i => renderCard(i, 'PODCAST')).join('');
+  if(gpc) gpc.innerHTML = DATABASE.PODCASTS.CONTRATOS.map(i => renderCard(i, 'PODCAST')).join('');
+  
+  // Grids Clases
+  const gca = document.getElementById('grid-clases-admin');
+  const gcc = document.getElementById('grid-clases-contratos');
+  if(gca) gca.innerHTML = DATABASE.CLASES.ADMINISTRATIVO.map(i => renderCard(i, 'CLASE')).join('');
+  if(gcc) gcc.innerHTML = DATABASE.CLASES.CONTRATOS.map(i => renderCard(i, 'CLASE')).join('');
+  
+  initRev();
 }
 
 /* ── INIT ── */
 document.addEventListener('DOMContentLoaded', () => {
-  renderAudioGrids(); loadKeys(); initRev();
+  renderAll(); loadKeys(); initRev();
 });
-const rio = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting) { e.target.classList.add('vis'); rio.unobserve(e.target); } }), {threshold:0.1});
+
+const rio = new IntersectionObserver(es => es.forEach(e => { 
+  if(e.isIntersecting) { e.target.classList.add('vis'); rio.unobserve(e.target); } 
+}), {threshold:0.1});
 function initRev() { document.querySelectorAll('.reveal').forEach(el => rio.observe(el)); }
 
 </script>
 </body>
 </html>
+
