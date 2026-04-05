@@ -118,27 +118,31 @@ body::after {
 /* Search Results UI */
 /* Search Results UI */
 /* Search Results UI */
-/* BUSCADOR PROFESIONAL (ÚLTIMA INSTANCIA) */
+/* RESTRUCTURA DOM Y BUSCADOR PROFESIONAL */
+#lex-search-engine { display: block; width: 100%; }
 .minimal-wrapper {
-  width: 95% !important; max-width: 1400px !important; height: 60px;
+  width: 95% !important; max-width: 1400px !important; height: 65px !important;
   margin: 2rem auto !important; display: flex !important;
   background: #000 !important; border: 1px solid #f7e7ce !important;
   border-radius: 12px; align-items: center; position: relative;
-  box-shadow: 0 25px 70px rgba(0,0,0,0.9);
+  box-shadow: 0 30px 90px rgba(0,0,0,0.9);
 }
 .minimal-input {
   flex: 1; background: none; border: none; outline: none;
-  padding-left: 1.5rem; color: #fff !important;
-  font-size: 1.2rem !important; font-family: 'DM Sans', sans-serif;
+  padding-left: 2rem; color: #fff !important;
+  font-size: 1.25rem !important; font-family: 'DM Sans', sans-serif;
   height: 100%;
 }
 .minimal-ic {
-  position: absolute; right: 20px;
-  color: #f7e7ce; font-size: 1.6rem; cursor: pointer;
+  position: absolute; right: 25px;
+  color: #f7e7ce; font-size: 1.8rem; cursor: pointer;
+  transition: transform 0.3s;
 }
+.minimal-ic:hover { transform: scale(1.2); }
 
-/* RESULTADOS REFINADOS */
-.rp { display: none; width: 90%; max-width: 1200px; margin: 0 auto 50px; text-align: left; }
+#portal-resultados {
+  width: 100%; margin-top: 20px; min-height: 200px; display: block;
+}
 .rc {
   background: rgba(8,24,44,0.5);
   border: 1px solid rgba(247,231,206,0.2);
@@ -235,7 +239,7 @@ body::after {
 <!-- BUSCADOR -->
 <div class="page on" id="pg-search">
   <div class="sbg"></div>
-  <div class="search-scene">
+  <div class="search-scene" id="lex-search-engine">
     <div class="hero-mark"><span class="hm-lex">Lex</span><span class="hm-srch">Search</span></div>
     <p style="color:var(--muted); font-size:1.1rem; margin-bottom:40px;" class="reveal">El buscador soberano impulsado por IA</p>
     <div class="reveal" data-d="1">
@@ -243,7 +247,7 @@ body::after {
         <input id="si" type="text" class="minimal-input" placeholder="Ley, Fallo o Concepto (ej: Silencio, Arizu, 19.549)" onkeydown="if(event.key==='Enter')executeTechnicalSearch()">
         <div class="minimal-ic" onclick="executeTechnicalSearch()">⌕</div>
       </div>
-      <div id="rp" class="rp"></div>
+      <div id="portal-resultados"></div>
     </div>
   </div>
 </div>
@@ -420,53 +424,56 @@ const HOLDINGS = [
 ];
 
 function linkToOfficialSource(q) {
+  if (!q) return null;
   const lq = q.toLowerCase();
-  // Mapas de ID de Infoleg críticos
   const infolegMap = { '19549': '20349', '19.549': '20349', '24.240': '29457', '17.091': '26639' };
   const ln = q.match(/(\d{2,5})(\.\d{3})?/) || q.match(/ley\s+(\d+)/i);
   
-  if(ln) {
-    const num = ln[1] || q.replace(/\D/g,'');
-    const id = infolegMap[num] || num; // Fallback al número si no hay ID mapeado
-    return `https://servicios.infoleg.gob.ar/infolegInternet/anexos/${id.slice(0,2)}000-${parseInt(id.slice(0,2))+4}999/${id}/norma.htm`;
+  if (ln) {
+    const num = ln[1].replace('.','');
+    const id = infolegMap[num] || num;
+    const nId = parseInt(id);
+    if (isNaN(nId)) return null;
+    const low = Math.floor(nId / 5000) * 5000;
+    const high = low + 4999;
+    return `https://servicios.infoleg.gob.ar/infolegInternet/anexos/${low}-${high}/${id}/norma.htm`;
   }
-  if(lq.includes('fallo') || lq.includes('csjn')) return `https://sj.csjn.gov.ar/sj/consulta/busquedaRapida.do`;
+  if (lq.includes('fallo') || lq.includes('csjn')) return `https://sj.csjn.gov.ar/sj/consulta/busquedaRapida.do`;
   return null;
 }
 
 function executeTechnicalSearch() {
   const q = document.getElementById('si').value.trim(); if(!q) return;
-  const box = document.getElementById('rp'); box.style.display = 'block';
-  box.innerHTML = `<div style="padding:40px; color:#f7e7ce; font-style:italic; text-align:center;">Iniciando Protocolo Total Recall (Fetch Soberano)...</div>`;
+  const portal = document.getElementById('portal-resultados');
+  portal.innerHTML = `<div style="padding:40px; color:#f7e7ce; font-style:italic; text-align:center;">Sincronizando con Repositorios Soberanos...</div>`;
   
   setTimeout(async () => {
     let results = [];
     const lq = q.toLowerCase();
     
-    // Scan local HOLDINGS
+    // Scan local HOLDINGS con fetch real
     const hMatches = HOLDINGS.filter(h => h.toLowerCase().includes(lq));
     for(let h of hMatches) {
-        if(results.length >= 6) break;
+        if(results.length >= 8) break;
         try {
             const resp = await fetch(`./holdings/${h}`);
             if(resp.ok) {
                 const text = await resp.text();
                 results.push({ 
-                  type: 'Holding Técnico', title: h.replace(/_/g,' ').replace('.md',''), 
-                  snip: text.slice(0,600) + '...', link: linkToOfficialSource(h) 
+                  type: 'Holding Jurídico', title: h.replace(/_/g,' ').replace('.md',''), 
+                  snip: text.slice(0,800) + '...', link: linkToOfficialSource(h) 
                 });
             }
-        } catch(e) { console.error("Error fetching", h, e); }
+        } catch(e) { console.error("Fetch local fallido:", h); }
     }
 
-    // AI Fallback Automático si no hay datos locales
     if(results.length === 0) {
-      box.innerHTML = `<div style="padding:40px; color:#f7e7ce; font-style:italic; text-align:center;">Local: 0 resultados. Despertando Inteligencia Académica (8-Skills)...</div>`;
+      portal.innerHTML = `<div style="padding:40px; color:#f7e7ce; font-style:italic; text-align:center;">Local: 0 resultados. Despertando Inteligencia Académica (8-Skills)...</div>`;
       activateLexIA(q);
       return;
     }
 
-    box.innerHTML = results.map(r => `
+    portal.innerHTML = results.map(r => `
       <div class="rc">
         <div class="rc-type">${r.type}</div>
         <div class="rc-title">${r.title}</div>
@@ -486,18 +493,26 @@ MÉTODO DE ENSEÑANZA (SKILLS):
 3. SOVEREIGN-ARCHIVE: Usa un tono académico profundo, soberano y de excelencia.
 4. RAZONAMIENTO: Explica las implicancias prácticas para el examen.`;
 
+const SOVEREIGN_SKILLS_BASE = `ACTUÁ COMO PROFESOR ADJUNTO DE LAS CÁTEDRAS BORDA/CORVALÁN (UBA).
+LÓGICAS INTEGRADAS (8-SKILLS):
+1. HOLDING-LOGIC: Estructura obligatoria Hechos -> Razonamiento -> Holding.
+2. JURIS-SEARCH: Enlaces oficiales Infoleg/SAIJ.
+3. ARCHIVE-MINER: Minería de datos soberanos.
+4. TUTORÍA: Tono académico, tips de cátedra y enfoque en excelencia.
+RESPUESTA OBLIGATORIA: Concepto | Aplicación | Cátedra.`;
+
 async function activateLexIA(directQuery = null) {
   const q = directQuery || document.getElementById('ia-query').value.trim(); if(!q) return;
-  const box = document.getElementById('ia-result') || document.getElementById('rp'); box.style.display = 'block';
-  box.innerHTML = `<div style="padding:20px; color:#f7e7ce; font-style:italic;">Profesor Adjunto UBA (8-Skills Core) razonando sobre "${q}"...</div>`;
+  const portal = document.getElementById('portal-resultados') || document.getElementById('ia-result');
+  portal.innerHTML = `<div style="padding:20px; color:#f7e7ce; font-style:italic;">Profesor Adjunto (8-Skills Core) razonando sobre "${q}"...</div>`;
   
-  const prompt = `${SKILLS_BASE}\n\nAnaliza detalladamente: ${q}.\nFORMATO DE RESPUESTA OBLIGATORIO:\n1. Concepto | 2. Aplicación Práctica | 3. Lógica de Cátedra.`;
+  const prompt = `${SOVEREIGN_SKILLS_BASE}\n\nConsulta Académica: ${q}`;
 
   try { 
     const res = await callSovereignAI(prompt);
-    box.innerHTML = `<div class="rc" style="line-height:1.8; color:#fff;">${res}</div>`;
+    portal.innerHTML = `<div class="rc" style="line-height:1.8; color:#fff;">${res}</div>`;
   } catch(e) { 
-    box.innerHTML = `<div style="color:var(--amber); padding:20px;">ERROR CRÍTICO (8-CORE): ${e.message}</div>`; 
+    portal.innerHTML = `<div style="color:var(--amber); padding:20px;">ERROR CRÍTICO (8-CORE): ${e.message}</div>`; 
   }
 }
 
@@ -517,21 +532,21 @@ async function openStudyMode(ctx) {
 }
 
 async function callSovereignAI(p) {
-  const d = localStorage.getItem('lex_keys'); 
-  if(!d) throw new Error("Sincronizá tus llaves en Configuración.");
+  const d = localStorage.getItem('lex_keys'); if(!d) throw new Error("Llaves no sincronizadas.");
   const k = JSON.parse(d); let pool = [];
   if(k.g) k.g.forEach(v => { if(v) pool.push({type:'google', key:v}); });
   if(k.groq) pool.push({type:'groq', key:k.groq});
   if(k.openrouter) pool.push({type:'openrouter', key:k.openrouter});
-  if(pool.length === 0) throw new Error("Cerebro inactivo: No hay llaves.");
+  if(pool.length === 0) throw new Error("Cerebro inactivo.");
   
-  for(let node of pool) {
+  let i = 0;
+  while(i < pool.length) {
+    const node = pool[i];
     try {
       let r;
       if(node.type === 'google') {
         r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${node.key}`, {
-          method:'POST', headers:{'Content-Type':'application/json'},
-          body:JSON.stringify({contents:[{parts:[{text:p}]}]})
+          method:'POST', body:JSON.stringify({contents:[{parts:[{text:p}]}]})
         });
       } else if(node.type === 'groq') {
         r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
@@ -539,13 +554,15 @@ async function callSovereignAI(p) {
           body:JSON.stringify({model:'llama-3.3-70b-versatile', messages:[{role:'user', content:p}]})
         });
       }
-      
-      if(!r || !r.ok) continue; // Salta al siguiente nodo ante cualquier error
+      if(!r || !r.ok) throw new Error("Error de Nodo");
       const j = await r.json();
       return node.type === 'google' ? j.candidates[0].content.parts[0].text : j.choices[0].message.content;
-    } catch(e) { console.warn("Nodo fallido, rotando...", e); continue; }
+    } catch(e) { 
+      console.warn(`Rotando nodo ${i} por error...`);
+      i++; 
+    }
   }
-  throw new Error("Saturación total (8-Core). Intente más tarde.");
+  throw new Error("Saturación Total (8-Core). Intenta más tarde.");
 }
 
 function setSubject(sub) {
