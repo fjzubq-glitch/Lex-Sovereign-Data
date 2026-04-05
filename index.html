@@ -147,25 +147,56 @@ body::after {
 #portal-resultados {
   width: 100%; margin-top: 30px; min-height: 100px; display: block;
 }
-.rc {
-  background: #111 !important;
-  border: 1px solid #f7e7ce !important;
-  border-radius: 12px; padding: 25px; margin-bottom: 20px;
-  transition: all 0.4s var(--spring);
-  backdrop-filter: blur(12px);
-  text-align: justify !important;
+.terminal-block { 
+  background: #111 !important; 
+  border: 1px solid #f7e7ce !important; 
+  border-radius: 8px; 
+  padding: 25px; 
+  margin-bottom: 20px; 
+  text-align: justify !important; 
+  font-family: 'DM Sans', sans-serif; 
+  box-shadow: 0 10px 30px rgba(0,0,0,0.5); 
+  color: #fff !important; 
 }
-.rc:hover { border-color: #f7e7ce; transform: translateY(-4px); box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
-.rc-type { font-size: 0.65rem; color: #f7e7ce; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; font-weight: 800; opacity: 0.9; }
-.rc-title { font-size: 1.6rem; font-family: var(--serif); color: #fff; margin-bottom: 15px; line-height: 1.2; }
-.rc-snip { font-size: 0.95rem; color: #fff; line-height: 1.7; font-family: monospace; opacity: 0.95; }
+.rc-type { 
+  color: #f7e7ce; 
+  font-weight: bold; 
+  font-size: 0.65rem; 
+  text-transform: uppercase; 
+  letter-spacing: 2px; 
+  margin-bottom: 12px; 
+}
+.rc-title { 
+  font-size: 1.6rem; 
+  font-family: var(--serif); 
+  color: #fff; 
+  margin-bottom: 15px; 
+  line-height: 1.2; 
+}
+.rc-snip { 
+  font-size: 0.95rem; 
+  color: #fff; 
+  line-height: 1.7; 
+  font-family: inherit; 
+  opacity: 0.95; 
+}
 .rc-link-gold { 
-  display: inline-block; background: #f7e7ce; color: #000 !important; 
-  padding: 12px 24px; border-radius: 5px; font-weight: 900; 
-  font-size: 0.75rem; text-decoration: none; margin-top: 15px; 
-  transition: all 0.3s; letter-spacing: 1px;
+  background: #f7e7ce !important; 
+  color: #000 !important; 
+  padding: 12px 24px; 
+  font-weight: 900; 
+  border-radius: 4px; 
+  display: inline-block; 
+  margin-top: 15px; 
+  text-decoration: none; 
+  transition: 0.3s; 
+  text-transform: uppercase; 
+  font-size: 0.85rem; 
 }
-.rc-link-gold:hover { background: #fff; transform: scale(1.03); }
+.rc-link-gold:hover { 
+  background: #fff !important; 
+  transform: translateY(-2px); 
+}
 
 /* LUXURY CARD V2 (Shadcn-Inspired) */
 .audio-card { 
@@ -437,17 +468,16 @@ function linkToOfficialSource(q) {
   if (!q) return null;
   const lq = q.toLowerCase();
   
-  // 1. MAPEADOR DE SIGLAS
-  if (lq === 'cn') return `https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/800/norma.htm`;
-  if (lq === 'ccycn') return `https://servicios.infoleg.gob.ar/infolegInternet/anexos/235000-239999/235975/norma.htm`;
+  // 1. MAPEADOR DE SIGLAS SOBERANO
+  const sovereignMaps = {
+    'cn': 'https://servicios.infoleg.gob.ar/infolegInternet/anexos/0-4999/800/norma.htm',
+    'ccycn': 'https://servicios.infoleg.gob.ar/infolegInternet/anexos/235000-239999/235975/norma.htm',
+    'lnpa': 'https://servicios.infoleg.gob.ar/infolegInternet/anexos/20000-24999/20349/norma.htm'
+  };
+  if (sovereignMaps[lq]) return sovereignMaps[lq];
   
   // 2. LEYES (Infoleg Math Range)
-  const infolegMap = { 
-    '19549': '20349', '19.549': '20349', 
-    '24240': '29457', '24.240': '29457',
-    '17091': '26639', '17.091': '26639',
-    '11672': '21743', '11.672': '21743'
-  };
+  const infolegMap = { '19549': '20349', '19.549': '20349', '24240': '29457', '17091': '26639', '11672': '21743' };
   const ln = q.match(/(?:ley|norma)?\s?(\d{2,5}(?:\.\d{3})?)/i) || q.match(/(\d{2,5})(\.\d{3})?/) || q.match(/ley\s+(\d+)/i);
   
   if (ln) {
@@ -460,12 +490,8 @@ function linkToOfficialSource(q) {
     return `https://servicios.infoleg.gob.ar/infolegInternet/anexos/${range}/${id}/norma.htm`;
   }
 
-  // 3. FALLOS CSJN (SAIJ Advanced Search)
-  if (lq.includes('fallo') || lq.includes('arizu') || lq.includes('teoria') || lq.includes('organo')) {
-    return `https://www.saij.gob.ar/busqueda-avanzada?q=${encodeURIComponent(q)}`;
-  }
-  
-  return null;
+  // 3. FALLOS Y BÚSQUEDA SAIJ
+  return `https://www.saij.gob.ar/busqueda-avanzada?q=${encodeURIComponent(q)}`;
 }
 
 async function executeTechnicalSearch() {
@@ -478,16 +504,15 @@ async function executeTechnicalSearch() {
   let results = [];
   const lq = q.toLowerCase();
   
-  // Mapper de siglas para búsqueda fuzzy extendida
   const fuzzyMap = { 'cn': 'constitucion', 'ccycn': 'civil', 'lnpa': '19.549' };
   const extendedLq = fuzzyMap[lq] || lq;
 
   // 1. REPOSITORIO HERNÁN / PRIORIDAD TÉCNICA
   if(lq.includes('arizu') || lq.includes('órgano') || lq.includes('organo')) {
     results.push({ 
-      type: '[REPOSITORIO HERNÁN - PRIORIDAD]', 
+      type: 'REPOSITORIO HERNÁN - PRIORIDAD', 
       title: 'TEORÍA DEL ÓRGANO (FALLO ARIZU)', 
-      snip: '--- CONCEPTOS TÉCNICOS ---\n• HECHOS: La firma Arizu reclama por actos de funcionarios del Estado.\n• RAZONAMIENTO: El funcionario no es un representante, sino parte del órgano.\n• HOLDING: Responsabilidad objetiva y directa del Estado por la voluntad de sus órganos.\n--- CÁTEDRA ---\n• Punto vital en Administrativo I (Corvalán).',
+      snip: '--- CONCEPTOS TÉCNICOS ---\n• HECHOS: La firma Arizu reclama por actos de funcionarios del Estado.\n--- RAZONAMIENTO ---\n• El funcionario no es un representante, sino parte del órgano.\n--- HOLDING ---\n• Responsabilidad objetiva y directa del Estado.\n--- LÓGICA DE CÁTEDRA ---\n• Punto vital en Administrativo I (Corvalán).',
       link: linkToOfficialSource('arizu') 
     });
   }
@@ -495,25 +520,25 @@ async function executeTechnicalSearch() {
   // 2. TESAURO JURÍDICO
   if(lq.includes('silencio') || lq.includes('voluntad') || lq.includes('lnpa')) {
     results.push({ 
-      type: 'Tesauro Jurídico', 
+      type: 'TESAURO JURÍDICO', 
       title: 'SILENCIO ADMINISTRATIVO (ART. 10 LNPA)', 
-      snip: '--- CONCEPTOS TÉCNICOS ---\n• HECHOS: Omisión de respuesta por parte de la Administración Pública.\n• RAZONAMIENTO: El silencio implica negativa por regla general tras el vencimiento de plazos.\n• HOLDING: Requiere pronto despacho para el agotamiento de la vía administrativa.\n--- CÁTEDRA ---\n• Diferencia entre silencio positivo y negativo.',
+      snip: '--- CONCEPTOS TÉCNICOS ---\n• HECHOS: Omisión de respuesta por parte de la Administración Pública.\n--- RAZONAMIENTO ---\n• El silencio implica negativa por regla general tras vencimiento.\n--- HOLDING ---\n• Requiere pronto despacho.\n--- LÓGICA DE CÁTEDRA ---\n• Diferencia entre silencio positivo y negativo.',
       link: linkToOfficialSource('19.549') 
     });
   }
 
   // 3. LEYES (Infoleg Sincronizado)
   const lawMatch = q.match(/(?:ley|norma)?\s?(\d{2,5}(?:\.\d{3})?)/i);
-  if(lawMatch || lq === 'cn' || lq === 'ccycn') {
+  if(lawMatch || lq === 'cn' || lq === 'ccycn' || lq === 'lnpa') {
     const num = lawMatch ? lawMatch[1] : q.toUpperCase();
     results.push({ 
-      type: 'Leyes / Infoleg', title: `NORMA FUNDAMENTAL: ${num}`, 
-      snip: `--- CONCEPTOS TÉCNICOS ---\n• Sincronización con base de datos de Infoleg.\n• Normativa vigente aplicable al caso.\n--- CÁTEDRA ---\n• Ver concordancias con el CCyCN.`,
+      type: 'LEYES / INFOLEG', title: `NORMA FUNDAMENTAL: ${num}`, 
+      snip: `--- CONCEPTOS TÉCNICOS ---\n• Sincronización con base de datos de Infoleg.\n--- RAZONAMIENTO ---\n• Normativa vigente aplicable al caso.\n--- HOLDING ---\n• Estabilidad jurídica absoluta.\n--- LÓGICA DE CÁTEDRA ---\n• Ver concordancias con el CCyCN.`,
       link: linkToOfficialSource(q) 
     });
   }
 
-  // 4. 75 HOLDINGS (Fuzzy Scan MD con includes)
+  // 4. 75 HOLDINGS
   const hMatches = HOLDINGS.filter(h => h.toLowerCase().includes(lq) || h.toLowerCase().includes(extendedLq));
   for(let h of hMatches) {
       if(results.length >= 15) break;
@@ -522,7 +547,7 @@ async function executeTechnicalSearch() {
           if(resp.ok) {
               const text = await resp.text();
               results.push({ 
-                type: 'Holding MD', 
+                type: 'HOLDING MD', 
                 title: h.replace(/_/g,' ').replace('.md','').toUpperCase(), 
                 snip: '--- RESUMEN JURÍDICO ---\n' + text.slice(0,500) + '...', 
                 link: linkToOfficialSource(h) 
@@ -535,19 +560,17 @@ async function executeTechnicalSearch() {
   if(results.length > 0) {
     const prefix = `<div style='color:#f7e7ce; font-weight:800; font-size: 0.7rem; margin-bottom: 20px; border-bottom: 1px solid rgba(247,231,206,0.2); padding-bottom:10px;'>[DATOS SOBERANOS RECUPERADOS]</div>`;
     portal.innerHTML = prefix + results.map(r => `
-      <div class="rc">
-        <div class="rc-type">${r.type}</div>
+      <div class="terminal-block">
+        <div class="rc-type"><span style="color:#f7e7ce; font-weight:bold;">[DATOS SOBERANOS RECUPERADOS]</span> | ${r.type}</div>
         <div class="rc-title">${r.title}</div>
-        <div class="rc-snip">${r.snip}</div>
+        <div class="rc-snip" style="white-space: pre-wrap;">${r.snip}</div>
         <div style="margin-top:20px;">
           ${r.link ? `<a href="${r.link}" target="_blank" class="rc-link-gold">🌐 CONSULTAR FUENTE OFICIAL</a>` : ''}
         </div>
       </div>
     `).join('');
-    // IA Complement mode (Waiting for local rendering)
     await activateLexIA(q, true);
   } else {
-    // IA Primary mode
     await activateLexIA(q, false);
   }
 }
@@ -566,12 +589,12 @@ REGLAS DE FORMATO:
 - Sin Markdown de chat (no negritas de asteriscos). 
 - Separar secciones con ---.
 ESTRUCTURA DE RESPUESTA:
---- CONCEPTOS JURÍDICOS ---
+--- CONCEPTOS ---
 • [Dato técnico 1]
 • [Dato técnico 2]
---- APLICACIÓN PRÁCTICA ---
+--- APLICACIÓN ---
 • [Uso en realidad argentina]
---- LÓGICA DE CÁTEDRA (BORDA/CORVALÁN) ---
+--- CÁTEDRA ---
 • [Enfoque crítico para examen]`;
 
 async function activateLexIA(directQuery = null, isComp = false) {
@@ -590,9 +613,9 @@ async function activateLexIA(directQuery = null, isComp = false) {
     const res = await callSovereignAI(prompt);
     statusDiv.remove();
     const iaRes = document.createElement('div');
-    iaRes.className = "rc";
-    iaRes.style.cssText = "line-height:1.8; color:#fff; font-family:monospace; background:#0a0a0a; border:1px solid #f7e7ce; padding:25px; margin-top:20px; border-radius:4px;";
-    iaRes.innerHTML = `<div class="rc-type" style="color:#f7e7ce; font-weight:800; font-size:0.6rem; letter-spacing:2px; margin-bottom:15px;">--- ANÁLISIS COMPLEMENTARIO (8-SKILLS) ---</div>` + res.replace(/\*\*/g, '');
+    iaRes.className = "terminal-block";
+    iaRes.style.marginTop = "20px";
+    iaRes.innerHTML = `<div class="rc-type" style="color:#f7e7ce; font-weight:800; font-size:0.6rem; letter-spacing:2px; margin-bottom:15px;">--- ANÁLISIS COMPLEMENTARIO (8-SKILLS) ---</div>` + res.replace(/\*\*/g, '').replace(/\n/g, '<br>');
     portal.appendChild(iaRes);
   } catch(e) { 
     statusDiv.innerHTML = `<div style="color:var(--amber); padding:10px;">SYSTEM_ERROR (8-CORE): ${e.message}</div>`; 
