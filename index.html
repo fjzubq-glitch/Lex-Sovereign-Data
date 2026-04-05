@@ -26,7 +26,7 @@
 </script>
 <script src="https://unpkg.com/lucide@latest"></script>
 <style>
-/* ── Design Tokens 21st.dev Style ── */
+/* ── Design Tokens RESTAURACIÓN LUXURY ── */
 :root {
   --abyss: #030b16;
   --bonewhite: #f0ead6;
@@ -40,22 +40,22 @@ body { font-family: 'Inter', sans-serif; background: var(--abyss); color: var(--
 
 /* Luxury Glassmorphism */
 .glass {
-  background: rgba(3, 11, 22, 0.4);
+  background: rgba(3, 11, 22, 0.45);
   backdrop-filter: blur(24px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  border: 1px solid rgba(247, 231, 206, 0.1);
   box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
 }
 
 .card-player {
-  background: rgba(3, 11, 22, 0.6);
+  background: rgba(255, 255, 255, 0.03);
   backdrop-filter: blur(20px);
-  border: 1px solid rgba(247, 231, 206, 0.1);
+  border: 1px solid rgba(247, 231, 206, 0.15);
   transition: all 0.4s var(--spring);
 }
 .card-player:hover {
   transform: translateY(-5px);
+  background: rgba(255, 255, 255, 0.06);
   border-color: rgba(247, 231, 206, 0.4);
-  background: rgba(3, 11, 22, 0.8);
 }
 
 .gold-line {
@@ -77,15 +77,15 @@ p, .font-ui { font-family: 'Inter', sans-serif; color: var(--beige); opacity: 0.
 .nav {
   position: fixed; top:0; left:0; right:0; z-index: 900;
   height: 68px; display: flex; align-items: center; justify-content: space-between;
-  padding: 0 40px; background: rgba(3, 11, 22, 0.8); backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  padding: 0 40px; background: rgba(3, 11, 22, 0.9); backdrop-filter: blur(20px);
+  border-bottom: 1px solid rgba(247, 231, 206, 0.1);
 }
 .nav-brand { font-family: 'Playfair Display', serif; font-size: 1.6rem; color: var(--bonewhite); font-weight: 700; cursor: pointer; }
 .nav-brand span { color: var(--goldc); font-style: italic; font-weight: 300; }
 
 .ntab {
   font-size: 0.75rem; font-weight: 500; color: var(--beige);
-  padding: 10px 22px; border-radius: 100px; transition: all 0.3s; letter-spacing: 0.5px;
+  padding: 10px 22px; border-radius: 100px; transition: all 0.3s;
 }
 .ntab.on { color: var(--abyss); background: var(--goldc); box-shadow: 0 10px 20px -5px rgba(247, 231, 206, 0.3); }
 
@@ -100,7 +100,7 @@ p, .font-ui { font-family: 'Inter', sans-serif; color: var(--beige); opacity: 0.
 .rc:hover { background: rgba(255, 255, 255, 0.02); }
 
 /* Player */
-.ap { display:none; position:fixed; bottom:0; left:0; right:0; z-index: 1000; background: rgba(3, 11, 22, 0.98); backdrop-filter: blur(30px); border-top: 1px solid rgba(247, 231, 206, 0.2); padding: 15px 40px; align-items: center; gap: 30px; }
+.ap { display:none; position:fixed; bottom:0; left:0; right:0; z-index: 1000; background: rgba(3, 11, 22, 0.98); backdrop-filter: blur(30px); border-top: 1px solid var(--goldc); padding: 15px 40px; align-items: center; gap: 30px; }
 .ap.on { display:flex; }
 .ap-tr { flex:1; min-width:0; }
 .ap-nm { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--goldc); }
@@ -221,17 +221,19 @@ audio { height: 36px; flex: 2; border-radius: 100px; filter: invert(100%) hue-ro
       <button onclick="toggleConfig()" class="text-3xl opacity-20 hover:opacity-100 transition-opacity">✕</button>
     </div>
     <div class="space-y-6">
-      <div class="text-[10px] uppercase tracking-widest text-goldchampagne font-black">Turbina Principal (Groq/Expert)</div>
-      <input id="groq" type="password" placeholder="Groq API Key (Llama 4 Priority)" class="w-full bg-white/5 border border-white/10 p-5 rounded-3xl text-sm focus:border-goldchampagne/50 outline-none transition-all">
-      
-      <div class="text-[10px] uppercase tracking-widest text-goldchampagne/50 font-black pt-4">Nodos Secundarios (Gemini Elite)</div>
+      <div class="text-[10px] uppercase tracking-widest text-goldchampagne/60 font-black">Nodos Soberanos (Google Gemini 1-6)</div>
       <div class="grid grid-cols-2 gap-3">
         <input id="g1" type="password" placeholder="Node 1" class="bg-white/5 border border-white/10 p-4 rounded-2xl text-xs"><input id="g2" type="password" placeholder="Node 2" class="bg-white/5 border border-white/10 p-4 rounded-2xl text-xs">
       </div>
       <div class="grid grid-cols-2 gap-3">
         <input id="g3" type="password" placeholder="Node 3" class="bg-white/5 border border-white/10 p-4 rounded-2xl text-xs"><input id="g4" type="password" placeholder="Node 4" class="bg-white/5 border border-white/10 p-4 rounded-2xl text-xs">
       </div>
+      <div class="grid grid-cols-2 gap-3">
+        <input id="g5" type="password" placeholder="Node 5" class="bg-white/5 border border-white/10 p-4 rounded-2xl text-xs"><input id="g6" type="password" placeholder="Node 6" class="bg-white/5 border border-white/10 p-4 rounded-2xl text-xs">
+      </div>
       
+      <div class="text-[10px] uppercase tracking-widest text-goldchampagne font-black pt-4">Turbinas Auxiliares</div>
+      <input id="groq" type="password" placeholder="Groq API Key (Llama 3 Priority)" class="w-full bg-white/5 border border-white/10 p-5 rounded-3xl text-sm focus:border-goldchampagne/50 outline-none transition-all">
       <input id="openrouter" type="password" placeholder="OpenRouter API (Respaldo)" class="w-full bg-white/5 border border-white/10 p-5 rounded-3xl text-sm mt-4">
       
       <button onclick="saveKeys()" class="w-full bg-goldchampagne text-abyss font-black py-5 rounded-3xl mt-8 hover:scale-[1.02] active:scale-100 transition-all shadow-xl">SINCRONIZAR CEREBRO</button>
@@ -290,8 +292,12 @@ function gatekeeper() {
 
 function saveKeys() {
   const k = {
+    g: [
+      document.getElementById('g1').value, document.getElementById('g2').value, 
+      document.getElementById('g3').value, document.getElementById('g4').value,
+      document.getElementById('g5').value, document.getElementById('g6').value
+    ],
     groq: document.getElementById('groq').value,
-    g: [document.getElementById('g1').value, document.getElementById('g2').value, document.getElementById('g3').value, document.getElementById('g4').value],
     openrouter: document.getElementById('openrouter').value
   };
   localStorage.setItem('lex_keys', JSON.stringify(k));
@@ -303,8 +309,8 @@ function loadKeys() {
   const d = localStorage.getItem('lex_keys');
   if(!d) return;
   const k = JSON.parse(d);
+  if(k.g) k.g.forEach((v, i) => { if(document.getElementById('g'+(i+1))) document.getElementById('g'+(i+1)).value = v || ''; });
   document.getElementById('groq').value = k.groq || '';
-  k.g.forEach((v, i) => document.getElementById('g'+(i+1)).value = v || '');
   document.getElementById('openrouter').value = k.openrouter || '';
 }
 
@@ -344,7 +350,7 @@ async function openStudyMode(ctx) {
   const m = document.getElementById('modal-study');
   const c = document.getElementById('study-content');
   m.classList.remove('hidden'); m.classList.add('flex');
-  c.innerHTML = '<div class="text-goldchampagne animate-pulse italic text-lg">Invocando Experto UBA vía Turbina Groq...</div>';
+  c.innerHTML = '<div class="text-goldchampagne animate-pulse italic text-lg">Invocando Experto UBA vía Turbinas Soberanas...</div>';
   
   const prompt = `SOS EL TUTOR EXPERTO UBA (Cátedras Borda/Corvalán). Analizá: ${ctx}. 
     ENTREGA: 1. Resumen Simple (Lenguaje llano). 2. Ejemplo Práctico (Día a día). 3. Tip de Examen (Clave para Corvalán/Borda). 4. Relación Jurídica.
@@ -364,10 +370,10 @@ async function callSovereignAI(p) {
   const k = JSON.parse(d);
   let pool = [];
   
-  // GROQ FIRST (Turbina Principal)
+  // GOOGLE FIRST (Nodos 1-6)
+  if(k.g) k.g.forEach(v => { if(v) pool.push({ type: 'google', key: v }); });
+  // GROQ SECOND (Turbina Auxiliar)
   if(k.groq) pool.push({ type: 'groq', key: k.groq });
-  // GOOGLE SECOND
-  k.g.forEach(v => { if(v) pool.push({ type: 'google', key: v }); });
   // OPENROUTER THIRD
   if(k.openrouter) pool.push({ type: 'openrouter', key: k.openrouter });
   
@@ -375,6 +381,13 @@ async function callSovereignAI(p) {
 
   for (let node of pool) {
     try {
+      if (node.type === 'google') {
+        const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${node.key}`, {
+          method: 'POST', body: JSON.stringify({ contents: [{ parts: [{ text: p }] }] })
+        });
+        if (r.status === 429) continue;
+        const j = await r.json(); return j.candidates[0].content.parts[0].text;
+      }
       if (node.type === 'groq') {
         const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
           method: 'POST',
@@ -383,13 +396,6 @@ async function callSovereignAI(p) {
         });
         if (r.status === 429) continue;
         const j = await r.json(); return j.choices[0].message.content;
-      }
-      if (node.type === 'google') {
-        const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${node.key}`, {
-          method: 'POST', body: JSON.stringify({ contents: [{ parts: [{ text: p }] }] })
-        });
-        if (r.status === 429) continue;
-        const j = await r.json(); return j.candidates[0].content.parts[0].text;
       }
     } catch (e) { continue; }
   }
