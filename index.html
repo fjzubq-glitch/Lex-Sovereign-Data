@@ -118,36 +118,52 @@ body::after {
 /* Search Results UI */
 /* Search Results UI */
 /* Search Results UI */
-.rp {
-  display: none; width: 100%; max-width: 950px; margin-top: 32px; text-align: left;
-  background: rgba(8,24,44,0.98); border: 1px solid var(--rim-hi); border-radius: 24px; overflow: hidden;
-  backdrop-filter: blur(15px); box-shadow: 0 40px 100px rgba(0,0,0,0.65);
-  animation: panelIn 0.4s var(--spring) both;
+/* BUSCADOR MINIMALISTA (LÍNEA DE LUZ) */
+.minimal-wrapper {
+  width: 100%; max-width: 850px; margin: 0 auto;
+  background: var(--abyss);
+  border: 1px solid var(--rim-hi);
+  border-radius: 100px;
+  display: flex; align-items: center;
+  padding: 4px 6px;
+  box-shadow: 0 15px 45px rgba(0,0,0,0.4);
+  transition: all 0.4s var(--spring);
 }
-.rc { display: block; padding: 28px 32px; border-bottom: 1px solid var(--rim); cursor: pointer; transition: all 0.3s; position: relative; }
-.rc:hover { background: rgba(20,60,120,0.2); }
-.rc-title { font-family:var(--lora); font-size:1.15rem; font-weight:500; color:var(--gold3); margin-bottom:10px; line-height:1.4; }
-.rc-snip { font-size:0.85rem; color:var(--muted); line-height:1.7; }
-.rc-type { font-size:0.65rem; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:8px; font-weight:800; }
-.rc-link { display:inline-block; margin-top:14px; font-size:0.68rem; color:var(--sky); text-decoration:none; border:1px solid var(--rim-hi); padding:8px 18px; border-radius:100px; transition:all 0.4s var(--spring); font-weight:600; letter-spacing:0.5px; }
-.rc-link:hover { background:var(--sapp); color:white; border-color:transparent; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(20,96,176,0.3); }
+.minimal-wrapper:focus-within {
+  border-color: var(--gold);
+  box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 20px rgba(184,136,48,0.15);
+  transform: translateY(-2px);
+}
+.minimal-input {
+  flex: 1; background: none; border: none; outline: none;
+  padding: 18px 32px; color: var(--white);
+  font-size: 1.25rem; font-family: var(--ui); /* DM Sans */
+  letter-spacing: 0.3px;
+}
+.minimal-btn {
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  color: var(--abyss); border: none; border-radius: 100px;
+  padding: 12px 30px; font-size: 0.85rem; font-weight: 800;
+  cursor: pointer; transition: all 0.3s;
+  font-family: var(--ui); text-transform: uppercase; letter-spacing: 1px;
+}
+.minimal-btn:hover { transform: scale(1.04); filter: brightness(1.1); }
 
-/* GOLDEN BUTTONS - LUXURY SOBERANO */
-.btn-gold { 
-  background: linear-gradient(135deg, var(--gold2), var(--gold-p)); 
-  color: var(--abyss); border: none; padding: 16px 40px; border-radius: 14px; 
-  font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 12px;
-  transition: all 0.4s var(--spring); box-shadow: 0 12px 30px rgba(184, 136, 48, 0.3);
-  font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1.5px;
+/* RESULTADOS (Cards Elite) */
+.rp { display: none; width: 100%; max-width: 900px; margin: 40px auto; text-align: left; }
+.rc {
+  background: rgba(8,24,44,0.4);
+  border: 1px solid var(--rim);
+  border-radius: 20px; padding: 32px; margin-bottom: 24px;
+  transition: all 0.4s var(--spring);
+  backdrop-filter: blur(10px);
 }
-.btn-gold:hover { transform: translateY(-4px) scale(1.03); box-shadow: 0 18px 45px rgba(184, 136, 48, 0.5); filter: contrast(1.15); }
-.btn-sapp { 
-  background: rgba(8, 24, 44, 0.7); 
-  color: var(--gold3); border: 1px solid var(--rim-hi); padding: 16px 40px; border-radius: 14px; 
-  font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 12px;
-  transition: all 0.4s var(--spring); font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1.5px;
-}
-.btn-sapp:hover { background: var(--mid); border-color: var(--gold); transform: translateY(-4px); box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
+.rc:hover { border-color: var(--gold); background: rgba(8,24,44,0.6); transform: translateY(-3px); }
+.rc-type { font-size: 0.65rem; color: var(--gold); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 12px; font-weight: 800; opacity: 0.8; }
+.rc-title { font-size: 1.7rem; font-family: var(--serif); color: var(--white); margin-bottom: 15px; line-height: 1.2; }
+.rc-snip { font-size: 1.05rem; color: var(--pale); line-height: 1.8; font-family: var(--ui); opacity: 0.8; font-weight: 300; }
+.rc-link { display: inline-block; margin-top: 20px; color: var(--gold); font-size: 0.8rem; text-decoration: none; font-weight: 700; letter-spacing: 1.2px; border-bottom: 1px solid transparent; transition: border 0.3s; }
+.rc-link:hover { border-color: var(--gold); }
 
 /* LUXURY CARD V2 (Shadcn-Inspired) */
 .audio-card { 
@@ -233,12 +249,10 @@ body::after {
   <div class="search-scene">
     <div class="hero-mark"><span class="hm-lex">Lex</span><span class="hm-srch">Search</span></div>
     <p style="color:var(--muted); font-size:1.1rem; margin-bottom:40px;" class="reveal">El buscador soberano impulsado por IA</p>
-    <div style="width:100%; max-width:900px;" class="reveal" data-d="1">
-      <div style="background:rgba(8,24,44,0.9); border:1px solid var(--rim-hi); border-radius:20px; overflow:hidden; padding:10px; margin-bottom:25px; display:flex; box-shadow: 0 20px 50px rgba(0,0,0,0.4);">
-        <input id="si" type="text" placeholder="Ingresa Ley, Fallo o Concepto (ej: Silencio, Objeto, Arizu)" style="flex:1; background:none; border:none; outline:none; padding:15px 25px; color:var(--white); font-size:1.2rem; font-family:var(--lora);" onkeydown="if(event.key==='Enter')executeTechnicalSearch()">
-      </div>
-      <div style="display:flex; justify-content:center;">
-        <button onclick="executeTechnicalSearch()" class="btn-gold" style="width:100%; max-width:400px; justify-content:center;">🔍 EXPLORAR REPOSITORIO TÉCNICO</button>
+    <div class="reveal" data-d="1">
+      <div class="minimal-wrapper">
+        <input id="si" type="text" class="minimal-input" placeholder="Ingresa Ley, Fallo o Concepto..." onkeydown="if(event.key==='Enter')executeTechnicalSearch()">
+        <button onclick="executeTechnicalSearch()" class="minimal-btn">Búsqueda Técnica</button>
       </div>
       <div id="rp" class="rp"></div>
     </div>
@@ -433,66 +447,76 @@ function executeTechnicalSearch() {
   const box = document.getElementById('rp'); box.style.display = 'block';
   box.innerHTML = `<div style="padding:40px; color:var(--gold3); font-style:italic; text-align:center;">Accediendo a Repositorio Técnico (Cátedra UBA)...</div>`;
   
-  setTimeout(() => {
+  setTimeout(async () => {
     let results = [];
     const lq = q.toLowerCase();
     
     // NÚCLEO TÉCNICO (Anclajes Hernán)
     if(lq.includes('silencio')) {
-      results.push({
-        type: 'Normativa Base', title: 'Ley 19.549 — Art. 10: Silencio Administrativo',
-        snip: 'Principio de Negativa: El silencio administrativo se interpreta como rechazo, salvo disposición legal en contrario.',
-        link: 'http://servicios.infoleg.gob.ar/infolegInternet/anexos/20000-24999/20349/norma.htm'
-      });
+      results.push({ type: 'Normativa Base', title: 'Ley 19.549 — Art. 10: Silencio Administrativo', snip: 'Principio de Negativa: El silencio administrativo se interpreta como rechazo, salvo disposición legal en contrario.', link: 'http://servicios.infoleg.gob.ar/infolegInternet/anexos/20000-24999/20349/norma.htm' });
     }
     if(lq.includes('arizu')) {
-      results.push({
-        type: 'Jurisprudencia Vertical', title: 'Fallo Arizu (1947) — Teoría del Órgano',
-        snip: 'Responsabilidad Directa del Estado. CSJN establece que los órganos actúan como el Estado mismo, no como mandatarios.',
-        link: 'https://sj.csjn.gov.ar/sj/consulta/busquedaRapida.do'
-      });
+      results.push({ type: 'Fallo Histórico', title: 'Fallo Arizu (1947) — Teoría del Órgano', snip: 'Responsabilidad Directa del Estado. CSJN establece que los órganos actúan como el Estado mismo.', link: 'https://sj.csjn.gov.ar/sj/consulta/busquedaRapida.do' });
     }
 
-    // Indexación rápida en HOLDINGS
-    HOLDINGS.filter(h => h.toLowerCase().includes(lq)).forEach(h => {
-      const title = h.replace(/_/g, ' ').replace('.md','');
-      if(!results.find(r => r.title === title)) {
+    // Indexación rápida en HOLDINGS con Fetch Real
+    const hMatches = HOLDINGS.filter(h => h.toLowerCase().includes(lq));
+    for(let h of hMatches) {
+        if(results.length >= 3) break; // Limitar a 3 holdings para no saturar
+        const title = h.replace(/_/g, ' ').replace('.md','');
+        let content = "Recuperando extracto oficial...";
+        try {
+            const resp = await fetch(`./${h}`);
+            if(resp.ok) {
+                const text = await resp.text();
+                content = text.slice(0, 350) + "...";
+            }
+        } catch(e) { console.warn("Fetch failed for", h); }
+        
         results.push({
           type: 'Holding Académico', title: title,
-          snip: 'Resumen técnico disponible. Ratio decidendi y fundamentos de la Corte Suprema.',
+          snip: content,
           link: linkToOfficialSource(title)
         });
-      }
-    });
+    }
 
+    // FALLBACK INTELIGENTE (IA Automática)
     if(results.length === 0) {
-      box.innerHTML = `<div style="padding:40px; color:var(--muted); text-align:center;">Sin coincidencias técnicas. Explorá <b>Aula Magna > Lex-IA</b> para consultas abstractas.</div>`;
+      box.innerHTML = `<div style="padding:40px; color:var(--frost); font-style:italic; text-align:center; border:1px dashed var(--rim-hi); border-radius:12px;">Sin dato técnico local. Activando Cerebro Académico (Fallback)...</div>`;
+      setTimeout(() => {
+        // Buscamos el input de IA en el Aula Magna o lo llamamos directo
+        if(typeof activateLexIA === 'function') {
+           const iaInput = document.getElementById('ia-query');
+           if(iaInput) iaInput.value = q;
+           activateLexIA(q);
+        }
+      }, 500);
       return;
     }
 
     box.innerHTML = results.map(r => `
-      <div class="rc" style="cursor:default;">
+      <div class="rc">
         <div class="rc-type">${r.type}</div>
         <div class="rc-title">${r.title}</div>
-        <p class="rc-snip">${r.snip}</p>
+        <p class="rc-snip" style="white-space: pre-wrap;">${r.snip}</p>
         <div style="margin-top:15px; display:flex; justify-content:space-between; align-items:center;">
           ${r.link ? `<a href="${r.link}" target="_blank" class="rc-link">🌐 CONSULTAR FUENTE OFICIAL</a>` : '<span></span>'}
           <span style="font-size:0.6rem; color:var(--rim-hi); font-weight:800; letter-spacing:1px;">LEX-SEARCH CORE</span>
         </div>
       </div>
     `).join('');
-  }, 120); // Optimización PBC: Respuesta instantánea
+  }, 100); 
 }
 
-async function activateLexIA() {
-  const q = document.getElementById('ia-query').value.trim(); if(!q) return;
+async function activateLexIA(directQuery = null) {
+  const q = directQuery || document.getElementById('ia-query').value.trim(); if(!q) return;
   const box = document.getElementById('ia-result'); box.style.display = 'block';
-  box.innerHTML = `<div style="padding:20px; color:var(--gold3); font-style:italic;">Invocando Tutoría de Cátedra (Borda/Corvalán). Procesando razonamiento...</div>`;
+  box.innerHTML = `<div style="padding:20px; color:var(--gold3); font-style:italic;">Profesor Adjunto UBA (Cerebro 8-Core) está razonando sobre "${q}"...</div>`;
   
   const prompt = `ACTUÁ COMO PROFESOR ADJUNTO UBA (Cátedras Borda/Corvalán). 
     Analizá detalladamente: ${q}. 
-    ESTRUCTURA: 1. CONCEPTO, 2. PRÁCTICA, 3. CÁTEDRA. 
-    ESTILO: HTML con Tailwind, usa #b88830 para resaltar.`;
+    ESTRUCTURA: 1. CONCEPTO BASE, 2. PRÁCTICA PROFESIONAL, 3. TIPS DE CÁTEDRA. 
+    ESTILO: HTML con Tailwind, usa #b88830 para términos jurídicos.`;
 
   try { 
     const res = await callSovereignAI(prompt);
