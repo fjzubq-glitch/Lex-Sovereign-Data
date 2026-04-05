@@ -6,6 +6,28 @@
 <title>LexSearch Argentina — El Buscador Legal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Lora:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<script src="https://cdn.tailwindcss.com"></script>
+<script>
+  tailwind.config = {
+    theme: {
+      extend: {
+        colors: {
+          abyss: '#030b16',
+          bonewhite: '#f0ead6',
+          beige: '#f5f5dc',
+          goldchampagne: '#f7e7ce',
+          cardbg: 'rgba(9, 30, 53, 0.65)',
+        },
+        fontFamily: {
+          serif: ['Cormorant Garamond', 'serif'],
+          ui: ['DM Sans', 'sans-serif'],
+          lora: ['Lora', 'serif'],
+        }
+      }
+    }
+  }
+</script>
+<script src="https://unpkg.com/lucide@latest"></script>
 <style>
 /* ═══════════════════════════════════════════════════
    DESIGN TOKENS
@@ -18,11 +40,9 @@
   --deep:     #08182c;
   --mid:      #0c2038;
   --card:     #091e35;
-
-  --rim:      rgba(74,160,240,0.09);
-  --rim-md:   rgba(74,160,240,0.16);
-  --rim-hi:   rgba(74,160,240,0.32);
-
+  --rim:      rgba(247,231,206,0.09);
+  --rim-md:   rgba(247,231,206,0.16);
+  --rim-hi:   rgba(247,231,206,0.32);
   --sapp:     #1460b0;
   --cobalt:   #1e78d8;
   --sky:      #4aa8f4;
@@ -30,15 +50,15 @@
   --pale:     #c4dcf2;
   --muted:    #4e7090;
   --white:    #edf4fc;
-
   --gold:     #b88830;
   --gold2:    #cca044;
   --gold3:    #e0bc6a;
   --gold-p:   #f0d898;
-
   --green:    #22a86e;
   --amber:    #d89030;
-
+  --bonewhite: #f0ead6;
+  --beige:    #f5f5dc;
+  --goldc:    #f7e7ce;
   --serif:    'Cormorant Garamond', Georgia, serif;
   --ui:       'DM Sans', sans-serif;
   --lora:     'Lora', Georgia, serif;
@@ -46,7 +66,27 @@
 }
 
 html { scroll-behavior: smooth; }
-body { font-family: var(--ui); background: var(--ink); color: var(--white); overflow-x: hidden; min-height: 100vh; }
+body { font-family: var(--ui); background: var(--abyss); color: var(--bonewhite); overflow-x: hidden; min-height: 100vh; }
+
+/* Shimmer Border Animation */
+@keyframes shimmer-border {
+  0% { border-color: rgba(247, 231, 206, 0.1); }
+  50% { border-color: rgba(247, 231, 206, 0.3); }
+  100% { border-color: rgba(247, 231, 206, 0.1); }
+}
+
+.card-player {
+  background: var(--cardbg);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  transition: all 0.4s var(--spring);
+  animation: shimmer-border 4s infinite;
+}
+
+.card-player:hover {
+  transform: translateY(-4px);
+  border-color: rgba(247, 231, 206, 0.4);
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
 
 body::after {
   content: ''; position: fixed; inset: 0; z-index: 999; pointer-events: none;
@@ -55,7 +95,7 @@ body::after {
 
 ::-webkit-scrollbar { width: 2px; }
 ::-webkit-scrollbar-track { background: var(--abyss); }
-::-webkit-scrollbar-thumb { background: linear-gradient(var(--gold), var(--cobalt)); border-radius: 2px; }
+::-webkit-scrollbar-thumb { background: linear-gradient(var(--goldc), #080808); border-radius: 2px; }
 
 /* ═══════════════════════════════════════════════════
    NAV
@@ -65,43 +105,30 @@ body::after {
   height: 62px;
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 48px;
-  background: rgba(4,14,28,0.93);
+  background: rgba(3,11,22,0.93);
   backdrop-filter: blur(24px) saturate(160%);
-  border-bottom: 1px solid var(--rim);
-}
-.nav::before {
-  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
-  background: linear-gradient(90deg, transparent 0%, var(--gold) 30%, var(--gold3) 50%, var(--gold) 70%, transparent 100%);
-  opacity: 0.45;
+  border-bottom: 1px solid rgba(247,231,206,0.1);
 }
 
-.nav-brand { display: flex; align-items: baseline; gap: 1px; font-family: var(--serif); font-size: 1.5rem; font-weight: 500; color: var(--white); cursor: pointer; letter-spacing: 0.2px; text-decoration: none; user-select: none; }
-.nav-brand .ns {
-  background: linear-gradient(135deg, var(--gold2), var(--gold3), var(--gold-p));
-  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
-}
-.nav-brand sup { font-family: var(--ui); font-size: 0.52rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-left: 8px; align-self: flex-end; margin-bottom: 3px; -webkit-text-fill-color: var(--muted); }
+.nav-brand { display: flex; align-items: baseline; gap: 1px; font-family: var(--serif); font-size: 1.5rem; font-weight: 500; color: var(--bonewhite); cursor: pointer; letter-spacing: 0.2px; text-decoration: none; user-select: none; }
+.nav-brand .ns { color: var(--goldc); }
 
 .nav-center {
   position: absolute; left: 50%; transform: translateX(-50%);
   display: flex; align-items: center;
-  background: rgba(8,24,44,0.7); border: 1px solid var(--rim); border-radius: 100px; padding: 5px 6px; gap: 2px;
+  background: rgba(8,24,44,0.7); border: 1px solid rgba(255,255,255,0.05); border-radius: 100px; padding: 5px 6px; gap: 2px;
 }
 .ntab {
   display: flex; align-items: center; gap: 8px;
-  font-size: 0.76rem; font-weight: 400; letter-spacing: 0.2px; color: var(--muted);
+  font-size: 0.76rem; font-weight: 400; letter-spacing: 0.2px; color: var(--beige);
   padding: 7px 22px; border-radius: 100px; border: none; background: none;
   cursor: pointer; transition: color 0.3s var(--spring), background 0.3s var(--spring);
   white-space: nowrap; font-family: var(--ui);
 }
-.ntab-ic { font-size: 0.9rem; opacity: 0.5; transition: opacity 0.3s; }
-.ntab.on { color: var(--white); background: rgba(20,96,176,0.28); box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 0 0 1px rgba(74,168,240,0.18); }
-.ntab.on .ntab-ic { opacity: 1; }
-.ntab:not(.on):hover { color: var(--pale); background: rgba(74,160,240,0.06); }
-.nbadge { font-size: 0.58rem; letter-spacing: 1px; text-transform: uppercase; background: rgba(192,160,68,0.14); border: 1px solid rgba(192,160,68,0.28); color: var(--gold3); padding: 2px 8px; border-radius: 100px; }
+.ntab.on { color: var(--bonewhite); background: rgba(247,231,206,0.15); box-shadow: 0 0 0 1px rgba(247,231,206,0.2); }
 
-.nav-cta { font-family: var(--ui); font-size: 0.73rem; font-weight: 500; letter-spacing: 0.3px; color: var(--white); background: linear-gradient(135deg, var(--sapp), var(--cobalt)); border: none; cursor: pointer; padding: 8px 22px; border-radius: 100px; box-shadow: 0 4px 16px rgba(20,96,176,0.35); transition: box-shadow 0.25s, transform 0.2s; }
-.nav-cta:hover { box-shadow: 0 6px 24px rgba(20,96,176,0.55); transform: translateY(-1px); }
+.nav-cta { font-family: var(--ui); font-size: 0.73rem; font-weight: 500; letter-spacing: 0.3px; color: var(--abyss); background: var(--goldc); border: none; cursor: pointer; padding: 8px 22px; border-radius: 100px; transition: transform 0.2s; }
+.nav-cta:hover { transform: translateY(-1px); }
 
 /* ═══════════════════════════════════════════════════
    PAGE SYSTEM
@@ -118,7 +145,7 @@ body::after {
     radial-gradient(ellipse 100% 60% at 50% 0%, rgba(18,70,148,0.2) 0%, transparent 60%),
     radial-gradient(ellipse 50% 40% at 15% 60%, rgba(10,40,100,0.12) 0%, transparent 55%),
     radial-gradient(ellipse 50% 40% at 85% 60%, rgba(10,40,100,0.12) 0%, transparent 55%),
-    var(--ink);
+    var(--abyss);
 }
 
 .sbg { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
@@ -170,7 +197,7 @@ body::after {
 
 .hero-tagline {
   font-family: var(--lora); font-size: clamp(0.9rem,2vw,1.1rem); font-style: italic;
-  color: var(--muted); letter-spacing: 0.5px;
+  color: var(--beige); opacity: 0.8; letter-spacing: 0.5px;
   margin-bottom: 52px; animation: fadeUp 0.9s 0.13s var(--spring) both;
 }
 
@@ -178,20 +205,19 @@ body::after {
 .sbar-wrap { width:100%; max-width:700px; animation: fadeUp 0.9s 0.19s var(--spring) both; }
 .sbar {
   position: relative; display: flex; align-items: center;
-  background: rgba(8,22,40,0.85); border: 1px solid rgba(74,168,240,0.2); border-radius: 60px; overflow: hidden;
-  box-shadow: 0 0 0 0 rgba(74,168,240,0.1), 0 24px 64px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04);
+  background: rgba(8,22,40,0.85); border: 1px solid rgba(247,231,206,0.2); border-radius: 60px; overflow: hidden;
   transition: border-color 0.35s, box-shadow 0.35s;
 }
-.sbar:focus-within { border-color: rgba(74,168,240,0.45); box-shadow: 0 0 0 5px rgba(20,96,176,0.12), 0 24px 64px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.06); }
-.sbar-ico { padding: 0 18px 0 26px; flex-shrink: 0; color: var(--muted); font-size: 1.05rem; transition: color 0.3s; }
-.sbar:focus-within .sbar-ico { color: var(--sky); }
-.sbar input { flex: 1; background: none; border: none; outline: none; font-family: var(--ui); font-size: 0.97rem; font-weight: 300; color: var(--white); padding: 20px 0; letter-spacing: 0.1px; }
-.sbar input::placeholder { color: rgba(78,112,144,0.8); }
-.sbar-sep { width:1px; height:22px; background: var(--rim); flex-shrink: 0; }
-.sbar select { appearance: none; background: none; border: none; outline: none; font-family: var(--ui); font-size: 0.73rem; color: var(--muted); padding: 0 20px; cursor: pointer; letter-spacing: 0.3px; transition: color 0.2s; }
-.sbar select:hover { color: var(--pale); }
-.sbar select option { background: var(--deep); color: var(--white); }
-.sbar-btn { margin: 5px; flex-shrink: 0; display: flex; align-items: center; gap: 8px; font-family: var(--ui); font-size: 0.76rem; font-weight: 500; letter-spacing: 0.4px; color: var(--white); background: linear-gradient(135deg, var(--sapp) 0%, var(--cobalt) 100%); border: none; cursor: pointer; padding: 12px 28px; border-radius: 100px; box-shadow: 0 4px 20px rgba(20,96,176,0.45); transition: box-shadow 0.25s, transform 0.2s; }
+.sbar:focus-within { border-color: rgba(247,231,206,0.45); }
+.sbar-ico { padding: 0 18px 0 26px; flex-shrink: 0; color: var(--beige); opacity: 0.5; font-size: 1.05rem; transition: color 0.3s; }
+.sbar:focus-within .sbar-ico { color: var(--goldc); opacity: 1; }
+.sbar input { flex: 1; background: none; border: none; outline: none; font-family: var(--ui); font-size: 0.97rem; font-weight: 300; color: var(--bonewhite); padding: 20px 0; letter-spacing: 0.1px; }
+.sbar input::placeholder { color: var(--beige); opacity: 0.4; }
+.sbar-sep { width:1px; height:22px; background: rgba(255,255,255,0.1); flex-shrink: 0; }
+.sbar select { appearance: none; background: none; border: none; outline: none; font-family: var(--ui); font-size: 0.73rem; color: var(--beige); padding: 0 20px; cursor: pointer; letter-spacing: 0.3px; transition: color 0.2s; }
+.sbar select:hover { color: var(--bonewhite); }
+.sbar select option { background: var(--abyss); color: var(--bonewhite); }
+.sbar-btn { margin: 5px; flex-shrink: 0; display: flex; align-items: center; gap: 8px; font-family: var(--ui); font-size: 0.76rem; font-weight: 500; letter-spacing: 0.4px; color: var(--abyss); background: var(--goldc); border: none; cursor: pointer; padding: 12px 28px; border-radius: 100px; box-shadow: 0 4px 20px rgba(247,231,206,0.3); transition: box-shadow 0.25s, transform 0.2s; }
 .sbar-btn:hover { box-shadow: 0 8px 28px rgba(20,96,176,0.6); transform: translateY(-1px); }
 .sbar-btn:active { transform: translateY(0); }
 
@@ -455,123 +481,477 @@ body::after {
 
 <!-- ════ PAGE 2 — LEXPODCAST ════ -->
 <div class="page" id="pg-podcast">
-  <div class="pg-hdr reveal">
+  <div class="pg-hdr reveal px-12 pt-16 pb-8 max-w-7xl mx-auto flex flex-col md:flex-row md:items-end justify-between gap-6">
+    <div class="flex-1">
+      <div class="flex items-center gap-2 text-[10px] uppercase tracking-[0.2em] text-goldchampagne mb-4">
+        <span class="w-8 h-[1px] bg-goldchampagne/40"></span> Multiples Formatos
+      </div>
+      <h1 class="text-4xl md:text-6xl font-serif text-bonewhite">Lex<span class="italic text-goldchampagne">Multitrabajo</span></h1>
+      <p class="text-beige/70 text-sm md:text-base mt-4 max-w-xl leading-relaxed">
+        Modernización de contenidos multimedia. Clases de Derecho Administrativo y Contratos adaptadas para el estudio dinámico.
+      </p>
+    </div>
+    <div class="flex items-center gap-3 px-4 py-2 rounded-full border border-goldchampagne/20 bg-goldchampagne/5 text-goldchampagne text-xs font-medium">
+      <span class="inline-block w-2 h-2 rounded-full bg-goldchampagne animate-pulse"></span>
+      Sincronización PBC Activada
+    </div>
+  </div>
+
+  <div class="max-w-7xl mx-auto px-6 py-12">
+    <!-- SECCIÓN PODCASTS -->
+    <div class="mb-16">
+      <div class="flex items-center gap-4 mb-8">
+        <h2 class="text-3xl font-serif text-bonewhite">Lex<span class="italic text-goldchampagne">Podcasts</span></h2>
+        <div class="h-[1px] flex-1 bg-white/10"></div>
+        <span class="text-xs uppercase tracking-widest text-beige/50">10 Episodios</span>
+      </div>
+      
+      <div id="section-podcasts" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+        <!-- P1 -->
+        <div class="card-player rounded-xl p-5 flex flex-col gap-4 relative group" id="p1">
+          <div class="relative aspect-video rounded-lg overflow-hidden bg-white/5 flex items-center justify-center">
+             <i data-lucide="mic" class="w-10 h-10 text-goldchampagne/20 group-hover:text-goldchampagne/40 transition-colors"></i>
+          </div>
+          <div>
+            <span class="text-[10px] uppercase tracking-tighter text-goldchampagne font-bold">LexPodcast • E1</span>
+            <h3 class="text-bonewhite font-semibold leading-snug mt-1 h-12 overflow-hidden">Legalidad Exorbitante</h3>
+            <p class="text-beige text-[11px] mt-1">Episodio 1 (12/03/26)</p>
+          </div>
+          <div class="flex flex-wrap gap-2 mt-auto">
+            <span class="text-[9px] px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-beige">#Administrativo</span>
+          </div>
+          <div class="mt-2">
+            <div class="flex justify-between text-[9px] text-beige/50 mb-1">
+              <span id="time-p1">00:00</span>
+              <span id="dur-p1">--:--</span>
+            </div>
+            <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden relative">
+               <div id="bar-p1" class="h-full bg-goldchampagne w-0 transition-all duration-300"></div>
+            </div>
+          </div>
+          <button onclick="pA('https://res.cloudinary.com/dhdsklult/video/upload/v1773923327/Derecho_exorbitante_y_principio_de_legalidad_cll8wx.mp4','Legalidad Exorbitante','p1')" 
+                  class="absolute bottom-4 right-4 w-10 h-10 bg-goldchampagne rounded-full flex items-center justify-center text-abyss shadow-xl hover:scale-110 transition-transform active:scale-95">
+             <i data-lucide="play" class="w-5 h-5 fill-current"></i>
+          </button>
+        </div>
+
+        <!-- P2 -->
+        <div class="card-player rounded-xl p-5 flex flex-col gap-4 relative group" id="p2">
+          <div class="relative aspect-video rounded-lg overflow-hidden bg-white/5 flex items-center justify-center">
+             <i data-lucide="mic" class="w-10 h-10 text-goldchampagne/20 group-hover:text-goldchampagne/40 transition-colors"></i>
+          </div>
+          <div>
+            <span class="text-[10px] uppercase tracking-tighter text-goldchampagne font-bold">LexPodcast • E2</span>
+            <h3 class="text-bonewhite font-semibold leading-snug mt-1 h-12 overflow-hidden">Jerarquía y Decretos</h3>
+            <p class="text-beige text-[11px] mt-1">Episodio 2 (16/03/26)</p>
+          </div>
+          <div class="flex flex-wrap gap-2 mt-auto">
+            <span class="text-[9px] px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-beige">#Normativa</span>
+          </div>
+          <div class="mt-2">
+            <div class="flex justify-between text-[9px] text-beige/50 mb-1"><span id="time-p2">00:00</span><span id="dur-p2">--:--</span></div>
+            <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden"><div id="bar-p2" class="h-full bg-goldchampagne w-0 transition-all"></div></div>
+          </div>
+          <button onclick="pA('https://res.cloudinary.com/dhdsklult/video/upload/v1773923339/Jerarqu%C3%ADa_normativa_y_tipos_de_decretos_kttkgm.mp4','Jerarquía y Decretos','p2')" 
+                  class="absolute bottom-4 right-4 w-10 h-10 bg-goldchampagne rounded-full flex items-center justify-center text-abyss shadow-xl hover:scale-110 transition-transform">
+             <i data-lucide="play" class="w-5 h-5 fill-current"></i>
+          </button>
+        </div>
+
+        <!-- P3 -->
+        <div class="card-player rounded-xl p-5 flex flex-col gap-4 relative group" id="p3">
+          <div class="relative aspect-video rounded-lg overflow-hidden bg-white/5 flex items-center justify-center">
+             <i data-lucide="mic" class="w-10 h-10 text-goldchampagne/20 group-hover:text-goldchampagne/40 transition-colors"></i>
+          </div>
+          <div>
+            <span class="text-[10px] uppercase tracking-tighter text-goldchampagne font-bold">LexPodcast • E3</span>
+            <h3 class="text-bonewhite font-semibold leading-snug mt-1 h-12 overflow-hidden">Teoría del Órgano</h3>
+            <p class="text-beige text-[11px] mt-1">Episodio 3 (19/03/26)</p>
+          </div>
+          <div class="flex flex-wrap gap-2 mt-auto">
+            <span class="text-[9px] px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-beige">#Organizacion</span>
+          </div>
+          <div class="mt-2">
+            <div class="flex justify-between text-[9px] text-beige/50 mb-1"><span id="time-p3">00:00</span><span id="dur-p3">--:--</span></div>
+            <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden"><div id="bar-p3" class="h-full bg-goldchampagne w-0 transition-all"></div></div>
+          </div>
+          <button onclick="pA('https://res.cloudinary.com/dhdsklult/video/upload/v1774060302/Teor%C3%ADa_del_%C3%B3rgano_y_competencia_administrativa_eitrzd.mp4','Teoría del Órgano','p3')" 
+                  class="absolute bottom-4 right-4 w-10 h-10 bg-goldchampagne rounded-full flex items-center justify-center text-abyss shadow-xl hover:scale-110 transition-transform">
+             <i data-lucide="play" class="w-5 h-5 fill-current"></i>
+          </button>
+        </div>
+
+        <!-- P4 -->
+        <div class="card-player rounded-xl p-5 flex flex-col gap-4 relative group" id="p4">
+          <div class="relative aspect-video rounded-lg overflow-hidden bg-white/5 flex items-center justify-center">
+             <i data-lucide="mic" class="w-10 h-10 text-goldchampagne/20 group-hover:text-goldchampagne/40 transition-colors"></i>
+          </div>
+          <div>
+            <span class="text-[10px] uppercase tracking-tighter text-goldchampagne font-bold">LexPodcast • E4</span>
+            <h3 class="text-bonewhite font-semibold leading-snug mt-1 h-12 overflow-hidden">Acto Administrativo</h3>
+            <p class="text-beige text-[11px] mt-1">Episodio 4 (26/03/26)</p>
+          </div>
+          <div class="flex flex-wrap gap-2 mt-auto">
+            <span class="text-[9px] px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-beige">#Elementos</span>
+          </div>
+          <div class="mt-2">
+            <div class="flex justify-between text-[9px] text-beige/50 mb-1"><span id="time-p4">00:00</span><span id="dur-p4">--:--</span></div>
+            <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden"><div id="bar-p4" class="h-full bg-goldchampagne w-0 transition-all"></div></div>
+          </div>
+          <button onclick="pA('https://res.cloudinary.com/dhdsklult/video/upload/v1774838420/Elementos_del_Acto_Administrativo_y_Nulidades_m2z8v1.mp4','Acto Administrativo','p4')" 
+                  class="absolute bottom-4 right-4 w-10 h-10 bg-goldchampagne rounded-full flex items-center justify-center text-abyss shadow-xl hover:scale-110 transition-transform">
+             <i data-lucide="play" class="w-5 h-5 fill-current"></i>
+          </button>
+        </div>
+
+        <!-- P5 -->
+        <div class="card-player rounded-xl p-5 flex flex-col gap-4 relative group" id="p5">
+          <div class="relative aspect-video rounded-lg overflow-hidden bg-white/5 flex items-center justify-center">
+             <i data-lucide="mic" class="w-10 h-10 text-goldchampagne/20 group-hover:text-goldchampagne/40 transition-colors"></i>
+          </div>
+          <div>
+            <span class="text-[10px] uppercase tracking-tighter text-goldchampagne font-bold">LexPodcast • E5</span>
+            <h3 class="text-bonewhite font-semibold leading-snug mt-1 h-12 overflow-hidden">Procedimientos Nacionales</h3>
+            <p class="text-beige text-[11px] mt-1">Episodio 5 (30/03/26)</p>
+          </div>
+          <div class="flex flex-wrap gap-2 mt-auto">
+            <span class="text-[9px] px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-beige">#LNPA</span>
+          </div>
+          <div class="mt-2">
+            <div class="flex justify-between text-[9px] text-beige/50 mb-1"><span id="time-p5">00:00</span><span id="dur-p5">--:--</span></div>
+            <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden"><div id="bar-p5" class="h-full bg-goldchampagne w-0 transition-all"></div></div>
+          </div>
+          <button onclick="pA('https://res.cloudinary.com/dhdsklult/video/upload/v1774838430/Procedimientos_Administrativos_y_Recursos_Nacionales_p9x3k1.mp4','Procedimientos Nacionales','p5')" 
+                  class="absolute bottom-4 right-4 w-10 h-10 bg-goldchampagne rounded-full flex items-center justify-center text-abyss shadow-xl hover:scale-110 transition-transform">
+             <i data-lucide="play" class="w-5 h-5 fill-current"></i>
+          </button>
+        </div>
+
+        <!-- P6 -->
+        <div class="card-player rounded-xl p-5 flex flex-col gap-4 relative group" id="p6">
+          <div class="relative aspect-video rounded-lg overflow-hidden bg-white/5 flex items-center justify-center">
+             <i data-lucide="mic" class="w-10 h-10 text-goldchampagne/20 group-hover:text-goldchampagne/40 transition-colors"></i>
+          </div>
+          <div>
+            <span class="text-[10px] uppercase tracking-tighter text-goldchampagne font-bold">LexPodcast • E6</span>
+            <h3 class="text-bonewhite font-semibold leading-snug mt-1 h-12 overflow-hidden">Contratos: Concepto</h3>
+            <p class="text-beige text-[11px] mt-1">Episodio 6 (12/03/26)</p>
+          </div>
+          <div class="flex flex-wrap gap-2 mt-auto">
+            <span class="text-[9px] px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-beige">#CCyC</span>
+          </div>
+          <div class="mt-2">
+            <div class="flex justify-between text-[9px] text-beige/50 mb-1"><span id="time-p6">00:00</span><span id="dur-p6">--:--</span></div>
+            <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden"><div id="bar-p6" class="h-full bg-goldchampagne w-0 transition-all"></div></div>
+          </div>
+          <button onclick="pA('https://res.cloudinary.com/dhdsklult/video/upload/v1773923360/Anatom%C3%ADa_y_clasificaci%C3%B3n_de_los_contratos_k4dapl.mp4','Contratos: Concepto','p6')" 
+                  class="absolute bottom-4 right-4 w-10 h-10 bg-goldchampagne rounded-full flex items-center justify-center text-abyss shadow-xl hover:scale-110 transition-transform">
+             <i data-lucide="play" class="w-5 h-5 fill-current"></i>
+          </button>
+        </div>
+
+        <!-- P7 -->
+        <div class="card-player rounded-xl p-5 flex flex-col gap-4 relative group" id="p7">
+          <div class="relative aspect-video rounded-lg overflow-hidden bg-white/5 flex items-center justify-center">
+             <i data-lucide="mic" class="w-10 h-10 text-goldchampagne/20 group-hover:text-goldchampagne/40 transition-colors"></i>
+          </div>
+          <div>
+            <span class="text-[10px] uppercase tracking-tighter text-goldchampagne font-bold">LexPodcast • E7</span>
+            <h3 class="text-bonewhite font-semibold leading-snug mt-1 h-12 overflow-hidden">Clasificación Contratos</h3>
+            <p class="text-beige text-[11px] mt-1">Episodio 7 (16/03/26)</p>
+          </div>
+          <div class="flex flex-wrap gap-2 mt-auto">
+            <span class="text-[9px] px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-beige">#Formacion</span>
+          </div>
+          <div class="mt-2">
+            <div class="flex justify-between text-[9px] text-beige/50 mb-1"><span id="time-p7">00:00</span><span id="dur-p7">--:--</span></div>
+            <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden"><div id="bar-p7" class="h-full bg-goldchampagne w-0 transition-all"></div></div>
+          </div>
+          <button onclick="pA('https://res.cloudinary.com/dhdsklult/video/upload/v1773923370/Clasificaci%C3%B3n_de_contratos_y_claves_para_aprobar_dt8azq.mp4','Clasificación Contratos','p7')" 
+                  class="absolute bottom-4 right-4 w-10 h-10 bg-goldchampagne rounded-full flex items-center justify-center text-abyss shadow-xl hover:scale-110 transition-transform">
+             <i data-lucide="play" class="w-5 h-5 fill-current"></i>
+          </button>
+        </div>
+
+        <!-- P8 -->
+        <div class="card-player rounded-xl p-5 flex flex-col gap-4 relative group" id="p8">
+          <div class="relative aspect-video rounded-lg overflow-hidden bg-white/5 flex items-center justify-center">
+             <i data-lucide="mic" class="w-10 h-10 text-goldchampagne/20 group-hover:text-goldchampagne/40 transition-colors"></i>
+          </div>
+          <div>
+            <span class="text-[10px] uppercase tracking-tighter text-goldchampagne font-bold">LexPodcast • E8</span>
+            <h3 class="text-bonewhite font-semibold leading-snug mt-1 h-12 overflow-hidden">Consentimiento y Oferta</h3>
+            <p class="text-beige text-[11px] mt-1">Episodio 8 (19/03/26)</p>
+          </div>
+          <div class="flex flex-wrap gap-2 mt-auto">
+            <span class="text-[9px] px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-beige">#Voluntad</span>
+          </div>
+          <div class="mt-2">
+            <div class="flex justify-between text-[9px] text-beige/50 mb-1"><span id="time-p8">00:00</span><span id="dur-p8">--:--</span></div>
+            <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden"><div id="bar-p8" class="h-full bg-goldchampagne w-0 transition-all"></div></div>
+          </div>
+          <button onclick="pA('https://res.cloudinary.com/dhdsklult/video/upload/v1774060346/Consentimiento_silencio_y_requisitos_de_la_oferta_ajwwaz.mp4','Consentimiento y Oferta','p8')" 
+                  class="absolute bottom-4 right-4 w-10 h-10 bg-goldchampagne rounded-full flex items-center justify-center text-abyss shadow-xl hover:scale-110 transition-transform">
+             <i data-lucide="play" class="w-5 h-5 fill-current"></i>
+          </button>
+        </div>
+
+        <!-- P9 -->
+        <div class="card-player rounded-xl p-5 flex flex-col gap-4 relative group" id="p9">
+          <div class="relative aspect-video rounded-lg overflow-hidden bg-white/5 flex items-center justify-center">
+             <i data-lucide="mic" class="w-10 h-10 text-goldchampagne/20 group-hover:text-goldchampagne/40 transition-colors"></i>
+          </div>
+          <div>
+            <span class="text-[10px] uppercase tracking-tighter text-goldchampagne font-bold">LexPodcast • E9</span>
+            <h3 class="text-bonewhite font-semibold leading-snug mt-1 h-12 overflow-hidden">Objeto y Causa</h3>
+            <p class="text-beige text-[11px] mt-1">Episodio 9 (26/03/26)</p>
+          </div>
+          <div class="flex flex-wrap gap-2 mt-auto">
+            <span class="text-[9px] px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-beige">#Estructura</span>
+          </div>
+          <div class="mt-2">
+            <div class="flex justify-between text-[9px] text-beige/50 mb-1"><span id="time-p9">00:00</span><span id="dur-p9">--:--</span></div>
+            <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden"><div id="bar-p9" class="h-full bg-goldchampagne w-0 transition-all"></div></div>
+          </div>
+          <button onclick="pA('https://res.cloudinary.com/dhdsklult/video/upload/v1774838400/Objeto_Causa_y_Forma_en_el_CCyC_k9x2w8.mp4','Objeto y Causa','p9')" 
+                  class="absolute bottom-4 right-4 w-10 h-10 bg-goldchampagne rounded-full flex items-center justify-center text-abyss shadow-xl hover:scale-110 transition-transform">
+             <i data-lucide="play" class="w-5 h-5 fill-current"></i>
+          </button>
+        </div>
+
+        <!-- P10 -->
+        <div class="card-player rounded-xl p-5 flex flex-col gap-4 relative group" id="p10">
+          <div class="relative aspect-video rounded-lg overflow-hidden bg-white/5 flex items-center justify-center">
+             <i data-lucide="mic" class="w-10 h-10 text-goldchampagne/20 group-hover:text-goldchampagne/40 transition-colors"></i>
+          </div>
+          <div>
+            <span class="text-[10px] uppercase tracking-tighter text-goldchampagne font-bold">LexPodcast • E10</span>
+            <h3 class="text-bonewhite font-semibold leading-snug mt-1 h-12 overflow-hidden">Prueba y Efectos</h3>
+            <p class="text-beige text-[11px] mt-1">Episodio 10 (30/03/26)</p>
+          </div>
+          <div class="flex flex-wrap gap-2 mt-auto">
+            <span class="text-[9px] px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-beige">#Prueba</span>
+          </div>
+          <div class="mt-2">
+            <div class="flex justify-between text-[9px] text-beige/50 mb-1"><span id="time-p10">00:00</span><span id="dur-p10">--:--</span></div>
+            <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden"><div id="bar-p10" class="h-full bg-goldchampagne w-0 transition-all"></div></div>
+          </div>
+          <button onclick="pA('https://res.cloudinary.com/dhdsklult/video/upload/v1774838410/Prueba_y_Efectos_de_los_Contratos_l4q9z1.mp4','Prueba y Efectos','p10')" 
+                  class="absolute bottom-4 right-4 w-10 h-10 bg-goldchampagne rounded-full flex items-center justify-center text-abyss shadow-xl hover:scale-110 transition-transform">
+             <i data-lucide="play" class="w-5 h-5 fill-current"></i>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- SECCIÓN CLASES -->
     <div>
-      <div class="pg-eye"><span></span> Parte de LexSearch</div>
-      <h1 class="pg-ttl">Lex<em>Podcast</em></h1>
-      <p class="pg-sub">Clases de Derecho Administrativo y Contratos en formato audio. Escuchalas en cualquier lugar y dominá los temas de cátedra.</p>
+      <div class="flex items-center gap-4 mb-8">
+        <h2 class="text-3xl font-serif text-bonewhite">Clases <span class="italic text-goldchampagne">Grabadas</span></h2>
+        <div class="h-[1px] flex-1 bg-white/10"></div>
+        <span class="text-xs uppercase tracking-widest text-beige/50">9 Sesiones</span>
+      </div>
+      
+      <div id="section-clases" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5 gap-6">
+        
+        <!-- C1 -->
+        <div class="card-player rounded-xl p-5 flex flex-col gap-4 relative group" id="c1">
+          <div class="relative aspect-video rounded-lg overflow-hidden bg-white/5 flex items-center justify-center">
+             <i data-lucide="presentation" class="w-10 h-10 text-goldchampagne/20 group-hover:text-goldchampagne/40 transition-colors"></i>
+          </div>
+          <div>
+            <span class="text-[10px] uppercase tracking-tighter text-goldchampagne font-bold">Clase Grabada • S1</span>
+            <h3 class="text-bonewhite font-semibold leading-snug mt-1 h-12 overflow-hidden">Jerarquía y Decretos (C)</h3>
+            <p class="text-beige text-[11px] mt-1">Sesión 1 (12/03/26)</p>
+          </div>
+          <div class="flex flex-wrap gap-2 mt-auto">
+            <span class="text-[9px] px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-beige">#Admin</span>
+          </div>
+          <div class="mt-2">
+            <div class="flex justify-between text-[9px] text-beige/50 mb-1"><span id="time-c1">00:00</span><span id="dur-c1">--:--</span></div>
+            <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden"><div id="bar-c1" class="h-full bg-goldchampagne w-0 transition-all"></div></div>
+          </div>
+          <button onclick="pA('https://res.cloudinary.com/dhdsklult/video/upload/v1773923339/Jerarqu%C3%ADa_normativa_y_tipos_de_decretos_kttkgm.mp4','Jerarquía Clase','c1')" 
+                  class="absolute bottom-4 right-4 w-10 h-10 bg-goldchampagne rounded-full flex items-center justify-center text-abyss shadow-xl hover:scale-110 transition-transform">
+             <i data-lucide="play" class="w-5 h-5 fill-current"></i>
+          </button>
+        </div>
+
+        <!-- C2 (Soon) -->
+        <div class="card-player rounded-xl p-5 flex flex-col gap-4 relative group opacity-60" id="c2">
+          <div class="relative aspect-video rounded-lg overflow-hidden bg-white/5 flex items-center justify-center">
+             <i data-lucide="clock" class="w-10 h-10 text-beige/10"></i>
+          </div>
+          <div>
+            <span class="text-[10px] uppercase tracking-tighter text-beige/40 font-bold">Clase Grabada • S2</span>
+            <h3 class="text-bonewhite/50 font-semibold leading-snug mt-1 h-12 overflow-hidden">Próxima Sesión</h3>
+            <p class="text-beige/40 text-[11px] mt-1">Sesión 2 (16/03/26)</p>
+          </div>
+          <div class="flex flex-wrap gap-2 mt-auto">
+             <span class="text-[9px] px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-beige/20">#Pendiente</span>
+          </div>
+          <div class="mt-2 h-1 w-full bg-white/5 rounded-full overflow-hidden"></div>
+        </div>
+
+        <!-- C3 -->
+        <div class="card-player rounded-xl p-5 flex flex-col gap-4 relative group" id="c3">
+          <div class="relative aspect-video rounded-lg overflow-hidden bg-white/5 flex items-center justify-center">
+             <i data-lucide="presentation" class="w-10 h-10 text-goldchampagne/20 group-hover:text-goldchampagne/40 transition-colors"></i>
+          </div>
+          <div>
+            <span class="text-[10px] uppercase tracking-tighter text-goldchampagne font-bold">Clase Grabada • S3</span>
+            <h3 class="text-bonewhite font-semibold leading-snug mt-1 h-12 overflow-hidden">Legalidad y Potestades</h3>
+            <p class="text-beige text-[11px] mt-1">Sesión 3 (19/03/26)</p>
+          </div>
+          <div class="flex flex-wrap gap-2 mt-auto"><span class="text-[9px] px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-beige">#Catedra</span></div>
+          <div class="mt-2">
+            <div class="flex justify-between text-[9px] text-beige/50 mb-1"><span id="time-c3">00:00</span><span id="dur-c3">--:--</span></div>
+            <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden"><div id="bar-c3" class="h-full bg-goldchampagne w-0 transition-all"></div></div>
+          </div>
+          <button onclick="pA('https://res.cloudinary.com/dhdsklult/video/upload/v1773923327/Derecho_exorbitante_y_principio_de_legalidad_cll8wx.mp4','Legalidad Clase','c3')" 
+                  class="absolute bottom-4 right-4 w-10 h-10 bg-goldchampagne rounded-full flex items-center justify-center text-abyss shadow-xl">
+             <i data-lucide="play" class="w-5 h-5 fill-current"></i>
+          </button>
+        </div>
+
+        <!-- C4 -->
+        <div class="card-player rounded-xl p-5 flex flex-col gap-4 relative group" id="c4">
+          <div class="relative aspect-video rounded-lg overflow-hidden bg-white/5 flex items-center justify-center">
+             <i data-lucide="presentation" class="w-10 h-10 text-goldchampagne/20 group-hover:text-goldchampagne/40 transition-colors"></i>
+          </div>
+          <div>
+            <span class="text-[10px] uppercase tracking-tighter text-goldchampagne font-bold">Clase Grabada • S4</span>
+            <h3 class="text-bonewhite font-semibold leading-snug mt-1 h-12 overflow-hidden">Acto Admin y Nulidades</h3>
+            <p class="text-beige text-[11px] mt-1">Sesión 4 (26/03/26)</p>
+          </div>
+          <div class="flex flex-wrap gap-2 mt-auto"><span class="text-[9px] px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-beige">#Admin</span></div>
+          <div class="mt-2">
+            <div class="flex justify-between text-[9px] text-beige/50 mb-1"><span id="time-c4">00:00</span><span id="dur-c4">--:--</span></div>
+            <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden"><div id="bar-c4" class="h-full bg-goldchampagne w-0 transition-all"></div></div>
+          </div>
+          <button onclick="pA('https://res.cloudinary.com/dhdsklult/video/upload/v1774838420/Elementos_del_Acto_Administrativo_y_Nulidades_m2z8v1.mp4','Acto Clase','c4')" 
+                  class="absolute bottom-4 right-4 w-10 h-10 bg-goldchampagne rounded-full flex items-center justify-center text-abyss shadow-xl">
+             <i data-lucide="play" class="w-5 h-5 fill-current"></i>
+          </button>
+        </div>
+
+        <!-- C5 -->
+        <div class="card-player rounded-xl p-5 flex flex-col gap-4 relative group" id="c5">
+          <div class="relative aspect-video rounded-lg overflow-hidden bg-white/5 flex items-center justify-center">
+             <i data-lucide="graduation-cap" class="w-10 h-10 text-goldchampagne/20 group-hover:text-goldchampagne/40 transition-colors"></i>
+          </div>
+          <div>
+            <span class="text-[10px] uppercase tracking-tighter text-goldchampagne font-bold">Clase Grabada • S5</span>
+            <h3 class="text-bonewhite font-semibold leading-snug mt-1 h-12 overflow-hidden">Consentimiento y Silencio</h3>
+            <p class="text-beige text-[11px] mt-1">Sesión 5 (12/03/26)</p>
+          </div>
+          <div class="flex flex-wrap gap-2 mt-auto"><span class="text-[9px] px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-beige">#Contratos</span></div>
+          <div class="mt-2">
+            <div class="flex justify-between text-[9px] text-beige/50 mb-1"><span id="time-c5">00:00</span><span id="dur-c5">--:--</span></div>
+            <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden"><div id="bar-c5" class="h-full bg-goldchampagne w-0 transition-all"></div></div>
+          </div>
+          <button onclick="pA('https://res.cloudinary.com/dhdsklult/video/upload/v1774060346/Consentimiento_silencio_y_requisitos_de_la_oferta_ajwwaz.mp4','Consentimiento Clase','c5')" 
+                  class="absolute bottom-4 right-4 w-10 h-10 bg-goldchampagne rounded-full flex items-center justify-center text-abyss shadow-xl">
+             <i data-lucide="play" class="w-5 h-5 fill-current"></i>
+          </button>
+        </div>
+
+        <!-- C6 -->
+        <div class="card-player rounded-xl p-5 flex flex-col gap-4 relative group" id="c6">
+          <div class="relative aspect-video rounded-lg overflow-hidden bg-white/5 flex items-center justify-center">
+             <i data-lucide="graduation-cap" class="w-10 h-10 text-goldchampagne/20 group-hover:text-goldchampagne/40 transition-colors"></i>
+          </div>
+          <div>
+            <span class="text-[10px] uppercase tracking-tighter text-goldchampagne font-bold">Clase Grabada • S6</span>
+            <h3 class="text-bonewhite font-semibold leading-snug mt-1 h-12 overflow-hidden">Objeto, Causa y Forma</h3>
+            <p class="text-beige text-[11px] mt-1">Sesión 6 (16/03/26)</p>
+          </div>
+          <div class="flex flex-wrap gap-2 mt-auto"><span class="text-[9px] px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-beige">#CCyC</span></div>
+          <div class="mt-2">
+            <div class="flex justify-between text-[9px] text-beige/50 mb-1"><span id="time-c6">00:00</span><span id="dur-c6">--:--</span></div>
+            <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden"><div id="bar-c6" class="h-full bg-goldchampagne w-0 transition-all"></div></div>
+          </div>
+          <button onclick="pA('https://res.cloudinary.com/dhdsklult/video/upload/v1774838400/Objeto_Causa_y_Forma_en_el_CCyC_k9x2w8.mp4','Objeto Clase','c6')" 
+                  class="absolute bottom-4 right-4 w-10 h-10 bg-goldchampagne rounded-full flex items-center justify-center text-abyss shadow-xl">
+             <i data-lucide="play" class="w-5 h-5 fill-current"></i>
+          </button>
+        </div>
+
+        <!-- C7 -->
+        <div class="card-player rounded-xl p-5 flex flex-col gap-4 relative group" id="c7">
+          <div class="relative aspect-video rounded-lg overflow-hidden bg-white/5 flex items-center justify-center">
+             <i data-lucide="graduation-cap" class="w-10 h-10 text-goldchampagne/20 group-hover:text-goldchampagne/40 transition-colors"></i>
+          </div>
+          <div>
+            <span class="text-[10px] uppercase tracking-tighter text-goldchampagne font-bold">Clase Grabada • S7</span>
+            <h3 class="text-bonewhite font-semibold leading-snug mt-1 h-12 overflow-hidden">Clasificación y Claves</h3>
+            <p class="text-beige text-[11px] mt-1">Sesión 7 (19/03/26)</p>
+          </div>
+          <div class="flex flex-wrap gap-2 mt-auto"><span class="text-[9px] px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-beige">#Repaso</span></div>
+          <div class="mt-2">
+            <div class="flex justify-between text-[9px] text-beige/50 mb-1"><span id="time-c7">00:00</span><span id="dur-c7">--:--</span></div>
+            <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden"><div id="bar-c7" class="h-full bg-goldchampagne w-0 transition-all"></div></div>
+          </div>
+          <button onclick="pA('https://res.cloudinary.com/dhdsklult/video/upload/v1773923370/Clasificaci%C3%B3n_de_contratos_y_claves_para_aprobar_dt8azq.mp4','Clasificacion Clase','c7')" 
+                  class="absolute bottom-4 right-4 w-10 h-10 bg-goldchampagne rounded-full flex items-center justify-center text-abyss shadow-xl">
+             <i data-lucide="play" class="w-5 h-5 fill-current"></i>
+          </button>
+        </div>
+
+        <!-- C8 -->
+        <div class="card-player rounded-xl p-5 flex flex-col gap-4 relative group" id="c8">
+          <div class="relative aspect-video rounded-lg overflow-hidden bg-white/5 flex items-center justify-center">
+             <i data-lucide="graduation-cap" class="w-10 h-10 text-goldchampagne/20 group-hover:text-goldchampagne/40 transition-colors"></i>
+          </div>
+          <div>
+            <span class="text-[10px] uppercase tracking-tighter text-goldchampagne font-bold">Clase Grabada • S8</span>
+            <h3 class="text-bonewhite font-semibold leading-snug mt-1 h-12 overflow-hidden">Prueba y Efectos (C)</h3>
+            <p class="text-beige text-[11px] mt-1">Sesión 8 (26/03/26)</p>
+          </div>
+          <div class="flex flex-wrap gap-2 mt-auto"><span class="text-[9px] px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-beige">#Examen</span></div>
+          <div class="mt-2">
+            <div class="flex justify-between text-[9px] text-beige/50 mb-1"><span id="time-c8">00:00</span><span id="dur-c8">--:--</span></div>
+            <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden"><div id="bar-c8" class="h-full bg-goldchampagne w-0 transition-all"></div></div>
+          </div>
+          <button onclick="pA('https://res.cloudinary.com/dhdsklult/video/upload/v1774838410/Prueba_y_Efectos_de_los_Contratos_l4q9z1.mp4','Prueba Clase','c8')" 
+                  class="absolute bottom-4 right-4 w-10 h-10 bg-goldchampagne rounded-full flex items-center justify-center text-abyss shadow-xl">
+             <i data-lucide="play" class="w-5 h-5 fill-current"></i>
+          </button>
+        </div>
+
+        <!-- C9 -->
+        <div class="card-player rounded-xl p-5 flex flex-col gap-4 relative group" id="c9">
+          <div class="relative aspect-video rounded-lg overflow-hidden bg-white/5 flex items-center justify-center">
+             <i data-lucide="graduation-cap" class="w-10 h-10 text-goldchampagne/20 group-hover:text-goldchampagne/40 transition-colors"></i>
+          </div>
+          <div>
+            <span class="text-[10px] uppercase tracking-tighter text-goldchampagne font-bold">Clase Grabada • S9</span>
+            <h3 class="text-bonewhite font-semibold leading-snug mt-1 h-12 overflow-hidden">Anatomía Contratos</h3>
+            <p class="text-beige text-[11px] mt-1">Sesión 9 (30/03/26)</p>
+          </div>
+          <div class="flex flex-wrap gap-2 mt-auto"><span class="text-[9px] px-2 py-0.5 rounded-full bg-white/5 border border-white/10 text-beige">#Repaso</span></div>
+          <div class="mt-2">
+            <div class="flex justify-between text-[9px] text-beige/50 mb-1"><span id="time-c9">00:00</span><span id="dur-c9">--:--</span></div>
+            <div class="h-1 w-full bg-white/5 rounded-full overflow-hidden"><div id="bar-c9" class="h-full bg-goldchampagne w-0 transition-all"></div></div>
+          </div>
+          <button onclick="pA('https://res.cloudinary.com/dhdsklult/video/upload/v1773923360/Anatom%C3%ADa_y_clasificaci%C3%B3n_de_los_contratos_k4dapl.mp4','Anatomia Clase','c9')" 
+                  class="absolute bottom-4 right-4 w-10 h-10 bg-goldchampagne rounded-full flex items-center justify-center text-abyss shadow-xl">
+             <i data-lucide="play" class="w-5 h-5 fill-current"></i>
+          </button>
+        </div>
+
+      </div>
     </div>
-    <div class="free-b">Acceso libre · Sin registro</div>
   </div>
 
-  <div class="subjs">
-    <div class="subj reveal">
-      <div class="subj-hd">
-        <div class="subj-ico">📋</div>
-        <div><div class="subj-nm">Derecho Administrativo</div><div class="subj-ds">Clases grabadas de cátedra</div></div>
-        <div class="subj-ct">5 unidades</div>
-      </div>
-      <div>
-        <div class="ep">
-          <div class="ep-n">12/03</div><div class="ep-ln"></div>
-          <div class="ep-if"><div class="ep-tt">Legalidad Exorbitante</div><div class="ep-mt">Sesión 1</div></div>
-          <div class="ep-ac">
-            <button class="pill pb" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1773923327/Derecho_exorbitante_y_principio_de_legalidad_cll8wx.mp4','Legalidad Exorbitante','🎙️ Podcast')">🎙️ Podcast</button>
-            <button class="pill pb" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1773923339/Jerarqu%C3%ADa_normativa_y_tipos_de_decretos_kttkgm.mp4','Legalidad Exorbitante','👨‍🏫 Clase')">👨‍🏫 Clase</button>
-          </div>
-        </div>
-        <div class="ep">
-          <div class="ep-n">16/03</div><div class="ep-ln"></div>
-          <div class="ep-if"><div class="ep-tt">Jerarquía y Decretos</div><div class="ep-mt">Sesión 2</div></div>
-          <div class="ep-ac">
-            <button class="pill pb" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1773923339/Jerarqu%C3%ADa_normativa_y_tipos_de_decretos_kttkgm.mp4','Jerarquía y Decretos','🎙️ Podcast')">🎙️ Podcast</button>
-            <button class="pill pb" onclick="null">👨‍🏫 Clase (Soon)</button>
-          </div>
-        </div>
-        <div class="ep">
-          <div class="ep-n">19/03</div><div class="ep-ln"></div>
-          <div class="ep-if"><div class="ep-tt">Teoría del Órgano</div><div class="ep-mt">Sesión 3</div></div>
-          <div class="ep-ac">
-            <button class="pill pb" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1774060302/Teor%C3%ADa_del_%C3%B3rgano_y_competencia_administrativa_eitrzd.mp4','Teoría del Órgano','🎙️ Podcast')">🎙️ Podcast</button>
-            <button class="pill pb" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1773923327/Derecho_exorbitante_y_principio_de_legalidad_cll8wx.mp4','Teoría del Órgano','👨‍🏫 Clase')">👨‍🏫 Clase</button>
-          </div>
-        </div>
-        <div class="ep">
-          <div class="ep-n">26/03</div><div class="ep-ln"></div>
-          <div class="ep-if"><div class="ep-tt">Acto Administrativo</div><div class="ep-mt">Sesión 4</div></div>
-          <div class="ep-ac">
-            <button class="pill pb" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1774838420/Elementos_del_Acto_Administrativo_y_Nulidades_m2z8v1.mp4','Acto Administrativo','🎙️ Podcast')">🎙️ Podcast</button>
-            <button class="pill pb" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1774838420/Elementos_del_Acto_Administrativo_y_Nulidades_m2z8v1.mp4','Acto Administrativo','👨‍🏫 Clase')">👨‍🏫 Clase</button>
-          </div>
-        </div>
-        <div class="ep">
-          <div class="ep-n">30/03</div><div class="ep-ln"></div>
-          <div class="ep-if"><div class="ep-tt">Procedimientos Nacionales</div><div class="ep-mt">Sesión 5</div></div>
-          <div class="ep-ac">
-            <button class="pill pb" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1774838430/Procedimientos_Administrativos_y_Recursos_Nacionales_p9x3k1.mp4','Procedimientos Nacionales','🎙️ Podcast')">🎙️ Podcast</button>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <div class="subj reveal" data-d="1">
-      <div class="subj-hd">
-        <div class="subj-ico">📜</div>
-        <div><div class="subj-nm">Derecho de los Contratos</div><div class="subj-ds">Clases grabadas de cátedra</div></div>
-        <div class="subj-ct">5 unidades</div>
-      </div>
-      <div>
-        <div class="ep">
-          <div class="ep-n">12/03</div><div class="ep-ln"></div>
-          <div class="ep-if"><div class="ep-tt">Concepto y Naturaleza</div><div class="ep-mt">Sesión 1</div></div>
-          <div class="ep-ac">
-            <button class="pill pb" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1773923360/Anatom%C3%ADa_y_clasificaci%C3%B3n_de_los_contratos_k4dapl.mp4','Concepto y Naturaleza','🎙️ Podcast')">🎙️ Podcast</button>
-            <button class="pill pb" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1774060346/Consentimiento_silencio_y_requisitos_de_la_oferta_ajwwaz.mp4','Concepto y Naturaleza','👨‍🏫 Clase')">👨‍🏫 Clase</button>
-          </div>
-        </div>
-        <div class="ep">
-          <div class="ep-n">16/03</div><div class="ep-ln"></div>
-          <div class="ep-if"><div class="ep-tt">Clasificación General</div><div class="ep-mt">Sesión 2</div></div>
-          <div class="ep-ac">
-            <button class="pill pb" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1773923370/Clasificaci%C3%B3n_de_contratos_y_claves_para_aprobar_dt8azq.mp4','Clasificación General','🎙️ Podcast')">🎙️ Podcast</button>
-            <button class="pill pb" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1774838400/Objeto_Causa_y_Forma_en_el_CCyC_k9x2w8.mp4','Clasificación General','👨‍🏫 Clase')">👨‍🏫 Clase</button>
-          </div>
-        </div>
-        <div class="ep">
-          <div class="ep-n">19/03</div><div class="ep-ln"></div>
-          <div class="ep-if"><div class="ep-tt">Consentimiento y Oferta</div><div class="ep-mt">Sesión 3</div></div>
-          <div class="ep-ac">
-            <button class="pill pb" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1774060346/Consentimiento_silencio_y_requisitos_de_la_oferta_ajwwaz.mp4','Consentimiento y Oferta','🎙️ Podcast')">🎙️ Podcast</button>
-            <button class="pill pb" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1773923370/Clasificaci%C3%B3n_de_contratos_y_claves_para_aprobar_dt8azq.mp4','Consentimiento y Oferta','👨‍🏫 Clase')">👨‍🏫 Clase</button>
-          </div>
-        </div>
-        <div class="ep">
-          <div class="ep-n">26/03</div><div class="ep-ln"></div>
-          <div class="ep-if"><div class="ep-tt">Objeto y Causa (CCyC)</div><div class="ep-mt">Sesión 4</div></div>
-          <div class="ep-ac">
-            <button class="pill pb" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1774838400/Objeto_Causa_y_Forma_en_el_CCyC_k9x2w8.mp4','Objeto y Causa','🎙️ Podcast')">🎙️ Podcast</button>
-            <button class="pill pb" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1774838410/Prueba_y_Efectos_de_los_Contratos_l4q9z1.mp4','Objeto y Causa','👨‍🏫 Clase')">👨‍🏫 Clase</button>
-          </div>
-        </div>
-        <div class="ep">
-          <div class="ep-n">30/03</div><div class="ep-ln"></div>
-          <div class="ep-if"><div class="ep-tt">Prueba y Efectos</div><div class="ep-mt">Sesión 5</div></div>
-          <div class="ep-ac">
-            <button class="pill pb" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1774838410/Prueba_y_Efectos_de_los_Contratos_l4q9z1.mp4','Prueba y Efectos','🎙️ Podcast')">🎙️ Podcast</button>
-            <button class="pill pb" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1773923360/Anatom%C3%ADa_y_clasificaci%C3%B3n_de_los_contratos_k4dapl.mp4','Prueba y Efectos','👨‍🏫 Clase')">👨‍🏫 Clase</button>
-          </div>
-        </div>
-
-      </div>
-    </div>
-  </div>
-
-  <footer class="footer">
-    <div class="footer-in">
-      <div class="fbrand">Lex<span class="fs">Search</span> Argentina</div>
-      <nav class="fnav"><a onclick="go('search')">Buscador</a><a onclick="go('tools')">Herramientas</a></nav>
-      <div class="fcopy">© 2026 — Un proyecto de <em>Franklin Zaldaña</em></div>
+  <footer class="footer bg-abyss py-12 px-12 border-t border-white/5">
+    <div class="max-w-7xl mx-auto flex flex-col md:flex-row items-center justify-between gap-6">
+      <div class="font-serif text-2xl text-bonewhite">Lex<span class="text-goldchampagne italic">Search</span></div>
+      <nav class="flex gap-8">
+        <a onclick="go('search')" class="text-beige/50 hover:text-bonewhite cursor-pointer text-xs uppercase tracking-widest transition-colors">Buscador</a>
+        <a onclick="go('tools')" class="text-beige/50 hover:text-bonewhite cursor-pointer text-xs uppercase tracking-widest transition-colors">Herramientas</a>
+      </nav>
+      <div class="text-beige/40 text-[10px] uppercase tracking-widest">© 2026 LexSearch Argentina</div>
     </div>
   </footer>
 </div>
@@ -765,15 +1145,89 @@ function render(res,q){
 }
 
 
-/* ── Audio ── */
-function playAudio(url,name,cat){
-  if(!url||url.startsWith('LINK')){ alert('⚠️ Episodio sin audio cargado.\nReemplazá el link de Google Drive en el HTML.'); return; }
-  document.getElementById('apNm').textContent=name;
-  document.getElementById('apCt').textContent=cat;
-  const a=document.getElementById('apA'); a.src=url; a.play();
+lucide.createIcons();
+/* ── Audio Logic (pA) ── */
+let currentAudio = null;
+let progressInterval = null;
+let activeId = null;
+
+function pA(url, name, id) {
+  const audio = document.getElementById('apA');
+  const bar = document.getElementById('bar-' + id);
+  const timeEl = document.getElementById('time-' + id);
+  const durEl = document.getElementById('dur-' + id);
+
+  // If clicking same audio while playing, toggle pause
+  if (activeId === id) {
+    if (audio.paused) {
+      audio.play();
+      updateProgress(id);
+    } else {
+      audio.pause();
+      clearInterval(progressInterval);
+    }
+    return;
+  }
+
+  // New audio
+  if (currentAudio) {
+    stopAudio();
+  }
+
+  activeId = id;
+  audio.src = url;
+  document.getElementById('apNm').textContent = name;
+  document.getElementById('apCt').textContent = "LexSearch Podcast";
   document.getElementById('ap').classList.add('on');
+  
+  audio.play();
+  updateProgress(id);
+
+  audio.onloadedmetadata = () => {
+    durEl.textContent = formatTime(audio.duration);
+  };
+
+  audio.onended = () => {
+    stopAudio();
+  };
 }
-function stopAudio(){ document.getElementById('apA').pause(); document.getElementById('ap').classList.remove('on'); }
+
+function updateProgress(id) {
+  const audio = document.getElementById('apA');
+  const bar = document.getElementById('bar-' + id);
+  const timeEl = document.getElementById('time-' + id);
+  
+  clearInterval(progressInterval);
+  progressInterval = setInterval(() => {
+    if (audio.duration) {
+      const pct = (audio.currentTime / audio.duration) * 100;
+      if(bar) bar.style.width = pct + '%';
+      if(timeEl) timeEl.textContent = formatTime(audio.currentTime);
+    }
+  }, 500);
+}
+
+function stopAudio() {
+  const audio = document.getElementById('apA');
+  audio.pause();
+  clearInterval(progressInterval);
+  
+  // Reset previous active progress bar if exists
+  if (activeId) {
+    const bar = document.getElementById('bar-' + activeId);
+    const timeEl = document.getElementById('time-' + activeId);
+    // if(bar) bar.style.width = '0%'; // Keep progress for visual or reset? Resetting for now.
+  }
+  
+  document.getElementById('ap').classList.remove('on');
+  activeId = null;
+}
+
+function formatTime(seconds) {
+  const m = Math.floor(seconds / 60);
+  const s = Math.floor(seconds % 60);
+  return (m < 10 ? '0' : '') + m + ':' + (s < 10 ? '0' : '') + s;
+}
 
 /* ── Scroll reveal ── */
 const rio=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');rio.unobserve(e.target);}});},{threshold:0.07});
