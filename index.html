@@ -118,30 +118,34 @@ body::after {
 /* Search Results UI */
 /* Search Results UI */
 /* Search Results UI */
-/* RESTRUCTURA DOM Y BUSCADOR PROFESIONAL */
-#lex-search-engine { display: block; width: 100%; }
+/* UI TERMINAL PROFESIONAL (50px High) */
+#lex-search-engine { display: block; width: 100%; margin-top: 40px; }
 .minimal-wrapper {
-  width: 95% !important; max-width: 1400px !important; height: 65px !important;
-  margin: 2rem auto !important; display: flex !important;
+  width: 95% !important; max-width: 1400px !important; height: 50px !important;
+  margin: 0 auto !important; display: flex !important;
   background: #000 !important; border: 1px solid #f7e7ce !important;
-  border-radius: 12px; align-items: center; position: relative;
-  box-shadow: 0 30px 90px rgba(0,0,0,0.9);
+  border-radius: 4px; align-items: center; position: relative;
+  overflow: hidden;
 }
 .minimal-input {
   flex: 1; background: none; border: none; outline: none;
-  padding-left: 2rem; color: #fff !important;
-  font-size: 1.25rem !important; font-family: 'DM Sans', sans-serif;
+  padding-left: 1.5rem; color: #fff !important;
+  font-size: 1.1rem !important; font-family: 'DM Sans', sans-serif;
   height: 100%;
 }
-.minimal-ic {
-  position: absolute; right: 25px;
-  color: #f7e7ce; font-size: 1.8rem; cursor: pointer;
-  transition: transform 0.3s;
+.minimal-btn {
+  height: 100%; border: none; background: #f7e7ce;
+  color: #000; font-weight: 900; font-size: 0.75rem;
+  letter-spacing: 2px; padding: 0 40px; cursor: pointer;
+  transition: opacity 0.3s;
 }
-.minimal-ic:hover { transform: scale(1.2); }
+.minimal-btn:hover { opacity: 0.8; }
+.spinner-box { display: none; padding: 20px; color: #f7e7ce; font-family: var(--ui); text-align: center; }
+.spinner-ic { width: 14px; height: 14px; border: 2px solid #f7e7ce; border-top-color: transparent; border-radius: 50%; display: inline-block; animation: spin 1s linear infinite; margin-right: 10px; }
+@keyframes spin { to { transform: rotate(360deg); } }
 
 #portal-resultados {
-  width: 100%; margin-top: 20px; min-height: 200px; display: block;
+  width: 100%; margin-top: 30px; min-height: 100px; display: block;
 }
 .rc {
   background: rgba(8,24,44,0.5);
@@ -241,12 +245,12 @@ body::after {
   <div class="sbg"></div>
   <div class="search-scene" id="lex-search-engine">
     <div class="hero-mark"><span class="hm-lex">Lex</span><span class="hm-srch">Search</span></div>
-    <p style="color:var(--muted); font-size:1.1rem; margin-bottom:40px;" class="reveal">El buscador soberano impulsado por IA</p>
     <div class="reveal" data-d="1">
       <div class="minimal-wrapper">
-        <input id="si" type="text" class="minimal-input" placeholder="Ley, Fallo o Concepto (ej: Silencio, Arizu, 19.549)" onkeydown="if(event.key==='Enter')executeTechnicalSearch()">
-        <div class="minimal-ic" onclick="executeTechnicalSearch()">⌕</div>
+        <input id="si" type="text" class="minimal-input" placeholder="Consultar 4 Pilares (Holdings, Leyes, Hernán, Tesauro)..." onkeydown="if(event.key==='Enter')executeTechnicalSearch()">
+        <button class="minimal-btn" onclick="executeTechnicalSearch()">SEARCH</button>
       </div>
+      <div id="search-spinner" class="spinner-box"><span class="spinner-ic"></span>Searching Sovereign Repositories...</div>
       <div id="portal-resultados"></div>
     </div>
   </div>
@@ -360,6 +364,7 @@ function go(page) {
   }, 400);
   cur = page;
   document.querySelectorAll('.ntab').forEach(el => el.classList.toggle('on', el.dataset.p === page));
+  renderAll(); // Lazy load call on page switch
 }
 
 function toggleConfig() { document.getElementById('modal-config').classList.toggle('on'); }
@@ -445,30 +450,45 @@ function linkToOfficialSource(q) {
 function executeTechnicalSearch() {
   const q = document.getElementById('si').value.trim(); if(!q) return;
   const portal = document.getElementById('portal-resultados');
-  portal.innerHTML = `<div style="padding:40px; color:#f7e7ce; font-style:italic; text-align:center;">Sincronizando con Repositorios Soberanos...</div>`;
+  const spinner = document.getElementById('search-spinner');
+  
+  portal.innerHTML = '';
+  spinner.style.display = 'block';
   
   setTimeout(async () => {
     let results = [];
     const lq = q.toLowerCase();
     
-    // Scan local HOLDINGS con fetch real
+    // 1. REPOSITORIO HERNÁN / TESAURO (Lógica Interna PBC)
+    if(lq.includes('arizu') || lq.includes('acto admin')) {
+      results.push({ type: 'Hernán Repo', title: 'Fallo Arizu (Teoría del Órgano)', snip: 'Corte Suprema: La responsabilidad del Estado es directa por actos de sus órganos. El funcionario compromete a la persona jurídica.', link: linkToOfficialSource('arizu') });
+    }
+    if(lq.includes('silencio')) {
+      results.push({ type: 'Tesauro Técnico', title: 'Silencio Administrativo (Pauper)', snip: 'Regla Gral Art. 10 LNPA: El silencio es denegatorio. Excepto casos de silencio positivo donde la ley lo exprese.', link: linkToOfficialSource('19.549') });
+    }
+
+    // 2. LEYES (Infoleg Auto-Sync)
+    const lawNum = q.match(/\d{2,5}/);
+    if(lawNum && results.length < 5) {
+      results.push({ type: 'Infoleg / Ley', title: `Ley Federal ${lawNum[0]}`, snip: `Sincronización dinámica detectada. Acceso directo al articulado vigente en el servidor nacional de Infoleg.`, link: linkToOfficialSource(lawNum[0]) });
+    }
+
+    // 3. 75 HOLDINGS (Fetch Local MD)
     const hMatches = HOLDINGS.filter(h => h.toLowerCase().includes(lq));
     for(let h of hMatches) {
-        if(results.length >= 8) break;
+        if(results.length >= 10) break;
         try {
             const resp = await fetch(`./holdings/${h}`);
             if(resp.ok) {
                 const text = await resp.text();
-                results.push({ 
-                  type: 'Holding Jurídico', title: h.replace(/_/g,' ').replace('.md',''), 
-                  snip: text.slice(0,800) + '...', link: linkToOfficialSource(h) 
-                });
+                results.push({ type: 'Holding MD', title: h.replace(/_/g,' ').replace('.md',''), snip: text.slice(0,700) + '...', link: linkToOfficialSource(h) });
             }
-        } catch(e) { console.error("Fetch local fallido:", h); }
+        } catch(e) {}
     }
 
+    spinner.style.display = 'none';
     if(results.length === 0) {
-      portal.innerHTML = `<div style="padding:40px; color:#f7e7ce; font-style:italic; text-align:center;">Local: 0 resultados. Despertando Inteligencia Académica (8-Skills)...</div>`;
+      portal.innerHTML = `<div style="padding:40px; color:#f7e7ce; font-style:italic; text-align:center;">--- DATA MISSING. ACTIVATING AI DATA TERMINAL ---</div>`;
       activateLexIA(q);
       return;
     }
@@ -476,14 +496,14 @@ function executeTechnicalSearch() {
     portal.innerHTML = results.map(r => `
       <div class="rc">
         <div class="rc-type">${r.type}</div>
-        <div class="rc-title">${r.title}</div>
-        <div class="rc-snip" style="white-space: pre-wrap;">${r.snip}</div>
+        <div class="rc-title" style="color:#f7e7ce;">${r.title}</div>
+        <div class="rc-snip" style="white-space: pre-wrap; font-size: 0.9rem;">${r.snip}</div>
         <div style="margin-top:20px;">
-          ${r.link ? `<a href="${r.link}" target="_blank" class="rc-link">🌐 VER EN FUENTE OFICIAL</a>` : ''}
+          ${r.link ? `<a href="${r.link}" target="_blank" class="rc-link" style="border: 1px solid #f7e7ce; padding: 8px 15px; border-radius: 4px;">🌐 VER EN FUENTE OFICIAL</a>` : ''}
         </div>
       </div>
     `).join('');
-  }, 100); 
+  }, 400); 
 }
 
 const SKILLS_BASE = `ACTUÁ COMO PROFESOR ADJUNTO DE LAS CÁTEDRAS BORDA/CORVALÁN (UBA).
@@ -493,26 +513,33 @@ MÉTODO DE ENSEÑANZA (SKILLS):
 3. SOVEREIGN-ARCHIVE: Usa un tono académico profundo, soberano y de excelencia.
 4. RAZONAMIENTO: Explica las implicancias prácticas para el examen.`;
 
-const SOVEREIGN_SKILLS_BASE = `ACTUÁ COMO PROFESOR ADJUNTO DE LAS CÁTEDRAS BORDA/CORVALÁN (UBA).
-LÓGICAS INTEGRADAS (8-SKILLS):
-1. HOLDING-LOGIC: Estructura obligatoria Hechos -> Razonamiento -> Holding.
-2. JURIS-SEARCH: Enlaces oficiales Infoleg/SAIJ.
-3. ARCHIVE-MINER: Minería de datos soberanos.
-4. TUTORÍA: Tono académico, tips de cátedra y enfoque en excelencia.
-RESPUESTA OBLIGATORIA: Concepto | Aplicación | Cátedra.`;
+const SOVEREIGN_SKILLS_BASE = `ACTUÁ COMO TERMINAL TÉCNICA DE DATOS JURÍDICOS (LEX-CORE).
+MODALIDAD: SOBERANÍA TOTAL. ANALIZAR TÉRMINO: [QUERY].
+REGLAS DE FORMATO: 
+- Usar bloques limpios y bullets (•). 
+- Sin Markdown de chat (no negritas de asteriscos). 
+- Separar secciones con ---.
+ESTRUCTURA DE RESPUESTA:
+--- CONCEPTOS JURÍDICOS ---
+• [Dato técnico 1]
+• [Dato técnico 2]
+--- APLICACIÓN PRÁCTICA ---
+• [Uso en realidad argentina]
+--- LÓGICA DE CÁTEDRA (BORDA/CORVALÁN) ---
+• [Enfoque crítico para examen]`;
 
 async function activateLexIA(directQuery = null) {
   const q = directQuery || document.getElementById('ia-query').value.trim(); if(!q) return;
   const portal = document.getElementById('portal-resultados') || document.getElementById('ia-result');
-  portal.innerHTML = `<div style="padding:20px; color:#f7e7ce; font-style:italic;">Profesor Adjunto (8-Skills Core) razonando sobre "${q}"...</div>`;
+  portal.innerHTML = `<div style="padding:20px; color:#f7e7ce; font-style:italic;">--- INICIANDO PROCESAMIENTO TERMINAL (8-SKILLS ENGINE) ---</div>`;
   
-  const prompt = `${SOVEREIGN_SKILLS_BASE}\n\nConsulta Académica: ${q}`;
+  const prompt = `${SOVEREIGN_SKILLS_BASE}\n\nTERMINAL_QUERY: ${q}`;
 
   try { 
     const res = await callSovereignAI(prompt);
-    portal.innerHTML = `<div class="rc" style="line-height:1.8; color:#fff;">${res}</div>`;
+    portal.innerHTML = `<div class="rc" style="line-height:1.8; color:#fff; font-family:monospace;">${res}</div>`;
   } catch(e) { 
-    portal.innerHTML = `<div style="color:var(--amber); padding:20px;">ERROR CRÍTICO (8-CORE): ${e.message}</div>`; 
+    portal.innerHTML = `<div style="color:var(--amber); padding:20px;">SYSTEM_ERROR (8-CORE): ${e.message}</div>`; 
   }
 }
 
@@ -701,25 +728,29 @@ function renderCard(item, type) {
   `;
 }
 
+let loaded = { podcast: false, tools: false };
 function renderAll() {
-  // Grids Podcast
-  const gpa = document.getElementById('grid-podcast-admin');
-  const gpc = document.getElementById('grid-podcast-contratos');
-  if(gpa) gpa.innerHTML = DATABASE.PODCASTS.ADMINISTRATIVO.map(i => renderCard(i, 'PODCAST')).join('');
-  if(gpc) gpc.innerHTML = DATABASE.PODCASTS.CONTRATOS.map(i => renderCard(i, 'PODCAST')).join('');
-  
-  // Grids Clases
-  const gca = document.getElementById('grid-clases-admin');
-  const gcc = document.getElementById('grid-clases-contratos');
-  if(gca) gca.innerHTML = DATABASE.CLASES.ADMINISTRATIVO.map(i => renderCard(i, 'CLASE')).join('');
-  if(gcc) gcc.innerHTML = DATABASE.CLASES.CONTRATOS.map(i => renderCard(i, 'CLASE')).join('');
-  
+  if (cur === 'search') return;
+  if (cur === 'podcast' && !loaded.podcast) {
+    const gpa = document.getElementById('grid-podcast-admin');
+    const gpc = document.getElementById('grid-podcast-contratos');
+    if(gpa) gpa.innerHTML = DATABASE.PODCASTS.ADMINISTRATIVO.map(i => renderCard(i, 'PODCAST')).join('');
+    if(gpc) gpc.innerHTML = DATABASE.PODCASTS.CONTRATOS.map(i => renderCard(i, 'PODCAST')).join('');
+    loaded.podcast = true;
+  }
+  if (cur === 'tools' && !loaded.tools) {
+    const gca = document.getElementById('grid-clases-admin');
+    const gcc = document.getElementById('grid-clases-contratos');
+    if(gca) gca.innerHTML = DATABASE.CLASES.ADMINISTRATIVO.map(i => renderCard(i, 'CLASE')).join('');
+    if(gcc) gcc.innerHTML = DATABASE.CLASES.CONTRATOS.map(i => renderCard(i, 'CLASE')).join('');
+    loaded.tools = true;
+  }
   initRev();
 }
 
 /* ── INIT ── */
 document.addEventListener('DOMContentLoaded', () => {
-  renderAll(); loadKeys(); initRev();
+  loadKeys(); initRev();
 });
 
 const rio = new IntersectionObserver(es => es.forEach(e => { 
