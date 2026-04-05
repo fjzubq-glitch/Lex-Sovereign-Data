@@ -118,36 +118,33 @@ body::after {
 /* Search Results UI */
 /* Search Results UI */
 /* Search Results UI */
-/* BUSCADOR MINIMALISTA (LÍNEA DE LUZ) */
+/* BUSCADOR LUXURY (TOTAL RECALL) */
 .minimal-wrapper {
-  width: 100%; max-width: 850px; margin: 0 auto;
-  background: var(--abyss);
-  border: 1px solid var(--rim-hi);
-  border-radius: 100px;
+  width: 100%; max-width: 90%; margin: 0 auto;
+  background: #000000;
+  border: 1px solid rgba(184,136,48,0.4);
+  border-radius: 12px;
   display: flex; align-items: center;
-  padding: 4px 6px;
-  box-shadow: 0 15px 45px rgba(0,0,0,0.4);
-  transition: all 0.4s var(--spring);
+  padding: 2px 10px;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.8);
+  transition: all 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 .minimal-wrapper:focus-within {
   border-color: var(--gold);
-  box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 20px rgba(184,136,48,0.15);
+  box-shadow: 0 0 30px rgba(184,136,48,0.2);
   transform: translateY(-2px);
 }
 .minimal-input {
   flex: 1; background: none; border: none; outline: none;
-  padding: 18px 32px; color: var(--white);
-  font-size: 1.25rem; font-family: var(--ui); /* DM Sans */
-  letter-spacing: 0.3px;
+  padding: 20px 24px; color: var(--white);
+  font-size: 1.3rem; font-family: var(--ui);
+  letter-spacing: 0.5px;
 }
-.minimal-btn {
-  background: linear-gradient(135deg, var(--gold), var(--gold2));
-  color: var(--abyss); border: none; border-radius: 100px;
-  padding: 12px 30px; font-size: 0.85rem; font-weight: 800;
-  cursor: pointer; transition: all 0.3s;
-  font-family: var(--ui); text-transform: uppercase; letter-spacing: 1px;
+.minimal-ic {
+  color: #f7e7ce; font-size: 1.6rem; margin-right: 15px; cursor: pointer;
+  transition: transform 0.3s;
 }
-.minimal-btn:hover { transform: scale(1.04); filter: brightness(1.1); }
+.minimal-ic:hover { transform: scale(1.1); color: var(--gold); }
 
 /* RESULTADOS (Cards Elite) */
 .rp { display: none; width: 100%; max-width: 900px; margin: 40px auto; text-align: left; }
@@ -251,8 +248,8 @@ body::after {
     <p style="color:var(--muted); font-size:1.1rem; margin-bottom:40px;" class="reveal">El buscador soberano impulsado por IA</p>
     <div class="reveal" data-d="1">
       <div class="minimal-wrapper">
-        <input id="si" type="text" class="minimal-input" placeholder="Ingresa Ley, Fallo o Concepto..." onkeydown="if(event.key==='Enter')executeTechnicalSearch()">
-        <button onclick="executeTechnicalSearch()" class="minimal-btn">Búsqueda Técnica</button>
+        <input id="si" type="text" class="minimal-input" placeholder="Ley, Fallo o Concepto (ej: Silencio, Arizu, 19.549)" onkeydown="if(event.key==='Enter')executeTechnicalSearch()">
+        <div class="minimal-ic" onclick="executeTechnicalSearch()">⌕</div>
       </div>
       <div id="rp" class="rp"></div>
     </div>
@@ -432,65 +429,70 @@ const HOLDINGS = [
 
 function linkToOfficialSource(q) {
   const lq = q.toLowerCase();
-  const ln = q.match(/ley\s+(\d+)/i) || q.match(/(\d+)\.?(\d+)/);
+  const ln = q.match(/(\d{2,5})(\.\d{3})?/) || q.match(/ley\s+(\d+)/i);
   if(lq.includes('19.549') || lq.includes('lnpa')) return 'http://servicios.infoleg.gob.ar/infolegInternet/anexos/20000-24999/20349/norma.htm';
   if(ln) {
-    const num = ln[1] || ln[0].replace('.','');
+    const num = ln[1];
     return `http://servicios.infoleg.gob.ar/infolegInternet/anexos/consulta_por_numero.do?numero=${num}`;
   }
-  if(lq.includes('fallo') || lq.includes('csjn') || lq.includes('arizu') || lq.includes('mendoza')) return `https://sj.csjn.gov.ar/sj/consulta/busquedaRapida.do`;
+  if(lq.includes('fallo') || lq.includes('csjn') || lq.includes('mendoza')) return `https://sj.csjn.gov.ar/sj/consulta/busquedaRapida.do`;
   return null;
 }
 
 function executeTechnicalSearch() {
   const q = document.getElementById('si').value.trim(); if(!q) return;
   const box = document.getElementById('rp'); box.style.display = 'block';
-  box.innerHTML = `<div style="padding:40px; color:var(--gold3); font-style:italic; text-align:center;">Accediendo a Repositorio Técnico (Cátedra UBA)...</div>`;
+  box.innerHTML = `<div style="padding:40px; color:var(--gold3); font-style:italic; text-align:center;">Sincronizando 4 Pilares (Hernán, Holdings, Tesauro, Infoleg)...</div>`;
   
   setTimeout(async () => {
     let results = [];
     const lq = q.toLowerCase();
     
-    // NÚCLEO TÉCNICO (Anclajes Hernán)
+    // 1. REPOSITORIO HERNÁN / TESAURO (Semántica Instantánea)
     if(lq.includes('silencio')) {
-      results.push({ type: 'Normativa Base', title: 'Ley 19.549 — Art. 10: Silencio Administrativo', snip: 'Principio de Negativa: El silencio administrativo se interpreta como rechazo, salvo disposición legal en contrario.', link: 'http://servicios.infoleg.gob.ar/infolegInternet/anexos/20000-24999/20349/norma.htm' });
+      results.push({ type: 'Tesauro Jurídico', title: 'Silencio Administrativo (Hernán CC)', snip: 'Art. 10 LNPA. El silencio vale como negativa salvo norma expresa. Agota la vía administrativa si es denegatoria.', link: linkToOfficialSource('19.549') });
     }
     if(lq.includes('arizu')) {
-      results.push({ type: 'Fallo Histórico', title: 'Fallo Arizu (1947) — Teoría del Órgano', snip: 'Responsabilidad Directa del Estado. CSJN establece que los órganos actúan como el Estado mismo.', link: 'https://sj.csjn.gov.ar/sj/consulta/busquedaRapida.do' });
+      results.push({ type: 'Hernán Repository', title: 'Fallo Arizu (1947) - Resumen Crítico', snip: 'Teoría del Órgano: Los funcionarios no representan al Estado, SON el Estado. Responsabilidad directa e inmediata.', link: linkToOfficialSource('fallo arizu') });
     }
 
-    // Indexación rápida en HOLDINGS con Fetch Real
+    // 2. 75 HOLDINGS (Fetch Real de .md)
     const hMatches = HOLDINGS.filter(h => h.toLowerCase().includes(lq));
     for(let h of hMatches) {
-        if(results.length >= 3) break; // Limitar a 3 holdings para no saturar
+        if(results.length >= 4) break;
         const title = h.replace(/_/g, ' ').replace('.md','');
-        let content = "Recuperando extracto oficial...";
+        let content = "Analizando Holding Soberano...";
         try {
-            const resp = await fetch(`./${h}`);
+            const resp = await fetch(`./holdings/${h}`);
             if(resp.ok) {
                 const text = await resp.text();
-                content = text.slice(0, 350) + "...";
+                content = text.slice(0, 450) + "...";
             }
         } catch(e) { console.warn("Fetch failed for", h); }
         
         results.push({
-          type: 'Holding Académico', title: title,
+          type: 'Holding Jurisprudencial', title: title,
           snip: content,
           link: linkToOfficialSource(title)
         });
     }
 
-    // FALLBACK INTELIGENTE (IA Automática)
+    // 3. GENERADOR DE INFOLEG (Leyes)
+    if(q.match(/ley\s+(\d+)/i) || q.match(/^(\d{2,5})$/)) {
+        const num = q.match(/(\d+)/)[0];
+        results.unshift({ type: 'Infoleg Direct', title: `Ley Nacional ${num}`, snip: `Acceso directo al texto actualizado en el portal oficial del Ministerio de Justicia.`, link: linkToOfficialSource(num) });
+    }
+
+    // FALLBACK: IA 8-SKILLS (Profesor Adjunto)
     if(results.length === 0) {
-      box.innerHTML = `<div style="padding:40px; color:var(--frost); font-style:italic; text-align:center; border:1px dashed var(--rim-hi); border-radius:12px;">Sin dato técnico local. Activando Cerebro Académico (Fallback)...</div>`;
+      box.innerHTML = `<div style="padding:40px; color:var(--gold3); font-style:italic; text-align:center; border:1px dashed var(--rim-hi); border-radius:12px;">Sin dato técnico local. Activando Profesor Adjunto (Fallback 8-Skills)...</div>`;
       setTimeout(() => {
-        // Buscamos el input de IA en el Aula Magna o lo llamamos directo
         if(typeof activateLexIA === 'function') {
            const iaInput = document.getElementById('ia-query');
            if(iaInput) iaInput.value = q;
            activateLexIA(q);
         }
-      }, 500);
+      }, 400);
       return;
     }
 
@@ -499,9 +501,9 @@ function executeTechnicalSearch() {
         <div class="rc-type">${r.type}</div>
         <div class="rc-title">${r.title}</div>
         <p class="rc-snip" style="white-space: pre-wrap;">${r.snip}</p>
-        <div style="margin-top:15px; display:flex; justify-content:space-between; align-items:center;">
+        <div style="margin-top:20px; display:flex; justify-content:space-between; align-items:center;">
           ${r.link ? `<a href="${r.link}" target="_blank" class="rc-link">🌐 CONSULTAR FUENTE OFICIAL</a>` : '<span></span>'}
-          <span style="font-size:0.6rem; color:var(--rim-hi); font-weight:800; letter-spacing:1px;">LEX-SEARCH CORE</span>
+          <span style="font-size:0.6rem; color:var(--rim-hi); font-weight:800; letter-spacing:1px; opacity:0.5;">LEX-SEARCH TOTAL RECALL</span>
         </div>
       </div>
     `).join('');
@@ -511,19 +513,23 @@ function executeTechnicalSearch() {
 async function activateLexIA(directQuery = null) {
   const q = directQuery || document.getElementById('ia-query').value.trim(); if(!q) return;
   const box = document.getElementById('ia-result'); box.style.display = 'block';
-  box.innerHTML = `<div style="padding:20px; color:var(--gold3); font-style:italic;">Profesor Adjunto UBA (Cerebro 8-Core) está razonando sobre "${q}"...</div>`;
+  box.innerHTML = `<div style="padding:20px; color:var(--gold3); font-style:italic;">Profesor Adjunto UBA (Cerebro 8-Skills) analizando "${q}"...</div>`;
   
   const prompt = `ACTUÁ COMO PROFESOR ADJUNTO UBA (Cátedras Borda/Corvalán). 
-    Analizá detalladamente: ${q}. 
-    ESTRUCTURA: 1. CONCEPTO BASE, 2. PRÁCTICA PROFESIONAL, 3. TIPS DE CÁTEDRA. 
-    ESTILO: HTML con Tailwind, usa #b88830 para términos jurídicos.`;
+    RAZONAMIENTO REQUERIDO (8-SKILLS):
+    1. CONCEPTO JURÍDICO: Definición técnica absoluta.
+    2. APLICACIÓN PRÁCTICA: Cómo se aplica en la realidad legal argentina.
+    3. RELACIÓN CÁTEDRA: Tips críticos para el examen y enfoques de Borda/Corvalán.
+    
+    TEMA: ${q}. 
+    ESTILO: HTML con Tailwind, usa #b88830 para términos clave. No uses placeholders.`;
 
   try { 
     const res = await callSovereignAI(prompt);
     box.innerHTML = `<div class="reveal" style="line-height:1.8;">${res}</div>`;
     initRev();
   } catch(e) { 
-    box.innerHTML = `<div style="color:var(--amber); padding:20px;">ERROR DE LABORATORIO: ${e.message}</div>`; 
+    box.innerHTML = `<div style="color:var(--amber); padding:20px;">ERROR DE LABORATORIO (8-SKILLS): ${e.message}</div>`; 
   }
 }
 
