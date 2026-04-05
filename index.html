@@ -141,6 +141,15 @@ body::after {
 .ap.on { display:flex; }
 .ap audio { flex:2; height:30px; accent-color:var(--cobalt); }
 
+/* Audio Item Original Style */
+.audio-item { display:flex; align-items:center; gap:16px; padding:15px 28px; border-bottom:1px solid var(--rim); transition:background 0.2s; cursor:pointer; position:relative; overflow:hidden; }
+.audio-item:hover { background:rgba(247, 231, 206, 0.05); }
+.audio-item .ep-n { font-family:var(--serif); font-size:1.1rem; font-weight:300; color:var(--muted); width:24px; text-align:right; flex-shrink:0; opacity:0.5; }
+.audio-item .ep-if { flex:1; min-width:0; }
+.audio-item .ep-tt { font-family:var(--serif); font-size:1.1rem; color:var(--white); margin-bottom:2px; }
+.audio-item .ep-mt { font-family:var(--ui); font-size:0.75rem; color:var(--muted); }
+.audio-item .bar-gold { position:absolute; bottom:0; left:0; height:2px; background:var(--gold); width:0%; transition:width 0.3s; box-shadow:0 0 10px var(--gold); }
+
 /* Shake & Config Icon */
 #btn-config { background:none; border:none; color:var(--muted); cursor:pointer; font-size:1.1rem; opacity:0.4; transition:all 0.3s; margin-right:15px; }
 #btn-config:hover { opacity:1; color:var(--gold3); transform:scale(1.1) rotate(15deg); }
@@ -196,8 +205,17 @@ body::after {
 <!-- PODCAST -->
 <div class="page" id="pg-podcast">
   <div style="max-width:1120px; margin:0 auto; padding:100px 52px;">
-    <h1 style="font-family:var(--serif); font-size:3.5rem; margin-bottom:40px;">Lex<em>Podcast</em></h1>
-    <div id="grid-audio"></div>
+    <h1 style="font-family:var(--serif); font-size:3.5rem; margin-bottom:60px; color:var(--gold3);">Multimedia <span style="font-style:italic">Soberana</span></h1>
+    
+    <div style="margin-bottom:60px;">
+      <h2 style="font-family:var(--serif); font-size:2rem; margin-bottom:25px; color:var(--white);">🎙️ Lex-Podcast: Resúmenes de Fallos</h2>
+      <div id="podcast-grid" class="subj reveal"></div>
+    </div>
+
+    <div>
+      <h2 style="font-family:var(--serif); font-size:2rem; margin-bottom:25px; color:var(--white);">🏛️ Aula Magna: Clases Grabadas</h2>
+      <div id="clases-grid" class="subj reveal" data-d="1"></div>
+    </div>
   </div>
 </div>
 
@@ -349,40 +367,74 @@ async function callSovereignAI(p) {
   }
 }
 
-/* ── MULTIMEDIA SHIELD ── */
+/* ── MULTIMEDIA SHIELD (10 Podcasts + 9 Clases) ── */
 const PODCASTS = [
-  {id:'p1', title:'Legalidad Exorbitante', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1773923327/Derecho_exorbitante_y_principio_de_legalidad_cll8wx.mp4'},
-  {id:'p2', title:'Jerarquía y Decretos', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1773923339/Jerarqu%C3%ADa_normativa_y_tipos_de_decretos_kttkgm.mp4'},
-  {id:'p3', title:'Teoría del Órgano', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1774060302/Teor%C3%ADa_del_%C3%B3rgano_y_competencia_administrativa_eitrzd.mp4'},
-  {id:'p4', title:'Acto Administrativo', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1774838420/Elementos_del_Acto_Administrativo_y_Nulidades_m2z8v1.mp4'}
+  {id:'p1', tt:'Legalidad Exorbitante', mt:'Podcast · Resumen Fallo', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1773923327/Derecho_exorbitante_y_principio_de_legalidad_cll8wx.mp4'},
+  {id:'p2', tt:'Jerarquía y Decretos', mt:'Podcast · Resumen Fallo', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1773923339/Jerarqu%C3%ADa_normativa_y_tipos_de_decretos_kttkgm.mp4'},
+  {id:'p3', tt:'Teoría del Órgano', mt:'Podcast · Resumen Fallo', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1774060302/Teor%C3%ADa_del_%C3%B3rgano_y_competencia_administrativa_eitrzd.mp4'},
+  {id:'p4', tt:'Acto Administrativo', mt:'Podcast · Resumen Fallo', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1774838420/Elementos_del_Acto_Administrativo_y_Nulidades_m2z8v1.mp4'},
+  {id:'p5', tt:'Episodio 05', mt:'Podcast · Enlace Reservado 1', url:'#'},
+  {id:'p6', tt:'Episodio 06', mt:'Podcast · Enlace Reservado 2', url:'#'},
+  {id:'p7', tt:'Episodio 07', mt:'Podcast · Enlace Reservado 3', url:'#'},
+  {id:'p8', tt:'Episodio 08', mt:'Podcast · Enlace Reservado 4', url:'#'},
+  {id:'p9', tt:'Episodio 09', mt:'Podcast · Enlace Reservado 5', url:'#'},
+  {id:'p10', tt:'Episodio 10', mt:'Podcast · Enlace Reservado 6', url:'#'}
 ];
 
-function renderGrid() {
-  const g = document.getElementById('grid-audio');
-  g.innerHTML = `<div class="subj"><div class="subj-hd">📖 10 LexPodcasts</div><div>${PODCASTS.map(p => `
-    <div class="ep" id="ep-${p.id}">
-      <div style="flex:1"><div class="ep-tt">${p.title}</div><div class="gold-line" id="bar-${p.id}" style="height:2px; background:var(--gold); width:0%; transition:width 0.3s;"></div></div>
-      <button class="pill pb" onclick="pA('${p.url}','${p.title}','${p.id}')">▶ Reproducir</button>
-    </div>`).join('')}</div></div>`;
+const CLASES = [
+  {id:'c1', tt:'Seminario de Jerarquía', mt:'Clase 1 · Cátedra UBA', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1773923339/Jerarqu%C3%ADa_normativa_y_tipos_de_decretos_kttkgm.mp4'},
+  {id:'c2', tt:'Fundamentos Administrativos', mt:'Clase 2 · Cátedra UBA', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1773923327/Derecho_exorbitante_y_principio_de_legalidad_cll8wx.mp4'},
+  {id:'c3', tt:'Anatomía del Acto', mt:'Clase 3 · Cátedra UBA', url:'https://res.cloudinary.com/dhdsklult/video/upload/v1774838420/Elementos_del_Acto_Administrativo_y_Nulidades_m2z8v1.mp4'},
+  {id:'c4', tt:'Clase 04 (2024)', mt:'UBA · Enlace Reservado 1', url:'#'},
+  {id:'c5', tt:'Clase 05 (2024)', mt:'UBA · Enlace Reservado 2', url:'#'},
+  {id:'c6', tt:'Clase 06 (2024)', mt:'UBA · Enlace Reservado 3', url:'#'},
+  {id:'c7', tt:'Clase 07 (2024)', mt:'UBA · Enlace Reservado 4', url:'#'},
+  {id:'c8', tt:'Clase 08 (2024)', mt:'UBA · Enlace Reservado 5', url:'#'},
+  {id:'c9', tt:'Clase 09 (2024)', mt:'UBA · Enlace Reservado 6', url:'#'}
+];
+
+function renderAudioGrids() {
+  const pg = document.getElementById('podcast-grid');
+  const cg = document.getElementById('clases-grid');
+  const renderList = (data, container) => {
+    container.innerHTML = data.map((x, i) => `
+      <div class="audio-item reveal" onclick="pA('${x.url}','${x.tt}','${x.id}')">
+        <div class="ep-n">${(i+1).toString().padStart(2,'0')}</div>
+        <div style="width:1px; height:30px; background:var(--rim); flex-shrink:0;"></div>
+        <div class="ep-if">
+          <div class="ep-tt">${x.tt}</div>
+          <div class="ep-mt">${x.mt}</div>
+        </div>
+        <div class="ep-ac">
+          <button class="pill pb">▶ Escuchar</button>
+          <div id="bar-${x.id}" class="bar-gold"></div>
+        </div>
+      </div>
+    `).join('');
+  };
+  if(pg) renderList(PODCASTS, pg);
+  if(cg) renderList(CLASES, cg);
+  initRev();
 }
 
 let curId = null; let pInt = null;
 function pA(url, tit, id) {
+  if(!url || url==='#') { alert("Audio reservado en red soberana."); return; }
   const a = document.getElementById('apA');
   if(curId === id) { if(a.paused) a.play(); else a.pause(); return; }
-  if(curId) { document.getElementById('bar-'+curId).style.width = '0%'; }
+  if(curId) { const ob = document.getElementById('bar-'+curId); if(ob) ob.style.width = '0%'; }
   curId = id; a.src = url; document.getElementById('apNm').textContent = tit;
   document.getElementById('ap').classList.add('on'); a.play();
   clearInterval(pInt);
   pInt = setInterval(() => {
-    if(a.duration) { document.getElementById('bar-'+id).style.width = (a.currentTime/a.duration*100)+'%'; }
+    if(a.duration) { const nb = document.getElementById('bar-'+id); if(nb) nb.style.width = (a.currentTime/a.duration*100)+'%'; }
   }, 500);
 }
 function stopAudio() { document.getElementById('apA').pause(); document.getElementById('ap').classList.remove('on'); }
 
 /* ── INIT ── */
 document.addEventListener('DOMContentLoaded', () => {
-  renderGrid(); loadKeys(); initRev();
+  renderAudioGrids(); loadKeys(); initRev();
 });
 const rio = new IntersectionObserver(es => es.forEach(e => { if(e.isIntersecting) { e.target.classList.add('vis'); rio.unobserve(e.target); } }), {threshold:0.1});
 function initRev() { document.querySelectorAll('.reveal').forEach(el => rio.observe(el)); }
