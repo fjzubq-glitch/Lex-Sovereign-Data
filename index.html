@@ -116,29 +116,38 @@ body::after {
 @keyframes shimmer { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
 
 /* Search Results UI */
+/* Search Results UI */
+/* Search Results UI */
 .rp {
-  display: none; width: 100%; max-width: 700px; margin-top: 28px; text-align: left;
-.rc-snip { font-size:0.75rem; color:var(--muted); line-height:1.6; }
-.rc-type { font-size:0.55rem; letter-spacing:1px; text-transform:uppercase; color:var(--gold); margin-bottom:4px; font-weight:bold; }
-.rc-link { display:inline-block; margin-top:10px; font-size:0.6rem; color:var(--sky); text-decoration:none; border:1px solid var(--rim-hi); padding:4px 10px; border-radius:100px; transition:all 0.2s; }
-.rc-link:hover { background:var(--sapp); color:white; border-color:transparent; }
+  display: none; width: 100%; max-width: 950px; margin-top: 32px; text-align: left;
+  background: rgba(8,24,44,0.98); border: 1px solid var(--rim-hi); border-radius: 24px; overflow: hidden;
+  backdrop-filter: blur(15px); box-shadow: 0 40px 100px rgba(0,0,0,0.65);
+  animation: panelIn 0.4s var(--spring) both;
+}
+.rc { display: block; padding: 28px 32px; border-bottom: 1px solid var(--rim); cursor: pointer; transition: all 0.3s; position: relative; }
+.rc:hover { background: rgba(20,60,120,0.2); }
+.rc-title { font-family:var(--lora); font-size:1.15rem; font-weight:500; color:var(--gold3); margin-bottom:10px; line-height:1.4; }
+.rc-snip { font-size:0.85rem; color:var(--muted); line-height:1.7; }
+.rc-type { font-size:0.65rem; letter-spacing:2px; text-transform:uppercase; color:var(--gold); margin-bottom:8px; font-weight:800; }
+.rc-link { display:inline-block; margin-top:14px; font-size:0.68rem; color:var(--sky); text-decoration:none; border:1px solid var(--rim-hi); padding:8px 18px; border-radius:100px; transition:all 0.4s var(--spring); font-weight:600; letter-spacing:0.5px; }
+.rc-link:hover { background:var(--sapp); color:white; border-color:transparent; transform: translateY(-2px); box-shadow: 0 5px 15px rgba(20,96,176,0.3); }
 
-/* GOLDEN BUTTONS */
+/* GOLDEN BUTTONS - LUXURY SOBERANO */
 .btn-gold { 
-  background: linear-gradient(135deg, var(--gold2), var(--gold3)); 
-  color: var(--abyss); border: none; padding: 12px 28px; border-radius: 100px; 
-  font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px;
-  transition: all 0.3s var(--spring); box-shadow: 0 8px 20px rgba(184, 136, 48, 0.2);
-  font-size: 0.85rem;
+  background: linear-gradient(135deg, var(--gold2), var(--gold-p)); 
+  color: var(--abyss); border: none; padding: 16px 40px; border-radius: 14px; 
+  font-weight: 800; cursor: pointer; display: flex; align-items: center; gap: 12px;
+  transition: all 0.4s var(--spring); box-shadow: 0 12px 30px rgba(184, 136, 48, 0.3);
+  font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1.5px;
 }
-.btn-gold:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(184, 136, 48, 0.4); filter: brightness(1.1); }
+.btn-gold:hover { transform: translateY(-4px) scale(1.03); box-shadow: 0 18px 45px rgba(184, 136, 48, 0.5); filter: contrast(1.15); }
 .btn-sapp { 
-  background: linear-gradient(135deg, var(--mid), var(--deep)); 
-  color: var(--white); border: 1px solid var(--rim-hi); padding: 12px 28px; border-radius: 100px; 
-  font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;
-  transition: all 0.3s var(--spring); font-size: 0.85rem;
+  background: rgba(8, 24, 44, 0.7); 
+  color: var(--gold3); border: 1px solid var(--rim-hi); padding: 16px 40px; border-radius: 14px; 
+  font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 12px;
+  transition: all 0.4s var(--spring); font-size: 0.95rem; text-transform: uppercase; letter-spacing: 1.5px;
 }
-.btn-sapp:hover { background: var(--mid); border-color: var(--gold); transform: translateY(-2px); }
+.btn-sapp:hover { background: var(--mid); border-color: var(--gold); transform: translateY(-4px); box-shadow: 0 10px 30px rgba(0,0,0,0.4); }
 
 /* LUXURY CARD V2 (Shadcn-Inspired) */
 .audio-card { 
@@ -224,11 +233,11 @@ body::after {
   <div class="search-scene">
     <div class="hero-mark"><span class="hm-lex">Lex</span><span class="hm-srch">Search</span></div>
     <p style="color:var(--muted); font-size:1.1rem; margin-bottom:40px;" class="reveal">El buscador soberano impulsado por IA</p>
-    <div style="width:100%; max-width:850px;" class="reveal" data-d="1">
-      <div style="background:rgba(8,22,40,0.85); border:1px solid var(--rim); border-radius:30px; overflow:hidden; padding:8px; margin-bottom:20px; display:flex;">
-        <input id="si" type="text" placeholder="¿Qué ley, fallo o concepto jurídico buscas?" style="flex:1; background:none; border:none; outline:none; padding:15px 25px; color:var(--white); font-size:1.1rem;" onkeydown="if(event.key==='Enter')executeLegalSearch()">
+    <div style="width:100%; max-width:960px;" class="reveal" data-d="1">
+      <div style="background:rgba(8,24,44,0.96); border:1px solid var(--rim-hi); border-radius:24px; overflow:hidden; padding:12px; margin-bottom:32px; display:flex; box-shadow: 0 25px 65px rgba(0,0,0,0.55);">
+        <input id="si" type="text" placeholder="Ingresa Ley, Fallo o Concepto (ej: Silencio, Objeto, Arizu)" style="flex:1; background:none; border:none; outline:none; padding:20px 32px; color:var(--white); font-size:1.35rem; font-family:var(--lora);" onkeydown="if(event.key==='Enter')executeLegalSearch()">
       </div>
-      <div style="display:flex; justify-content:center; gap:16px;">
+      <div style="display:flex; justify-content:center; gap:24px;">
         <button onclick="executeLegalSearch()" class="btn-gold">🔍 BUSCAR LEY / FALLO</button>
         <button onclick="activateStudyMode()" class="btn-sapp">🎓 MODO ESTUDIO AI</button>
       </div>
@@ -403,67 +412,86 @@ function generateOfficialLink(q) {
 function executeLegalSearch() {
   const q = document.getElementById('si').value.trim(); if(!q) return;
   const box = document.getElementById('rp'); box.style.display = 'block';
-  box.innerHTML = `<div style="padding:20px; color:var(--gold3); font-style:italic;">Escaneando Holdings y DB de Leyes Soberanas...</div>`;
+  box.innerHTML = `<div style="padding:40px; color:var(--gold3); font-style:italic; text-align:center; letter-spacing:1px;">Escaneando Bases Soberanas Académicas...</div>`;
   
   setTimeout(() => {
     let results = [];
+    const lq = q.toLowerCase();
     
-    // Prioridad Hernán: Silencio Administrativo
-    if(q.toLowerCase().includes('silencio') || q.toLowerCase().includes('administrativo')) {
+    // ANCLAJES DE ORO (Lógica Hernán de Prioridad)
+    if(lq.includes('silencio')) {
       results.push({
-        type: 'Ley Nacional (Prioridad)',
-        title: 'Ley 19.549 — Art. 10: Silencio Administrativo',
-        snip: 'El silencio o la ambigüedad de la Administración frente a pretensiones que requieran de ella un pronunciamiento concreto, se interpretarán como negativa. Solo por ley podrá atribuirse valor positivo al silencio.',
+        type: 'Ley Nacional (Prioridad)', title: 'Ley 19.549 — Art. 10: Silencio Administrativo',
+        snip: 'Respuesta negativa de la Administración por defecto. Solo por ley se admite el silencio positivo. Concepto neurálgico de la Cátedra Corvalán.',
+        link: 'http://servicios.infoleg.gob.ar/infolegInternet/anexos/20000-24999/20349/norma.htm'
+      });
+    }
+    if(lq.includes('arizu')) {
+      results.push({
+        type: 'Jurisprudencia Clave', title: 'Fallo Arizu (1947) — Teoría del Órgano',
+        snip: 'Consolidación de la responsabilidad del Estado. Los agentes no son terceros, son el Estado mismo. Doctrina fundamental.',
+        link: 'https://sj.csjn.gov.ar/sj/consulta/busquedaRapida.do'
+      });
+    }
+    if(lq.includes('objeto')) {
+      results.push({
+        type: 'Requisito Esencial', title: 'Acto Administrativo — Objeto (Art. 7 LNPA)',
+        snip: 'Debe ser lícito, cierto, física y jurídicamente posible. Vicio en el objeto conlleva nulidad absoluta.',
         link: 'http://servicios.infoleg.gob.ar/infolegInternet/anexos/20000-24999/20349/norma.htm'
       });
     }
 
-    // Match en DATA
-    const dataMatches = DATA.filter(r => r.title.toLowerCase().includes(q.toLowerCase()) || r.snip.toLowerCase().includes(q.toLowerCase()));
-    dataMatches.forEach(m => results.push({...m, link: generateOfficialLink(m.title)}));
-
-    // Match en HOLDINGS
-    const holdingMatches = HOLDINGS.filter(h => h.toLowerCase().includes(q.toLowerCase()));
-    holdingMatches.forEach(h => results.push({
-      type: 'Holding / Fallo',
-      title: h.replace(/_/g, ' ').replace('.md',''),
-      snip: 'Resumen técnico disponible en repositorio soberano. Analiza fundamentos de hecho y derecho aplicado.',
-      link: 'https://github.com/fjzubq-glitch/Lex-Sovereign-Data.'
-    }));
+    // Fuzzy y Match en HOLDINGS y DATA
+    const hMatches = HOLDINGS.filter(h => h.toLowerCase().includes(lq));
+    hMatches.forEach(h => {
+      const title = h.replace(/_/g, ' ').replace('.md','');
+      if(!results.find(r => r.title === title)) {
+        results.push({
+          type: 'Sovereign Holding', title: title,
+          snip: 'Análisis detallado de fundamentos y ratio decidendi disponible en repositorio de cátedra.',
+          link: 'https://github.com/fjzubq-glitch/Lex-Sovereign-Data.'
+        });
+      }
+    });
 
     if(results.length === 0) {
-      box.innerHTML = `<div style="padding:20px; color:var(--muted);">No hay coincidencias técnicas. Sugerencia: Use 🎓 Modo Estudio.</div>`;
+      box.innerHTML = `<div style="padding:40px; color:var(--muted); text-align:center;">Sin coincidencias técnicas exactas. <br>Se recomienda usar <b>🎓 MODO ESTUDIO</b> para análisis conceptual.</div>`;
       return;
     }
 
     box.innerHTML = results.map(r => `
       <div class="rc" onclick="openStudyMode('${r.title}: ${r.snip}')">
-        <div style="flex:1">
-          <div class="rc-type">${r.type}</div>
-          <div class="rc-title">${r.title}</div>
-          <div class="rc-snip">${r.snip}</div>
-          ${r.link ? `<a href="${r.link}" target="_blank" class="rc-link" onclick="event.stopPropagation()">🌐 VER EN FUENTE OFICIAL</a>` : ''}
+        <div class="rc-type">${r.type}</div>
+        <div class="rc-title">${r.title}</div>
+        <p class="rc-snip">${r.snip}</p>
+        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px;">
+          ${r.link ? `<a href="${r.link}" target="_blank" class="rc-link" onclick="event.stopPropagation()">🌐 FUENTE OFICIAL</a>` : '<span></span>'}
+          <span style="color:var(--gold); font-size:0.7rem; font-weight:800; letter-spacing:1.5px; opacity:0.8;">CÁTEDRA UBA 🎓</span>
         </div>
-        <div style="color:var(--gold); font-size:0.7rem; font-weight:bold;">MODO ESTUDIO ↗</div>
       </div>
     `).join('');
-  }, 300);
+  }, 450);
 }
 
 async function activateStudyMode() {
   const q = document.getElementById('si').value.trim(); if(!q) return;
   const box = document.getElementById('rp'); box.style.display = 'block';
-  box.innerHTML = `<div style="padding:20px; color:var(--sky); font-style:italic;">Invocando Razonamiento de Cátedra (Borda/Corvalán) para "${q}"...</div>`;
+  box.innerHTML = `<div style="padding:30px; color:var(--frost); font-style:italic; border:1px dashed var(--rim-hi); border-radius:12px;">Conectando con Profesor Adjunto (Cátedras Borda/Corvalán)... Razonando sobre "${q}"</div>`;
   openStudyMode(q);
 }
 
-function doSearch() { executeLegalSearch(); } // Backward compatibility
-
 async function openStudyMode(ctx) {
   const m = document.getElementById('modal-study'); const c = document.getElementById('study-content');
-  m.classList.add('on'); c.innerHTML = '<div style="color:var(--gold3); font-style:italic;">Invocando Tutor UBA (Comisiones Borda/Corvalán)...</div>';
-  const prompt = `SOS EL TUTOR EXPERTO UBA (Cátedras Borda/Corvalán). Analizá: ${ctx}. 
-    ENTREGA: 1. Resumen Simple. 2. Ejemplo Práctico UBA. 3. Tip de Examen. 4. Relación Jurídica. ESTILO: HTML con Tailwind.`;
+  m.classList.add('on'); c.innerHTML = '<div style="color:var(--gold3); font-style:italic;">Preparando material didáctico...</div>';
+  
+  const prompt = `ACTUÁ COMO PROFESOR ADJUNTO DE LAS CÁTEDRAS BORDA/CORVALÁN (UBA). 
+    Analizá detalladamente: ${ctx}. 
+    ESTRUCTURA OBLIGATORIA:
+    1. CONCEPTO BASE: Definición técnica y legal absoluta.
+    2. APLICACIÓN PRÁCTICA: Un ejemplo real del campo administrativo o civil.
+    3. RELACIÓN CON LA CÁTEDRA: Qué dice el titular (Dr. Borda o Dr. Corvalán) y tips para el examen.
+    ESTILO: HTML con Tailwind, resaltando términos en dorado (#b88830). Enfoque: Excelencia académica.`;
+
   try { c.innerHTML = await callSovereignAI(prompt); } catch(e) { c.innerHTML = `ERROR: ${e.message}`; }
 }
 
