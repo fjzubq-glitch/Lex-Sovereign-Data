@@ -431,13 +431,13 @@ const HOLDINGS = [
 function linkToOfficialSource(q) {
   if (!q) return null;
   const lq = q.toLowerCase();
-  const infolegMap = { 
-    '19549': '20349', '19.549': '20349', 
-    '24240': '29457', '24.240': '29457',
-    '17091': '26639', '17.091': '26639',
-    '11672': '21743', '11.672': '21743'
-  };
-  const ln = q.match(/(?:ley|norma)?\s?(\d{2,5}(?:\.\d{3})?)/i) || q.match(/(\d{2,5})(\.\d{3})?/) || q.match(/ley\s+(\d+)/i);
+  
+  // Mapeo de siglas y IDs críticos
+  const acronyms = { 'cn': 'Constitución Nacional', 'ccycn': 'Código Civil y Comercial', 'lnpa': '19.549' };
+  const infolegMap = { '19549': '20349', '19.549': '20349', '24240': '29457', '21743': '11672' };
+  
+  const query = acronyms[lq] || q;
+  const ln = query.match(/(?:ley|norma)?\s?(\d{2,5}(?:\.\d{3})?)/i) || query.match(/(\d{2,5})(\.\d{3})?/) || query.match(/ley\s+(\d+)/i);
   
   if (ln) {
     const num = ln[1].replace('.','');
@@ -445,7 +445,7 @@ function linkToOfficialSource(q) {
     const nId = parseInt(id);
     if (isNaN(nId)) return null;
     const base = Math.floor(nId / 5000) * 5000;
-    const range = `${base}-${base + 4999}`;
+    const range = base + "-" + (base + 4999);
     return `https://servicios.infoleg.gob.ar/infolegInternet/anexos/${range}/${id}/norma.htm`;
   }
   if (lq.includes('fallo') || lq.includes('csjn') || lq.includes('arizu')) return `https://sj.csjn.gov.ar/sj/consulta/busquedaRapida.do`;
@@ -462,6 +462,10 @@ async function executeTechnicalSearch() {
   let results = [];
   const lq = q.toLowerCase();
   
+  // Mapper de siglas para búsqueda fuzzy extendida
+  const fuzzyMap = { 'cn': 'constitucion', 'ccycn': 'civil', 'lnpa': '19.549' };
+  const extendedLq = fuzzyMap[lq] || lq;
+
   // 1. REPOSITORIO HERNÁN / PRIORIDAD TÉCNICA
   if(lq.includes('arizu') || lq.includes('órgano') || lq.includes('organo')) {
     results.push({ 
@@ -473,7 +477,7 @@ async function executeTechnicalSearch() {
   }
 
   // 2. TESAURO JURÍDICO
-  if(lq.includes('silencio') || lq.includes('voluntad')) {
+  if(lq.includes('silencio') || lq.includes('voluntad') || lq.includes('lnpa')) {
     results.push({ 
       type: 'Tesauro Jurídico', 
       title: 'SILENCIO ADMINISTRATIVO (ART. 10 LNPA)', 
@@ -494,7 +498,7 @@ async function executeTechnicalSearch() {
   }
 
   // 4. 75 HOLDINGS (Fuzzy Scan MD con includes)
-  const hMatches = HOLDINGS.filter(h => h.toLowerCase().includes(lq));
+  const hMatches = HOLDINGS.filter(h => h.toLowerCase().includes(lq) || h.toLowerCase().includes(extendedLq));
   for(let h of hMatches) {
       if(results.length >= 15) break;
       try {
@@ -518,7 +522,7 @@ async function executeTechnicalSearch() {
       <div class="rc" style="background:#111 !important; border:1px solid #f7e7ce !important; padding:20px; border-radius:4px; margin-bottom:20px;">
         <div class="rc-type" style="color:#f7e7ce; font-size:0.6rem; letter-spacing:2px; font-weight:800; margin-bottom:10px;">[DATOS SOBERANOS RECUPERADOS] | ${r.type}</div>
         <div class="rc-title" style="color:#fff; font-weight:900; font-size:1.4rem; margin-bottom:10px;">${r.title}</div>
-        <div class="rc-snip" style="white-space: pre-wrap; font-family:monospace; font-size:0.9rem; color:#fff; line-height:1.6;">${r.snip}</div>
+        <div class="rc-snip" style="white-space: pre-wrap; font-family:monospace; font-size:0.9rem; color:#fff; line-height:1.6; text-align: justify;">${r.snip}</div>
         <div style="margin-top:20px;">
           ${r.link ? `<a href="${r.link}" target="_blank" class="rc-link" style="border: 1px solid #f7e7ce; padding: 10px 20px; border-radius: 4px; font-size: 0.75rem; color:#f7e7ce; transition: background 0.3s;">🌐 VER EN FUENTE OFICIAL</a>` : ''}
         </div>
