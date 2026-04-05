@@ -431,8 +431,14 @@ const HOLDINGS = [
 function linkToOfficialSource(q) {
   if (!q) return null;
   const lq = q.toLowerCase();
-  const infolegMap = { '19549': '20349', '19.549': '20349', '24.240': '29457', '17.091': '26639' };
-  const ln = q.match(/(\d{2,5})(\.\d{3})?/) || q.match(/ley\s+(\d+)/i);
+  // Mapeo exhaustivo de IDs críticos de Infoleg
+  const infolegMap = { 
+    '19549': '20349', '19.549': '20349', 
+    '24240': '29457', '24.240': '29457',
+    '17091': '26639', '17.091': '26639',
+    '11672': '21743', '11.672': '21743'
+  };
+  const ln = q.match(/(?:ley|norma)?\s?(\d{2,5}(?:\.\d{3})?)/i) || q.match(/(\d{2,5})(\.\d{3})?/) || q.match(/ley\s+(\d+)/i);
   
   if (ln) {
     const num = ln[1].replace('.','');
@@ -443,90 +449,88 @@ function linkToOfficialSource(q) {
     const high = low + 4999;
     return `https://servicios.infoleg.gob.ar/infolegInternet/anexos/${low}-${high}/${id}/norma.htm`;
   }
-  if (lq.includes('fallo') || lq.includes('csjn')) return `https://sj.csjn.gov.ar/sj/consulta/busquedaRapida.do`;
+  if (lq.includes('fallo') || lq.includes('csjn') || lq.includes('arizu')) return `https://sj.csjn.gov.ar/sj/consulta/busquedaRapida.do`;
   return null;
 }
 
-function executeTechnicalSearch() {
+async function executeTechnicalSearch() {
   const q = document.getElementById('si').value.trim(); if(!q) return;
   const portal = document.getElementById('portal-resultados');
   const spinner = document.getElementById('search-spinner');
   
-  portal.innerHTML = '';
-  spinner.style.display = 'block';
+  portal.innerHTML = ''; spinner.style.display = 'block';
   
-  setTimeout(async () => {
-    let results = [];
-    const lq = q.toLowerCase();
-    
-    // 1. REPOSITORIO HERNÁN / PRIORIDAD TÉCNICA
-    if(lq.includes('arizu') || lq.includes('órgano') || lq.includes('organo')) {
-      results.push({ 
-        type: 'Repo Hernán', 
-        title: 'TEORÍA DEL ÓRGANO (FALLO ARIZU)', 
-        snip: '--- CONCEPTOS ---\n• El funcionario no es un representante, sino parte del órgano.\n• La voluntad del funcionario es la voluntad del Estado.\n--- APLICACIÓN ---\n• Responsabilidad objetiva y directa del Estado.\n--- CÁTEDRA ---\n• Punto vital en Administrativo I (Corvalán).',
-        link: linkToOfficialSource('arizu') 
-      });
-    }
+  let results = [];
+  const lq = q.toLowerCase();
+  
+  // 1. REPOSITORIO HERNÁN / PRIORIDAD TÉCNICA
+  if(lq.includes('arizu') || lq.includes('órgano') || lq.includes('organo')) {
+    results.push({ 
+      type: 'Repo Hernán', 
+      title: 'TEORÍA DEL ÓRGANO (FALLO ARIZU)', 
+      snip: '--- CONCEPTOS ---\n• El funcionario no es un representante, sino parte del órgano.\n• La voluntad del funcionario es la voluntad del Estado.\n--- APLICACIÓN ---\n• Responsabilidad objetiva y directa del Estado.\n--- CÁTEDRA ---\n• Punto vital en Administrativo I (Corvalán).',
+      link: linkToOfficialSource('arizu') 
+    });
+  }
 
-    // 2. TESAURO JURÍDICO
-    if(lq.includes('silencio') || lq.includes('voluntad')) {
-      results.push({ 
-        type: 'Tesauro Jurídico', 
-        title: 'SILENCIO ADMINISTRATIVO (ART. 10 LNPA)', 
-        snip: '--- CONCEPTOS ---\n• El silencio implica negativa por regla general.\n• Requiere vencimiento de plazos y pronto despacho.\n--- APLICACIÓN ---\n• Agotamiento de la vía administrativa.\n--- CÁTEDRA ---\n• Diferencia entre silencio positivo y negativo.',
-        link: linkToOfficialSource('19.549') 
-      });
-    }
+  // 2. TESAURO JURÍDICO
+  if(lq.includes('silencio') || lq.includes('voluntad')) {
+    results.push({ 
+      type: 'Tesauro Jurídico', 
+      title: 'SILENCIO ADMINISTRATIVO (ART. 10 LNPA)', 
+      snip: '--- CONCEPTOS ---\n• El silencio implica negativa por regla general.\n• Requiere vencimiento de plazos y pronto despacho.\n--- APLICACIÓN ---\n• Agotamiento de la vía administrativa.\n--- CÁTEDRA ---\n• Diferencia entre silencio positivo y negativo.',
+      link: linkToOfficialSource('19.549') 
+    });
+  }
 
-    // 3. LEYES (Infoleg Sincronizado)
-    const lawMatch = q.match(/(?:ley|norma)?\s?(\d{2,5}(?:\.\d{3})?)/i);
-    if(lawMatch) {
-      const num = lawMatch[1];
-      results.push({ 
-        type: 'Leyes / Infoleg', 
-        title: `LEY NACIONAL ${num}`, 
-        snip: `--- CONCEPTOS ---\n• Sincronización con base de datos de Infoleg.\n--- APLICACIÓN ---\n• Normativa vigente aplicable al caso.\n--- CÁTEDRA ---\n• Ver concordancias con el CCyCN.`,
-        link: linkToOfficialSource(num) 
-      });
-    }
+  // 3. LEYES (Infoleg Sincronizado)
+  const lawMatch = q.match(/(?:ley|norma)?\s?(\d{2,5}(?:\.\d{3})?)/i);
+  if(lawMatch) {
+    const num = lawMatch[1];
+    results.push({ 
+      type: 'Leyes / Infoleg', title: `LEY NACIONAL ${num}`, 
+      snip: `--- CONCEPTOS ---\n• Sincronización con base de datos de Infoleg.\n--- APLICACIÓN ---\n• Normativa vigente aplicable al caso.\n--- CÁTEDRA ---\n• Ver concordancias con el CCyCN.`,
+      link: linkToOfficialSource(num) 
+    });
+  }
 
-    // 4. 75 HOLDINGS (Fetch MD)
-    const hMatches = HOLDINGS.filter(h => h.toLowerCase().includes(lq));
-    for(let h of hMatches) {
-        if(results.length >= 12) break;
-        try {
-            const resp = await fetch(`./holdings/${h}`);
-            if(resp.ok) {
-                const text = await resp.text();
-                results.push({ 
-                  type: 'Holding MD', 
-                  title: h.replace(/_/g,' ').replace('.md','').toUpperCase(), 
-                  snip: text.slice(0,600) + '...', 
-                  link: linkToOfficialSource(h) 
-                });
-            }
-        } catch(e) {}
-    }
+  // 4. 75 HOLDINGS (Fuzzy Scan MD)
+  const hMatches = HOLDINGS.filter(h => h.toLowerCase().includes(lq));
+  for(let h of hMatches) {
+      if(results.length >= 15) break;
+      try {
+          const resp = await fetch(`./holdings/${h}`);
+          if(resp.ok) {
+              const text = await resp.text();
+              results.push({ 
+                type: 'Holding MD', 
+                title: h.replace(/_/g,' ').replace('.md','').toUpperCase(), 
+                snip: text.slice(0,600) + '...', 
+                link: linkToOfficialSource(h) 
+              });
+          }
+      } catch(e) {}
+  }
 
-    spinner.style.display = 'none';
-    if(results.length === 0) {
-      portal.innerHTML = `<div style="padding:40px; color:#f7e7ce; font-family:monospace; text-align:center;">--- DATA TERMINAL: NULL SEARCH. ACTIVATING LEX-CORE... ---</div>`;
-      activateLexIA(q);
-      return;
-    }
-
-    portal.innerHTML = results.map(r => `
-      <div class="rc">
+  spinner.style.display = 'none';
+  if(results.length > 0) {
+    const prefix = `<div style='color:#f7e7ce; font-weight:800; font-size: 0.7rem; margin-bottom: 20px; border-bottom: 1px solid rgba(247,231,206,0.2); padding-bottom:10px;'>[DATOS SOBERANOS RECUPERADOS]</div>`;
+    portal.innerHTML = prefix + results.map(r => `
+      <div class="rc" style="background:#111 !important; border:1px solid #f7e7ce !important;">
         <div class="rc-type">${r.type}</div>
         <div class="rc-title" style="color:#f7e7ce; font-weight:900;">${r.title}</div>
         <div class="rc-snip" style="white-space: pre-wrap; font-family:monospace; font-size:0.85rem; color:#fff;">${r.snip}</div>
         <div style="margin-top:25px;">
-          ${r.link ? `<a href="${r.link}" target="_blank" class="rc-link" style="border: 1px solid #f7e7ce; padding: 10px 20px; border-radius: 2px; font-size: 0.7rem; letter-spacing:1px; background: rgba(247,231,206,0.05);">🌐 VER EN FUENTE OFICIAL</a>` : ''}
+          ${r.link ? `<a href="${r.link}" target="_blank" class="rc-link" style="border: 1px solid #f7e7ce; padding: 10px 20px; border-radius: 2px; font-size: 0.7rem; letter-spacing:1px; background: rgba(247,231,206,0.1);">🌐 VER EN FUENTE OFICIAL</a>` : ''}
         </div>
       </div>
     `).join('');
-  }, 400); 
+    // IA Complement mode
+    setTimeout(() => activateLexIA(q, true), 500);
+  } else {
+    // IA Primary mode
+    activateLexIA(q, false);
+  }
 }
 
 const SKILLS_BASE = `ACTUÁ COMO PROFESOR ADJUNTO DE LAS CÁTEDRAS BORDA/CORVALÁN (UBA).
@@ -551,18 +555,28 @@ ESTRUCTURA DE RESPUESTA:
 --- LÓGICA DE CÁTEDRA (BORDA/CORVALÁN) ---
 • [Enfoque crítico para examen]`;
 
-async function activateLexIA(directQuery = null) {
+async function activateLexIA(directQuery = null, isComp = false) {
   const q = directQuery || document.getElementById('ia-query').value.trim(); if(!q) return;
   const portal = document.getElementById('portal-resultados') || document.getElementById('ia-result');
-  portal.innerHTML = `<div style="padding:20px; color:#f7e7ce; font-style:italic;">--- INICIANDO PROCESAMIENTO TERMINAL (8-SKILLS ENGINE) ---</div>`;
   
-  const prompt = `${SOVEREIGN_SKILLS_BASE}\n\nTERMINAL_QUERY: ${q}`;
+  const statusDiv = document.createElement('div');
+  statusDiv.style.cssText = "padding:20px; color:#f7e7ce; font-style:italic;";
+  statusDiv.textContent = isComp ? "--- COMPLEMENTANDO CON ANÁLISIS DOCTRINARIO (8-SKILLS) ---" : "--- INICIANDO PROCESAMIENTO TERMINAL (8-SKILLS ENGINE) ---";
+  portal.appendChild(statusDiv);
+  
+  let pContext = isComp ? "COMPLEMENTA LOS DATOS TÉCNICOS RECUPERADOS CON ESTE ANÁLISIS: " : "ANÁLISIS TOTAL SOBERANO: ";
+  const prompt = `${SOVEREIGN_SKILLS_BASE}\n\n${pContext} ${q}`;
 
   try { 
     const res = await callSovereignAI(prompt);
-    portal.innerHTML = `<div class="rc" style="line-height:1.8; color:#fff; font-family:monospace;">${res}</div>`;
+    statusDiv.remove();
+    const iaRes = document.createElement('div');
+    iaRes.className = "rc";
+    iaRes.style.cssText = "line-height:1.8; color:#fff; font-family:monospace; background:#050505; border:1px solid #b88830; margin-top:10px;";
+    iaRes.innerHTML = `<div class="rc-type" style="color:#b88830;">AI DOCTRINAL COMPLEMENT</div>` + res;
+    portal.appendChild(iaRes);
   } catch(e) { 
-    portal.innerHTML = `<div style="color:var(--amber); padding:20px;">SYSTEM_ERROR (8-CORE): ${e.message}</div>`; 
+    statusDiv.innerHTML = `<div style="color:var(--amber); padding:10px;">SYSTEM_ERROR (8-CORE): ${e.message}</div>`; 
   }
 }
 
