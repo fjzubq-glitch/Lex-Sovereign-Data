@@ -431,7 +431,6 @@ const HOLDINGS = [
 function linkToOfficialSource(q) {
   if (!q) return null;
   const lq = q.toLowerCase();
-  // Mapeo exhaustivo de IDs críticos de Infoleg
   const infolegMap = { 
     '19549': '20349', '19.549': '20349', 
     '24240': '29457', '24.240': '29457',
@@ -445,9 +444,9 @@ function linkToOfficialSource(q) {
     const id = infolegMap[num] || num;
     const nId = parseInt(id);
     if (isNaN(nId)) return null;
-    const low = Math.floor(nId / 5000) * 5000;
-    const high = low + 4999;
-    return `https://servicios.infoleg.gob.ar/infolegInternet/anexos/${low}-${high}/${id}/norma.htm`;
+    const base = Math.floor(nId / 5000) * 5000;
+    const range = `${base}-${base + 4999}`;
+    return `https://servicios.infoleg.gob.ar/infolegInternet/anexos/${range}/${id}/norma.htm`;
   }
   if (lq.includes('fallo') || lq.includes('csjn') || lq.includes('arizu')) return `https://sj.csjn.gov.ar/sj/consulta/busquedaRapida.do`;
   return null;
@@ -494,7 +493,7 @@ async function executeTechnicalSearch() {
     });
   }
 
-  // 4. 75 HOLDINGS (Fuzzy Scan MD)
+  // 4. 75 HOLDINGS (Fuzzy Scan MD con includes)
   const hMatches = HOLDINGS.filter(h => h.toLowerCase().includes(lq));
   for(let h of hMatches) {
       if(results.length >= 15) break;
@@ -516,20 +515,20 @@ async function executeTechnicalSearch() {
   if(results.length > 0) {
     const prefix = `<div style='color:#f7e7ce; font-weight:800; font-size: 0.7rem; margin-bottom: 20px; border-bottom: 1px solid rgba(247,231,206,0.2); padding-bottom:10px;'>[DATOS SOBERANOS RECUPERADOS]</div>`;
     portal.innerHTML = prefix + results.map(r => `
-      <div class="rc" style="background:#111 !important; border:1px solid #f7e7ce !important;">
+      <div class="rc" style="background:#111 !important; border:1px solid #f7e7ce !important; padding:20px; margin-bottom:15px;">
         <div class="rc-type">${r.type}</div>
         <div class="rc-title" style="color:#f7e7ce; font-weight:900;">${r.title}</div>
         <div class="rc-snip" style="white-space: pre-wrap; font-family:monospace; font-size:0.85rem; color:#fff;">${r.snip}</div>
-        <div style="margin-top:25px;">
+        <div style="margin-top:20px;">
           ${r.link ? `<a href="${r.link}" target="_blank" class="rc-link" style="border: 1px solid #f7e7ce; padding: 10px 20px; border-radius: 2px; font-size: 0.7rem; letter-spacing:1px; background: rgba(247,231,206,0.1);">🌐 VER EN FUENTE OFICIAL</a>` : ''}
         </div>
       </div>
     `).join('');
-    // IA Complement mode
-    setTimeout(() => activateLexIA(q, true), 500);
+    // IA Complement mode (Waiting for local rendering)
+    await activateLexIA(q, true);
   } else {
     // IA Primary mode
-    activateLexIA(q, false);
+    await activateLexIA(q, false);
   }
 }
 
