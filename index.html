@@ -233,13 +233,12 @@ body::after {
   <div class="search-scene">
     <div class="hero-mark"><span class="hm-lex">Lex</span><span class="hm-srch">Search</span></div>
     <p style="color:var(--muted); font-size:1.1rem; margin-bottom:40px;" class="reveal">El buscador soberano impulsado por IA</p>
-    <div style="width:100%; max-width:960px;" class="reveal" data-d="1">
-      <div style="background:rgba(8,24,44,0.96); border:1px solid var(--rim-hi); border-radius:24px; overflow:hidden; padding:12px; margin-bottom:32px; display:flex; box-shadow: 0 25px 65px rgba(0,0,0,0.55);">
-        <input id="si" type="text" placeholder="Ingresa Ley, Fallo o Concepto (ej: Silencio, Objeto, Arizu)" style="flex:1; background:none; border:none; outline:none; padding:20px 32px; color:var(--white); font-size:1.35rem; font-family:var(--lora);" onkeydown="if(event.key==='Enter')executeLegalSearch()">
+    <div style="width:100%; max-width:900px;" class="reveal" data-d="1">
+      <div style="background:rgba(8,24,44,0.9); border:1px solid var(--rim-hi); border-radius:20px; overflow:hidden; padding:10px; margin-bottom:25px; display:flex; box-shadow: 0 20px 50px rgba(0,0,0,0.4);">
+        <input id="si" type="text" placeholder="Ingresa Ley, Fallo o Concepto (ej: Silencio, Objeto, Arizu)" style="flex:1; background:none; border:none; outline:none; padding:15px 25px; color:var(--white); font-size:1.2rem; font-family:var(--lora);" onkeydown="if(event.key==='Enter')executeTechnicalSearch()">
       </div>
-      <div style="display:flex; justify-content:center; gap:24px;">
-        <button onclick="executeLegalSearch()" class="btn-gold">🔍 BUSCAR LEY / FALLO</button>
-        <button onclick="activateStudyMode()" class="btn-sapp">🎓 MODO ESTUDIO AI</button>
+      <div style="display:flex; justify-content:center;">
+        <button onclick="executeTechnicalSearch()" class="btn-gold" style="width:100%; max-width:400px; justify-content:center;">🔍 EXPLORAR REPOSITORIO TÉCNICO</button>
       </div>
       <div id="rp" class="rp"></div>
     </div>
@@ -289,6 +288,21 @@ body::after {
     <section id="sect-clase-CONTRATOS" style="display:none">
       <div id="grid-clases-contratos" class="audio-grid reveal"></div>
     </section>
+
+    <!-- LEX-IA LABORATORIO (DECOUPLED) -->
+    <div class="reveal" style="margin-top:80px; border-top:1px solid var(--rim-hi); padding-top:60px;">
+      <div style="background:linear-gradient(135deg,rgba(12,32,56,0.8),rgba(4,14,28,0.9)); border:1px solid var(--rim-hi); border-radius:24px; padding:40px; position:relative; overflow:hidden;">
+        <div style="position:absolute; top:20px; right:20px; background:var(--amber); color:var(--abyss); font-size:0.6rem; font-weight:800; padding:4px 12px; border-radius:100px; letter-spacing:1px; box-shadow:0 0 15px rgba(216,144,48,0.3);">LABORATORIO BETA / EN DESARROLLO</div>
+        <h2 style="font-family:var(--serif); font-size:2.5rem; color:var(--gold3); margin-bottom:15px;">Lex-IA <span style="font-style:italic">Tutor Síncrono</span></h2>
+        <p style="color:var(--muted); max-width:600px; margin-bottom:30px;">Experimentá con razonamiento jurídico avanzado (Cátedras Borda/Corvalán). Advertencia: Los nodos 8-Core pueden tener latencia.</p>
+        
+        <div style="background:rgba(255,255,255,0.03); border:1px solid var(--rim); border-radius:16px; display:flex; padding:8px; gap:10px; box-shadow:inset 0 2px 10px rgba(0,0,0,0.2);">
+          <input id="ia-query" type="text" placeholder="¿Qué concepto académico deseas profundizar?" style="flex:1; background:none; border:none; outline:none; padding:15px 25px; color:var(--white); font-size:1.1rem; font-family:var(--lora);" onkeydown="if(event.key==='Enter')activateLexIA()">
+          <button onclick="activateLexIA()" class="btn-gold" style="padding:10px 25px; font-size:0.8rem;">INICIAR TUTORÍA</button>
+        </div>
+        <div id="ia-result" style="margin-top:30px; display:none; background:rgba(0,0,0,0.2); border-radius:12px; padding:25px; border:1px solid var(--rim);"></div>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -402,82 +416,91 @@ const HOLDINGS = [
   "58_DerechoConstitucional_Kersich.md", "59_DerechoAdministrativo_Chocobar.md", "60_DerechoConstitucional_Peralta.md"
 ];
 
-function generateOfficialLink(q) {
-  const ln = q.match(/ley\s+(\d+)/i);
-  if(ln) return `http://servicios.infoleg.gob.ar/infolegInternet/anexos/consulta_por_numero.do?numero=${ln[1]}`;
-  if(q.toLowerCase().includes('fallo') || q.toLowerCase().includes('csjn')) return `https://sj.csjn.gov.ar/sj/consulta/busquedaRapida.do`;
+function linkToOfficialSource(q) {
+  const lq = q.toLowerCase();
+  const ln = q.match(/ley\s+(\d+)/i) || q.match(/(\d+)\.?(\d+)/);
+  if(lq.includes('19.549') || lq.includes('lnpa')) return 'http://servicios.infoleg.gob.ar/infolegInternet/anexos/20000-24999/20349/norma.htm';
+  if(ln) {
+    const num = ln[1] || ln[0].replace('.','');
+    return `http://servicios.infoleg.gob.ar/infolegInternet/anexos/consulta_por_numero.do?numero=${num}`;
+  }
+  if(lq.includes('fallo') || lq.includes('csjn') || lq.includes('arizu') || lq.includes('mendoza')) return `https://sj.csjn.gov.ar/sj/consulta/busquedaRapida.do`;
   return null;
 }
 
-function executeLegalSearch() {
+function executeTechnicalSearch() {
   const q = document.getElementById('si').value.trim(); if(!q) return;
   const box = document.getElementById('rp'); box.style.display = 'block';
-  box.innerHTML = `<div style="padding:40px; color:var(--gold3); font-style:italic; text-align:center; letter-spacing:1px;">Escaneando Bases Soberanas Académicas...</div>`;
+  box.innerHTML = `<div style="padding:40px; color:var(--gold3); font-style:italic; text-align:center;">Accediendo a Repositorio Técnico (Cátedra UBA)...</div>`;
   
   setTimeout(() => {
     let results = [];
     const lq = q.toLowerCase();
     
-    // ANCLAJES DE ORO (Lógica Hernán de Prioridad)
+    // NÚCLEO TÉCNICO (Anclajes Hernán)
     if(lq.includes('silencio')) {
       results.push({
-        type: 'Ley Nacional (Prioridad)', title: 'Ley 19.549 — Art. 10: Silencio Administrativo',
-        snip: 'Respuesta negativa de la Administración por defecto. Solo por ley se admite el silencio positivo. Concepto neurálgico de la Cátedra Corvalán.',
+        type: 'Normativa Base', title: 'Ley 19.549 — Art. 10: Silencio Administrativo',
+        snip: 'Principio de Negativa: El silencio administrativo se interpreta como rechazo, salvo disposición legal en contrario.',
         link: 'http://servicios.infoleg.gob.ar/infolegInternet/anexos/20000-24999/20349/norma.htm'
       });
     }
     if(lq.includes('arizu')) {
       results.push({
-        type: 'Jurisprudencia Clave', title: 'Fallo Arizu (1947) — Teoría del Órgano',
-        snip: 'Consolidación de la responsabilidad del Estado. Los agentes no son terceros, son el Estado mismo. Doctrina fundamental.',
+        type: 'Jurisprudencia Vertical', title: 'Fallo Arizu (1947) — Teoría del Órgano',
+        snip: 'Responsabilidad Directa del Estado. CSJN establece que los órganos actúan como el Estado mismo, no como mandatarios.',
         link: 'https://sj.csjn.gov.ar/sj/consulta/busquedaRapida.do'
       });
     }
-    if(lq.includes('objeto')) {
-      results.push({
-        type: 'Requisito Esencial', title: 'Acto Administrativo — Objeto (Art. 7 LNPA)',
-        snip: 'Debe ser lícito, cierto, física y jurídicamente posible. Vicio en el objeto conlleva nulidad absoluta.',
-        link: 'http://servicios.infoleg.gob.ar/infolegInternet/anexos/20000-24999/20349/norma.htm'
-      });
-    }
 
-    // Fuzzy y Match en HOLDINGS y DATA
-    const hMatches = HOLDINGS.filter(h => h.toLowerCase().includes(lq));
-    hMatches.forEach(h => {
+    // Indexación rápida en HOLDINGS
+    HOLDINGS.filter(h => h.toLowerCase().includes(lq)).forEach(h => {
       const title = h.replace(/_/g, ' ').replace('.md','');
       if(!results.find(r => r.title === title)) {
         results.push({
-          type: 'Sovereign Holding', title: title,
-          snip: 'Análisis detallado de fundamentos y ratio decidendi disponible en repositorio de cátedra.',
-          link: 'https://github.com/fjzubq-glitch/Lex-Sovereign-Data.'
+          type: 'Holding Académico', title: title,
+          snip: 'Resumen técnico disponible. Ratio decidendi y fundamentos de la Corte Suprema.',
+          link: linkToOfficialSource(title)
         });
       }
     });
 
     if(results.length === 0) {
-      box.innerHTML = `<div style="padding:40px; color:var(--muted); text-align:center;">Sin coincidencias técnicas exactas. <br>Se recomienda usar <b>🎓 MODO ESTUDIO</b> para análisis conceptual.</div>`;
+      box.innerHTML = `<div style="padding:40px; color:var(--muted); text-align:center;">Sin coincidencias técnicas. Explorá <b>Aula Magna > Lex-IA</b> para consultas abstractas.</div>`;
       return;
     }
 
     box.innerHTML = results.map(r => `
-      <div class="rc" onclick="openStudyMode('${r.title}: ${r.snip}')">
+      <div class="rc" style="cursor:default;">
         <div class="rc-type">${r.type}</div>
         <div class="rc-title">${r.title}</div>
         <p class="rc-snip">${r.snip}</p>
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-top:15px;">
-          ${r.link ? `<a href="${r.link}" target="_blank" class="rc-link" onclick="event.stopPropagation()">🌐 FUENTE OFICIAL</a>` : '<span></span>'}
-          <span style="color:var(--gold); font-size:0.7rem; font-weight:800; letter-spacing:1.5px; opacity:0.8;">CÁTEDRA UBA 🎓</span>
+        <div style="margin-top:15px; display:flex; justify-content:space-between; align-items:center;">
+          ${r.link ? `<a href="${r.link}" target="_blank" class="rc-link">🌐 CONSULTAR FUENTE OFICIAL</a>` : '<span></span>'}
+          <span style="font-size:0.6rem; color:var(--rim-hi); font-weight:800; letter-spacing:1px;">LEX-SEARCH CORE</span>
         </div>
       </div>
     `).join('');
-  }, 450);
+  }, 120); // Optimización PBC: Respuesta instantánea
 }
 
-async function activateStudyMode() {
-  const q = document.getElementById('si').value.trim(); if(!q) return;
-  const box = document.getElementById('rp'); box.style.display = 'block';
-  box.innerHTML = `<div style="padding:30px; color:var(--frost); font-style:italic; border:1px dashed var(--rim-hi); border-radius:12px;">Conectando con Profesor Adjunto (Cátedras Borda/Corvalán)... Razonando sobre "${q}"</div>`;
-  openStudyMode(q);
+async function activateLexIA() {
+  const q = document.getElementById('ia-query').value.trim(); if(!q) return;
+  const box = document.getElementById('ia-result'); box.style.display = 'block';
+  box.innerHTML = `<div style="padding:20px; color:var(--gold3); font-style:italic;">Invocando Tutoría de Cátedra (Borda/Corvalán). Procesando razonamiento...</div>`;
+  
+  const prompt = `ACTUÁ COMO PROFESOR ADJUNTO UBA (Cátedras Borda/Corvalán). 
+    Analizá detalladamente: ${q}. 
+    ESTRUCTURA: 1. CONCEPTO, 2. PRÁCTICA, 3. CÁTEDRA. 
+    ESTILO: HTML con Tailwind, usa #b88830 para resaltar.`;
+
+  try { 
+    const res = await callSovereignAI(prompt);
+    box.innerHTML = `<div class="reveal" style="line-height:1.8;">${res}</div>`;
+    initRev();
+  } catch(e) { 
+    box.innerHTML = `<div style="color:var(--amber); padding:20px;">ERROR DE LABORATORIO: ${e.message}</div>`; 
+  }
 }
 
 async function openStudyMode(ctx) {
