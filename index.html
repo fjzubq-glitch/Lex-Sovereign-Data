@@ -459,36 +459,59 @@ function executeTechnicalSearch() {
     let results = [];
     const lq = q.toLowerCase();
     
-    // 1. REPOSITORIO HERNÁN / TESAURO (Lógica Interna PBC)
-    if(lq.includes('arizu') || lq.includes('acto admin')) {
-      results.push({ type: 'Hernán Repo', title: 'Fallo Arizu (Teoría del Órgano)', snip: 'Corte Suprema: La responsabilidad del Estado es directa por actos de sus órganos. El funcionario compromete a la persona jurídica.', link: linkToOfficialSource('arizu') });
-    }
-    if(lq.includes('silencio')) {
-      results.push({ type: 'Tesauro Técnico', title: 'Silencio Administrativo (Pauper)', snip: 'Regla Gral Art. 10 LNPA: El silencio es denegatorio. Excepto casos de silencio positivo donde la ley lo exprese.', link: linkToOfficialSource('19.549') });
-    }
-
-    // 2. LEYES (Infoleg Auto-Sync)
-    const lawNum = q.match(/\d{2,5}/);
-    if(lawNum && results.length < 5) {
-      results.push({ type: 'Infoleg / Ley', title: `Ley Federal ${lawNum[0]}`, snip: `Sincronización dinámica detectada. Acceso directo al articulado vigente en el servidor nacional de Infoleg.`, link: linkToOfficialSource(lawNum[0]) });
+    // 1. REPOSITORIO HERNÁN / PRIORIDAD TÉCNICA
+    if(lq.includes('arizu') || lq.includes('órgano') || lq.includes('organo')) {
+      results.push({ 
+        type: 'Repo Hernán', 
+        title: 'TEORÍA DEL ÓRGANO (FALLO ARIZU)', 
+        snip: '--- CONCEPTOS ---\n• El funcionario no es un representante, sino parte del órgano.\n• La voluntad del funcionario es la voluntad del Estado.\n--- APLICACIÓN ---\n• Responsabilidad objetiva y directa del Estado.\n--- CÁTEDRA ---\n• Punto vital en Administrativo I (Corvalán).',
+        link: linkToOfficialSource('arizu') 
+      });
     }
 
-    // 3. 75 HOLDINGS (Fetch Local MD)
+    // 2. TESAURO JURÍDICO
+    if(lq.includes('silencio') || lq.includes('voluntad')) {
+      results.push({ 
+        type: 'Tesauro Jurídico', 
+        title: 'SILENCIO ADMINISTRATIVO (ART. 10 LNPA)', 
+        snip: '--- CONCEPTOS ---\n• El silencio implica negativa por regla general.\n• Requiere vencimiento de plazos y pronto despacho.\n--- APLICACIÓN ---\n• Agotamiento de la vía administrativa.\n--- CÁTEDRA ---\n• Diferencia entre silencio positivo y negativo.',
+        link: linkToOfficialSource('19.549') 
+      });
+    }
+
+    // 3. LEYES (Infoleg Sincronizado)
+    const lawMatch = q.match(/(?:ley|norma)?\s?(\d{2,5}(?:\.\d{3})?)/i);
+    if(lawMatch) {
+      const num = lawMatch[1];
+      results.push({ 
+        type: 'Leyes / Infoleg', 
+        title: `LEY NACIONAL ${num}`, 
+        snip: `--- CONCEPTOS ---\n• Sincronización con base de datos de Infoleg.\n--- APLICACIÓN ---\n• Normativa vigente aplicable al caso.\n--- CÁTEDRA ---\n• Ver concordancias con el CCyCN.`,
+        link: linkToOfficialSource(num) 
+      });
+    }
+
+    // 4. 75 HOLDINGS (Fetch MD)
     const hMatches = HOLDINGS.filter(h => h.toLowerCase().includes(lq));
     for(let h of hMatches) {
-        if(results.length >= 10) break;
+        if(results.length >= 12) break;
         try {
             const resp = await fetch(`./holdings/${h}`);
             if(resp.ok) {
                 const text = await resp.text();
-                results.push({ type: 'Holding MD', title: h.replace(/_/g,' ').replace('.md',''), snip: text.slice(0,700) + '...', link: linkToOfficialSource(h) });
+                results.push({ 
+                  type: 'Holding MD', 
+                  title: h.replace(/_/g,' ').replace('.md','').toUpperCase(), 
+                  snip: text.slice(0,600) + '...', 
+                  link: linkToOfficialSource(h) 
+                });
             }
         } catch(e) {}
     }
 
     spinner.style.display = 'none';
     if(results.length === 0) {
-      portal.innerHTML = `<div style="padding:40px; color:#f7e7ce; font-style:italic; text-align:center;">--- DATA MISSING. ACTIVATING AI DATA TERMINAL ---</div>`;
+      portal.innerHTML = `<div style="padding:40px; color:#f7e7ce; font-family:monospace; text-align:center;">--- DATA TERMINAL: NULL SEARCH. ACTIVATING LEX-CORE... ---</div>`;
       activateLexIA(q);
       return;
     }
@@ -496,10 +519,10 @@ function executeTechnicalSearch() {
     portal.innerHTML = results.map(r => `
       <div class="rc">
         <div class="rc-type">${r.type}</div>
-        <div class="rc-title" style="color:#f7e7ce;">${r.title}</div>
-        <div class="rc-snip" style="white-space: pre-wrap; font-size: 0.9rem;">${r.snip}</div>
-        <div style="margin-top:20px;">
-          ${r.link ? `<a href="${r.link}" target="_blank" class="rc-link" style="border: 1px solid #f7e7ce; padding: 8px 15px; border-radius: 4px;">🌐 VER EN FUENTE OFICIAL</a>` : ''}
+        <div class="rc-title" style="color:#f7e7ce; font-weight:900;">${r.title}</div>
+        <div class="rc-snip" style="white-space: pre-wrap; font-family:monospace; font-size:0.85rem; color:#fff;">${r.snip}</div>
+        <div style="margin-top:25px;">
+          ${r.link ? `<a href="${r.link}" target="_blank" class="rc-link" style="border: 1px solid #f7e7ce; padding: 10px 20px; border-radius: 2px; font-size: 0.7rem; letter-spacing:1px; background: rgba(247,231,206,0.05);">🌐 VER EN FUENTE OFICIAL</a>` : ''}
         </div>
       </div>
     `).join('');
