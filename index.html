@@ -106,6 +106,13 @@ p, .font-ui { font-family: 'Inter', sans-serif; color: var(--beige); opacity: 0.
 .ap-nm { font-family: 'Playfair Display', serif; font-size: 1.1rem; color: var(--goldc); }
 .ap-ct { font-size: 0.7rem; color: var(--beige); opacity: 0.5; text-transform: uppercase; letter-spacing: 1px; }
 audio { height: 36px; flex: 2; border-radius: 100px; filter: invert(100%) hue-rotate(180deg) brightness(1.5); opacity: 0.9; }
+
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  75% { transform: translateX(5px); }
+}
+.shake { animation: shake 0.2s ease-in-out 0s 2; border-color: rgba(255, 0, 0, 0.4) !important; }
 </style>
 </head>
 <body>
@@ -117,7 +124,7 @@ audio { height: 36px; flex: 2; border-radius: 100px; filter: invert(100%) hue-ro
     <button class="ntab" data-p="podcast" onclick="go('podcast')">LexPodcast</button>
     <button class="ntab" data-p="tools" onclick="go('tools')">Herramientas</button>
   </div>
-  <button onclick="toggleConfig()" class="w-11 h-11 rounded-full border border-goldchampagne/10 flex items-center justify-center text-goldchampagne hover:bg-goldchampagne/5 transition-all">
+  <button id="btn-config" onclick="gatekeeper()" class="w-11 h-11 rounded-full border border-goldchampagne/10 flex items-center justify-center text-goldchampagne hover:bg-goldchampagne/5 transition-all">
     <i data-lucide="settings" class="w-5 h-5"></i>
   </button>
 </nav>
@@ -268,6 +275,18 @@ function go(page) {
 }
 
 function toggleConfig() { document.getElementById('modal-config').classList.toggle('hidden'); document.getElementById('modal-config').classList.toggle('flex'); }
+
+function gatekeeper() {
+  const p = prompt("SISTEMA SOBERANO: Ingrese Clave de Acceso");
+  if(p === 'Alice1911') {
+    toggleConfig();
+  } else if(p !== null) {
+    const b = document.getElementById('btn-config');
+    b.classList.add('shake');
+    setTimeout(() => b.classList.remove('shake'), 400);
+    alert("ACCESO DENEGADO");
+  }
+}
 
 function saveKeys() {
   const k = {
