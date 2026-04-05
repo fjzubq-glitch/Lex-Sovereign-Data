@@ -3,206 +3,778 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>LexSearch Gold — Audio & Academia</title>
+<title>LexSearch Argentina — El Buscador Legal</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Lora:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
 <style>
 /* ═══════════════════════════════════════════════════
-   GOLD & ABYSS DESIGN SYSTEM (Bajo Consumo)
+   DESIGN TOKENS
 ═══════════════════════════════════════════════════ */
 *, *::before, *::after { margin:0; padding:0; box-sizing:border-box; }
 
 :root {
-  --abyss:    #0a0a0a;
-  --gold:     #d4af37;
-  --gold-dim: rgba(212, 175, 55, 0.2);
-  --card:     #111111;
-  --rim:      rgba(212, 175, 55, 0.1);
-  --white:    #e5e5e5;
-  --muted:    #888888;
-  --mono:     'Courier New', Courier, monospace;
+  --ink:      #040e1c;
+  --abyss:    #030b16;
+  --deep:     #08182c;
+  --mid:      #0c2038;
+  --card:     #091e35;
+
+  --rim:      rgba(74,160,240,0.09);
+  --rim-md:   rgba(74,160,240,0.16);
+  --rim-hi:   rgba(74,160,240,0.32);
+
+  --sapp:     #1460b0;
+  --cobalt:   #1e78d8;
+  --sky:      #4aa8f4;
+  --frost:    #a0d4f8;
+  --pale:     #c4dcf2;
+  --muted:    #4e7090;
+  --white:    #edf4fc;
+
+  --gold:     #b88830;
+  --gold2:    #cca044;
+  --gold3:    #e0bc6a;
+  --gold-p:   #f0d898;
+
+  --green:    #22a86e;
+  --amber:    #d89030;
+
+  --serif:    'Cormorant Garamond', Georgia, serif;
+  --ui:       'DM Sans', sans-serif;
+  --lora:     'Lora', Georgia, serif;
+  --spring:   cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-body { 
-  font-family: 'DM Sans', sans-serif; 
-  background: var(--abyss); 
-  color: var(--white); 
-  overflow-x: hidden; 
-  line-height: 1.6;
+html { scroll-behavior: smooth; }
+body { font-family: var(--ui); background: var(--ink); color: var(--white); overflow-x: hidden; min-height: 100vh; }
+
+body::after {
+  content: ''; position: fixed; inset: 0; z-index: 999; pointer-events: none;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='400' height='400'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.75' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='400' height='400' filter='url(%23n)' opacity='0.022'/%3E%3C/svg%3E");
 }
 
-/* Scrollbar Oro */
-::-webkit-scrollbar { width: 3px; }
+::-webkit-scrollbar { width: 2px; }
 ::-webkit-scrollbar-track { background: var(--abyss); }
-::-webkit-scrollbar-thumb { background: var(--gold); }
+::-webkit-scrollbar-thumb { background: linear-gradient(var(--gold), var(--cobalt)); border-radius: 2px; }
 
 /* ═══════════════════════════════════════════════════
    NAV
 ═══════════════════════════════════════════════════ */
 .nav {
-  position: fixed; top: 0; width: 100%; z-index: 1000;
-  height: 60px; display: flex; align-items: center; justify-content: space-between;
-  padding: 0 40px; background: rgba(10,10,10,0.95); backdrop-filter: blur(10px);
+  position: fixed; top: 0; width: 100%; z-index: 900;
+  height: 62px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 48px;
+  background: rgba(4,14,28,0.93);
+  backdrop-filter: blur(24px) saturate(160%);
   border-bottom: 1px solid var(--rim);
 }
-.nav-brand { font-family: 'Cormorant Garamond', serif; font-size: 1.5rem; color: var(--gold); text-decoration: none; font-weight: 500; cursor: pointer; }
-.nav-tabs { display: flex; gap: 20px; }
-.ntab { 
-  background: none; border: none; color: var(--muted); cursor: pointer; 
-  font-size: 0.8rem; text-transform: uppercase; letter-spacing: 1px; transition: 0.3s;
+.nav::before {
+  content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
+  background: linear-gradient(90deg, transparent 0%, var(--gold) 30%, var(--gold3) 50%, var(--gold) 70%, transparent 100%);
+  opacity: 0.45;
 }
-.ntab.on { color: var(--gold); border-bottom: 2px solid var(--gold); }
+
+.nav-brand { display: flex; align-items: baseline; gap: 1px; font-family: var(--serif); font-size: 1.5rem; font-weight: 500; color: var(--white); cursor: pointer; letter-spacing: 0.2px; text-decoration: none; user-select: none; }
+.nav-brand .ns {
+  background: linear-gradient(135deg, var(--gold2), var(--gold3), var(--gold-p));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+}
+.nav-brand sup { font-family: var(--ui); font-size: 0.52rem; letter-spacing: 2px; text-transform: uppercase; color: var(--muted); margin-left: 8px; align-self: flex-end; margin-bottom: 3px; -webkit-text-fill-color: var(--muted); }
+
+.nav-center {
+  position: absolute; left: 50%; transform: translateX(-50%);
+  display: flex; align-items: center;
+  background: rgba(8,24,44,0.7); border: 1px solid var(--rim); border-radius: 100px; padding: 5px 6px; gap: 2px;
+}
+.ntab {
+  display: flex; align-items: center; gap: 8px;
+  font-size: 0.76rem; font-weight: 400; letter-spacing: 0.2px; color: var(--muted);
+  padding: 7px 22px; border-radius: 100px; border: none; background: none;
+  cursor: pointer; transition: color 0.3s var(--spring), background 0.3s var(--spring);
+  white-space: nowrap; font-family: var(--ui);
+}
+.ntab-ic { font-size: 0.9rem; opacity: 0.5; transition: opacity 0.3s; }
+.ntab.on { color: var(--white); background: rgba(20,96,176,0.28); box-shadow: inset 0 1px 0 rgba(255,255,255,0.05), 0 0 0 1px rgba(74,168,240,0.18); }
+.ntab.on .ntab-ic { opacity: 1; }
+.ntab:not(.on):hover { color: var(--pale); background: rgba(74,160,240,0.06); }
+.nbadge { font-size: 0.58rem; letter-spacing: 1px; text-transform: uppercase; background: rgba(192,160,68,0.14); border: 1px solid rgba(192,160,68,0.28); color: var(--gold3); padding: 2px 8px; border-radius: 100px; }
+
+.nav-cta { font-family: var(--ui); font-size: 0.73rem; font-weight: 500; letter-spacing: 0.3px; color: var(--white); background: linear-gradient(135deg, var(--sapp), var(--cobalt)); border: none; cursor: pointer; padding: 8px 22px; border-radius: 100px; box-shadow: 0 4px 16px rgba(20,96,176,0.35); transition: box-shadow 0.25s, transform 0.2s; }
+.nav-cta:hover { box-shadow: 0 6px 24px rgba(20,96,176,0.55); transform: translateY(-1px); }
 
 /* ═══════════════════════════════════════════════════
-   SECTIONS
+   PAGE SYSTEM
 ═══════════════════════════════════════════════════ */
-.page { display: none; padding-top: 100px; max-width: 1100px; margin: 0 auto; padding-bottom: 100px; min-height: 100vh; }
-.page.on { display: block; animation: fadeIn 0.5s ease; }
-@keyframes fadeIn { from{opacity:0; transform:translateY(10px)} to{opacity:1; transform:translateY(0)} }
+.page { position: absolute; top: 0; left: 0; right: 0; opacity: 0; transform: translateY(16px) scale(0.995); pointer-events: none; transition: opacity 0.5s var(--spring), transform 0.5s var(--spring); will-change: opacity, transform; }
+.page.on { opacity: 1; transform: translateY(0) scale(1); pointer-events: all; position: relative; }
+.page.out { opacity: 0; transform: translateY(-8px) scale(0.998); pointer-events: none; }
 
 /* ═══════════════════════════════════════════════════
-   PODCAST & CLASE COMPONENTS
+   PAGE 1 — BUSCADOR
 ═══════════════════════════════════════════════════ */
-.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px; padding: 20px; }
-.card { 
-  background: var(--card); border: 1px solid var(--rim); border-radius: 8px; padding: 24px;
-  transition: 0.3s;
+#pg-search {
+  background:
+    radial-gradient(ellipse 100% 60% at 50% 0%, rgba(18,70,148,0.2) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 40% at 15% 60%, rgba(10,40,100,0.12) 0%, transparent 55%),
+    radial-gradient(ellipse 50% 40% at 85% 60%, rgba(10,40,100,0.12) 0%, transparent 55%),
+    var(--ink);
 }
-.card:hover { border-color: var(--gold); background: #161616; }
-.card-tag { font-size: 0.6rem; text-transform: uppercase; color: var(--gold); letter-spacing: 2px; margin-bottom: 10px; display: block; }
-.card-title { font-family: 'Lora', serif; font-size: 1.1rem; color: var(--white); margin-bottom: 8px; }
-.card-desc { font-size: 0.85rem; color: var(--muted); margin-bottom: 20px; }
 
-.btn-group { display: flex; gap: 10px; }
-.btn-audio { 
-  flex: 1; padding: 10px; border-radius: 4px; border: 1px solid var(--gold);
-  background: transparent; color: var(--gold); font-size: 0.75rem; font-weight: bold;
-  cursor: pointer; display: flex; align-items: center; justify-content: center; gap: 8px;
-  transition: 0.3s;
+.sbg { position: absolute; inset: 0; pointer-events: none; overflow: hidden; z-index: 0; }
+.sbg::before {
+  content: ''; position: absolute; inset: -50%;
+  background-image: linear-gradient(rgba(74,168,240,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(74,168,240,0.03) 1px, transparent 1px);
+  background-size: 80px 80px;
+  animation: gridDrift 40s linear infinite;
+  mask-image: radial-gradient(ellipse 70% 55% at 50% 40%, black 20%, transparent 75%);
 }
-.btn-audio:hover { background: var(--gold); color: var(--abyss); }
-.btn-audio:disabled { opacity: 0.3; cursor: not-allowed; border-color: var(--muted); color: var(--muted); }
+@keyframes gridDrift { from{transform:translate(0,0)} to{transform:translate(80px,80px)} }
+
+.orb { position: absolute; border-radius: 50%; pointer-events: none; filter: blur(80px); }
+.orb1 { width:600px; height:600px; background:radial-gradient(circle,rgba(20,80,180,0.14),transparent 70%); top:-100px; left:50%; animation: o1 12s ease-in-out infinite; }
+.orb2 { width:300px; height:300px; background:radial-gradient(circle,rgba(192,160,68,0.08),transparent 70%); bottom:100px; right:10%; animation: o2 16s ease-in-out infinite reverse; }
+@keyframes o1 { 0%,100%{transform:translateX(-50%) translateY(0)} 50%{transform:translateX(-50%) translateY(-30px)} }
+@keyframes o2 { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-20px)} }
+
+.search-scene {
+  min-height: 100vh; display: flex; flex-direction: column;
+  align-items: center; justify-content: center;
+  padding: 100px 24px 72px; text-align: center;
+  position: relative; z-index: 2;
+}
+
+.h-badge {
+  display: inline-flex; align-items: center; gap: 10px;
+  font-size: 0.63rem; letter-spacing: 3.5px; text-transform: uppercase;
+  color: var(--muted); margin-bottom: 40px;
+  animation: fadeUp 0.9s var(--spring) both;
+}
+.h-badge::before,.h-badge::after { content:''; width:36px; height:1px; background:linear-gradient(90deg,transparent,var(--muted)); opacity:0.4; }
+.h-badge::after { transform:scaleX(-1); }
+
+.hero-mark {
+  font-family: var(--serif); font-size: clamp(3.5rem,10vw,7.5rem);
+  font-weight: 300; line-height: 0.95; letter-spacing: -2px;
+  margin-bottom: 16px; animation: fadeUp 0.9s 0.07s var(--spring) both;
+}
+.hm-lex { color: var(--white); }
+.hm-srch {
+  font-style: italic;
+  background: linear-gradient(125deg, var(--gold) 0%, var(--gold3) 45%, var(--gold-p) 70%, var(--gold3) 100%);
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  background-size: 200% 200%;
+  animation: shimmer 6s ease-in-out infinite;
+}
+@keyframes shimmer { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
+
+.hero-tagline {
+  font-family: var(--lora); font-size: clamp(0.9rem,2vw,1.1rem); font-style: italic;
+  color: var(--muted); letter-spacing: 0.5px;
+  margin-bottom: 52px; animation: fadeUp 0.9s 0.13s var(--spring) both;
+}
+
+/* Search bar */
+.sbar-wrap { width:100%; max-width:700px; animation: fadeUp 0.9s 0.19s var(--spring) both; }
+.sbar {
+  position: relative; display: flex; align-items: center;
+  background: rgba(8,22,40,0.85); border: 1px solid rgba(74,168,240,0.2); border-radius: 60px; overflow: hidden;
+  box-shadow: 0 0 0 0 rgba(74,168,240,0.1), 0 24px 64px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.04);
+  transition: border-color 0.35s, box-shadow 0.35s;
+}
+.sbar:focus-within { border-color: rgba(74,168,240,0.45); box-shadow: 0 0 0 5px rgba(20,96,176,0.12), 0 24px 64px rgba(0,0,0,0.55), inset 0 1px 0 rgba(255,255,255,0.06); }
+.sbar-ico { padding: 0 18px 0 26px; flex-shrink: 0; color: var(--muted); font-size: 1.05rem; transition: color 0.3s; }
+.sbar:focus-within .sbar-ico { color: var(--sky); }
+.sbar input { flex: 1; background: none; border: none; outline: none; font-family: var(--ui); font-size: 0.97rem; font-weight: 300; color: var(--white); padding: 20px 0; letter-spacing: 0.1px; }
+.sbar input::placeholder { color: rgba(78,112,144,0.8); }
+.sbar-sep { width:1px; height:22px; background: var(--rim); flex-shrink: 0; }
+.sbar select { appearance: none; background: none; border: none; outline: none; font-family: var(--ui); font-size: 0.73rem; color: var(--muted); padding: 0 20px; cursor: pointer; letter-spacing: 0.3px; transition: color 0.2s; }
+.sbar select:hover { color: var(--pale); }
+.sbar select option { background: var(--deep); color: var(--white); }
+.sbar-btn { margin: 5px; flex-shrink: 0; display: flex; align-items: center; gap: 8px; font-family: var(--ui); font-size: 0.76rem; font-weight: 500; letter-spacing: 0.4px; color: var(--white); background: linear-gradient(135deg, var(--sapp) 0%, var(--cobalt) 100%); border: none; cursor: pointer; padding: 12px 28px; border-radius: 100px; box-shadow: 0 4px 20px rgba(20,96,176,0.45); transition: box-shadow 0.25s, transform 0.2s; }
+.sbar-btn:hover { box-shadow: 0 8px 28px rgba(20,96,176,0.6); transform: translateY(-1px); }
+.sbar-btn:active { transform: translateY(0); }
+
+.sbar-hints { display: flex; align-items: center; justify-content: center; gap: 20px; margin-top: 16px; }
+.hint { display: flex; align-items: center; gap: 6px; font-size: 0.68rem; color: var(--muted); cursor: pointer; transition: color 0.2s; padding: 4px 0; letter-spacing: 0.2px; }
+.hint:hover { color: var(--pale); }
+.hint::before { content:''; width:3px; height:3px; background: var(--muted); border-radius: 50%; }
+
+/* Results */
+.rp {
+  display: none; width: 100%; max-width: 700px; margin-top: 28px; text-align: left;
+  background: rgba(8,20,36,0.75); border: 1px solid var(--rim); border-radius: 16px; overflow: hidden;
+  backdrop-filter: blur(12px); box-shadow: 0 32px 80px rgba(0,0,0,0.45);
+  animation: panelIn 0.4s var(--spring) both;
+}
+@keyframes panelIn { from{opacity:0;transform:translateY(8px) scale(0.99)} to{opacity:1;transform:translateY(0) scale(1)} }
+
+.rbar { display:flex; justify-content:space-between; align-items:center; padding:14px 22px; border-bottom:1px solid var(--rim); background:rgba(12,28,48,0.4); }
+.rcount { font-size:0.69rem; letter-spacing:0.5px; color:var(--muted); }
+.rcount strong { color:var(--pale); font-weight:500; }
+
+.rc {
+  display: flex; align-items: flex-start; gap: 16px; padding: 18px 22px;
+  border-bottom: 1px solid var(--rim); cursor: pointer;
+  transition: background 0.2s; position: relative;
+}
+.rc:last-child { border-bottom: none; }
+.rc::before { content:''; position:absolute; left:0; top:0; bottom:0; width:2px; background:linear-gradient(180deg,var(--gold),var(--cobalt)); opacity:0; transform:scaleY(0); transition:opacity 0.25s,transform 0.25s var(--spring); transform-origin:top; }
+.rc:hover { background: rgba(20,60,120,0.1); }
+.rc:hover::before { opacity:1; transform:scaleY(1); }
+.rc-ico { width:34px; height:34px; flex-shrink:0; border-radius:8px; border:1px solid var(--rim-md); background:rgba(20,80,160,0.1); display:flex; align-items:center; justify-content:center; font-size:0.8rem; margin-top:2px; }
+.rc-body { flex:1; min-width:0; }
+.rc-type { font-size:0.62rem; letter-spacing:2px; text-transform:uppercase; color:var(--muted); margin-bottom:5px; }
+.rc-title { font-family:var(--lora); font-size:0.92rem; font-weight:500; color:var(--pale); margin-bottom:6px; line-height:1.35; transition:color 0.2s; }
+.rc:hover .rc-title { color:var(--frost); }
+.rc-snip { font-size:0.76rem; color:var(--muted); line-height:1.65; }
+.rc-snip mark { background:rgba(192,160,68,0.18); color:var(--gold3); border-radius:2px; padding:0 2px; }
+.rc-tags { display:flex; gap:6px; margin-top:10px; flex-wrap:wrap; }
+.rc-tag { font-size:0.62rem; letter-spacing:0.8px; color:var(--muted); border:1px solid var(--rim); padding:2px 9px; border-radius:100px; background:rgba(12,28,48,0.5); }
+.rc-arr { color:rgba(74,168,240,0.25); font-size:0.85rem; margin-top:4px; transition:color 0.2s,transform 0.2s; flex-shrink:0; }
+.rc:hover .rc-arr { color:var(--sky); transform:translate(2px,-2px); }
+.r-empty { padding:48px 22px; text-align:center; color:var(--muted); font-size:0.83rem; }
+.r-empty-ic { font-size:2rem; margin-bottom:14px; opacity:0.35; display:block; }
+
+/* Stats */
+.hero-stats {
+  display: flex; align-items: center; margin-top: 64px;
+  border: 1px solid var(--rim); border-radius: 14px;
+  background: rgba(8,20,36,0.6); backdrop-filter: blur(10px); overflow: hidden;
+  animation: fadeUp 0.9s 0.33s var(--spring) both;
+}
+.stc { flex:1; padding:18px 24px; text-align:center; border-right:1px solid var(--rim); }
+.stc:last-child { border-right:none; }
+.stn { font-family:var(--serif); font-size:2.1rem; font-weight:300; color:var(--white); line-height:1; margin-bottom:5px; }
+.stn sup { font-size:0.9rem; color:var(--gold3); }
+.stl { font-size:0.6rem; letter-spacing:2px; text-transform:uppercase; color:var(--muted); }
+
+/* ═══════════════════════════════════════════════════
+   PAGE 2 — LEXPODCAST
+═══════════════════════════════════════════════════ */
+#pg-podcast { background: radial-gradient(ellipse 80% 40% at 20% 0%, rgba(12,60,130,0.15) 0%, transparent 55%), var(--deep); padding-top:62px; }
+
+.pg-hdr { padding:64px 52px 52px; border-bottom:1px solid var(--rim); max-width:1120px; margin:0 auto; display:flex; align-items:flex-end; justify-content:space-between; gap:24px; }
+.pg-eye { display:flex; align-items:center; gap:10px; font-size:0.62rem; letter-spacing:3px; text-transform:uppercase; color:var(--muted); margin-bottom:14px; }
+.pg-eye span { width:20px; height:1px; background:linear-gradient(90deg,var(--gold),var(--cobalt)); opacity:0.7; }
+.pg-ttl { font-family:var(--serif); font-size:clamp(2rem,5vw,3.8rem); font-weight:300; line-height:1.0; color:var(--white); }
+.pg-ttl em { font-style:italic; color:var(--sky); }
+.pg-ttl .ge { font-style:italic; color:var(--gold3); }
+.pg-sub { color:var(--muted); font-size:0.85rem; line-height:1.85; margin-top:14px; max-width:500px; }
+
+.free-b { display:inline-flex; align-items:center; gap:8px; border:1px solid rgba(34,168,110,0.3); background:rgba(34,168,110,0.06); color:var(--green); font-size:0.67rem; letter-spacing:1.5px; padding:7px 18px; border-radius:100px; flex-shrink:0; }
+.free-b::before { content:''; width:5px; height:5px; background:var(--green); border-radius:50%; animation:blink 2s ease-in-out infinite; }
+@keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.25} }
+
+.subjs { max-width:1120px; margin:0 auto; padding:44px 52px; display:grid; grid-template-columns:repeat(auto-fit,minmax(480px,1fr)); gap:20px; }
+
+.subj { background:var(--card); border:1px solid var(--rim); border-radius:14px; overflow:hidden; transition:border-color 0.3s,box-shadow 0.3s; }
+.subj:hover { border-color:var(--rim-md); box-shadow:0 12px 40px rgba(0,0,0,0.25); }
+.subj-hd { display:flex; align-items:center; gap:14px; padding:22px 28px 20px; border-bottom:1px solid var(--rim); background:linear-gradient(90deg,rgba(20,80,160,0.08),transparent); }
+.subj-ico { width:42px; height:42px; flex-shrink:0; background:rgba(20,80,160,0.1); border:1px solid rgba(74,168,240,0.16); border-radius:10px; display:flex; align-items:center; justify-content:center; font-size:1.1rem; }
+.subj-nm { font-family:var(--lora); font-size:1.05rem; font-weight:500; margin-bottom:2px; color:var(--pale); }
+.subj-ds { font-size:0.72rem; color:var(--muted); }
+.subj-ct { margin-left:auto; flex-shrink:0; font-size:0.62rem; letter-spacing:1.5px; text-transform:uppercase; color:var(--muted); border:1px solid var(--rim); padding:3px 10px; border-radius:100px; }
+
+.ep { display:flex; align-items:center; gap:16px; padding:15px 28px; border-bottom:1px solid var(--rim); transition:background 0.2s; }
+.ep:last-of-type { border-bottom:none; }
+.ep:hover { background:rgba(74,168,240,0.04); }
+.ep-n { font-family:var(--serif); font-size:1.1rem; font-weight:300; color:rgba(78,112,144,0.5); width:24px; text-align:right; flex-shrink:0; }
+.ep-ln { width:1px; height:30px; background:var(--rim); flex-shrink:0; }
+.ep-if { flex:1; min-width:0; }
+.ep-tt { font-size:0.84rem; color:var(--pale); margin-bottom:3px; }
+.ep-mt { font-size:0.69rem; color:var(--muted); }
+.ep-ac { display:flex; gap:7px; flex-shrink:0; }
+
+.pill { display:inline-flex; align-items:center; gap:5px; font-family:var(--ui); font-size:0.69rem; font-weight:400; letter-spacing:0.2px; padding:5px 15px; border-radius:100px; border:none; cursor:pointer; text-decoration:none; transition:all 0.22s var(--spring); white-space:nowrap; }
+.pb { background:rgba(20,96,176,0.14); color:var(--sky); border:1px solid rgba(74,168,240,0.2); }
+.pb:hover { background:var(--cobalt); color:var(--white); border-color:transparent; box-shadow:0 4px 16px rgba(20,96,176,0.4); transform:translateY(-1px); }
+.pg { background:transparent; color:var(--muted); border:1px solid var(--rim); }
+.pg:hover { color:var(--pale); border-color:var(--rim-md); }
+
+.ep-soon { text-align:center; padding:18px 28px; font-size:0.71rem; color:var(--muted); letter-spacing:0.5px; border-top:1px dashed var(--rim); }
 
 /* Player */
-.player { 
-  position: fixed; bottom: 0; left: 0; width: 100%; background: #000;
-  border-top: 1px solid var(--gold); padding: 15px 40px; display: none;
-  align-items: center; justify-content: space-between; z-index: 1001;
-  box-shadow: 0 -10px 30px rgba(0,0,0,0.8);
-}
-.player.on { display: flex; }
-.player-info { flex: 1; }
-.player-title { font-size: 0.85rem; color: var(--gold); font-weight: bold; margin-bottom: 2px; }
-.player-sub { font-size: 0.7rem; color: var(--muted); font-family: var(--mono); }
-audio { height: 32px; filter: invert(100%) hue-rotate(180deg) brightness(1.5); outline: none; }
+.ap { display:none; position:fixed; bottom:0; left:0; right:0; z-index:800; background:rgba(4,12,24,0.97); backdrop-filter:blur(28px); border-top:1px solid var(--rim-md); padding:14px 52px; align-items:center; gap:24px; }
+.ap.on { display:flex; }
+.ap::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,var(--gold3),var(--sky),var(--gold3),transparent); opacity:0.3; }
+.ap-tr { flex:1; }
+.ap-nm { font-size:0.82rem; color:var(--frost); margin-bottom:2px; }
+.ap-ct { font-size:0.68rem; color:var(--muted); letter-spacing:0.5px; }
+.ap audio { flex:2; height:30px; accent-color:var(--cobalt); }
+.ap-x { background:none; border:none; color:var(--muted); cursor:pointer; font-size:0.9rem; padding:6px; border-radius:100px; transition:color 0.2s,background 0.2s; }
+.ap-x:hover { color:var(--white); background:rgba(255,255,255,0.06); }
 
-.center { text-align: center; margin-bottom: 40px; }
+/* ═══════════════════════════════════════════════════
+   PAGE 3 — HERRAMIENTAS
+═══════════════════════════════════════════════════ */
+#pg-tools { background: radial-gradient(ellipse 60% 40% at 80% 10%, rgba(10,50,120,0.12) 0%, transparent 55%), var(--ink); padding-top:62px; }
+
+.tools-body { max-width:1120px; margin:0 auto; padding:44px 52px; }
+.tsec { margin-bottom:52px; }
+.tsec-lbl { display:flex; align-items:center; gap:14px; font-size:0.62rem; letter-spacing:3px; text-transform:uppercase; color:var(--muted); margin-bottom:20px; }
+.tsec-lbl::after { content:''; flex:1; height:1px; background:var(--rim); }
+.tgrid { display:grid; grid-template-columns:repeat(auto-fill,minmax(310px,1fr)); gap:14px; }
+
+.tool { background:var(--card); border:1px solid var(--rim); border-radius:14px; padding:28px 28px 24px; cursor:pointer; position:relative; overflow:hidden; transition:border-color 0.3s var(--spring),transform 0.3s var(--spring),box-shadow 0.3s var(--spring); }
+.tool::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent 10%,rgba(74,168,240,0.18) 50%,transparent 90%); opacity:0; transition:opacity 0.3s; }
+.tool:hover { border-color:var(--rim-md); transform:translateY(-4px); box-shadow:0 20px 52px rgba(0,0,0,0.3); }
+.tool:hover::before { opacity:1; }
+.tool.dim { opacity:0.5; pointer-events:none; }
+.tool-ic { width:44px; height:44px; background:rgba(20,80,160,0.08); border:1px solid var(--rim); border-radius:11px; display:flex; align-items:center; justify-content:center; font-size:1.25rem; margin-bottom:18px; transition:background 0.3s,border-color 0.3s; }
+.tool:hover .tool-ic { background:rgba(20,80,160,0.16); border-color:var(--rim-md); }
+.tool-nm { font-family:var(--lora); font-size:1rem; font-weight:500; color:var(--pale); margin-bottom:8px; }
+.tool-ds { font-size:0.77rem; color:var(--muted); line-height:1.75; margin-bottom:20px; }
+.tool-st { display:inline-flex; align-items:center; gap:7px; font-size:0.64rem; letter-spacing:1.5px; text-transform:uppercase; }
+.dot { width:5px; height:5px; border-radius:50%; flex-shrink:0; }
+.dg { background:var(--green); animation:blink 2s ease-in-out infinite; }
+.da { background:var(--amber); }
+.dm { background:var(--muted); }
+.sl { color:var(--green); } .ss { color:var(--amber); } .sp { color:var(--muted); }
+.tool-ar { position:absolute; top:26px; right:26px; color:var(--rim-md); font-size:0.95rem; transition:color 0.25s,transform 0.25s var(--spring); }
+.tool:hover .tool-ar { color:var(--sky); transform:translate(3px,-3px); }
+.tool.feat { grid-column:span 2; background:linear-gradient(135deg,rgba(12,26,52,0.9) 0%,var(--card) 100%); border-color:rgba(74,168,240,0.15); }
+.tool.feat .tool-ic { background:rgba(20,96,176,0.15); border-color:rgba(74,168,240,0.25); }
+@media(max-width:740px){ .tool.feat { grid-column:span 1; } }
+
+/* ═══════════════════════════════════════════════════
+   FOOTER
+═══════════════════════════════════════════════════ */
+.footer { background:var(--abyss); border-top:1px solid var(--rim); padding:44px 52px; position:relative; z-index:2; }
+.footer::before { content:''; position:absolute; top:0; left:0; right:0; height:1px; background:linear-gradient(90deg,transparent,var(--gold3),transparent); opacity:0.2; }
+.footer-in { max-width:1120px; margin:0 auto; display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:20px; }
+.fbrand { font-family:var(--serif); font-size:1.4rem; font-weight:400; color:var(--white); }
+.fbrand .fs { background:linear-gradient(135deg,var(--gold2),var(--gold3)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text; }
+.fnav { display:flex; gap:28px; }
+.fnav a { color:var(--muted); text-decoration:none; font-size:0.74rem; letter-spacing:0.3px; cursor:pointer; transition:color 0.2s; }
+.fnav a:hover { color:var(--pale); }
+.fcopy { font-size:0.72rem; color:var(--muted); line-height:1.9; text-align:right; }
+.fcopy em { color:var(--gold3); font-style:normal; }
+
+/* ═══════════════════════════════════════════════════
+   UTILS
+═══════════════════════════════════════════════════ */
+.reveal { opacity:0; transform:translateY(18px); transition:opacity 0.65s var(--spring),transform 0.65s var(--spring); }
+.reveal.vis { opacity:1; transform:translateY(0); }
+.reveal[data-d="1"]{transition-delay:.07s} .reveal[data-d="2"]{transition-delay:.14s} .reveal[data-d="3"]{transition-delay:.21s} .reveal[data-d="4"]{transition-delay:.28s} .reveal[data-d="5"]{transition-delay:.35s}
+
+@keyframes fadeUp { from{opacity:0;transform:translateY(22px)} to{opacity:1;transform:translateY(0)} }
+
+@media(max-width:900px) {
+  .nav { padding:0 20px; }
+  .nav-center { display:none; }
+  .nav-cta { display:none; }
+  .mob-nav { display:flex !important; }
+  .pg-hdr { padding:44px 20px 36px; flex-direction:column; align-items:flex-start; }
+  .subjs { padding:24px 16px; grid-template-columns:1fr; }
+  .tools-body { padding:28px 16px; }
+  .footer { padding:36px 20px; }
+  .footer-in { flex-direction:column; text-align:center; }
+  .fcopy { text-align:center; }
+}
+
+.mob-nav { display:none; position:fixed; bottom:0; left:0; right:0; z-index:800; background:rgba(4,12,24,0.97); border-top:1px solid var(--rim); padding:10px 0 14px; justify-content:space-around; }
+.mob-btn { display:flex; flex-direction:column; align-items:center; gap:4px; background:none; border:none; cursor:pointer; font-family:var(--ui); color:var(--muted); font-size:0.57rem; letter-spacing:1px; text-transform:uppercase; padding:2px 20px; transition:color 0.2s; }
+.mob-ic { font-size:1.15rem; transition:transform 0.2s var(--spring); }
+.mob-btn.on { color:var(--sky); }
+.mob-btn.on .mob-ic { transform:translateY(-2px); }
 </style>
 </head>
 <body>
 
+<!-- NAV -->
 <nav class="nav">
-  <div class="nav-brand" onclick="go('search')">LexSearch <span style="color:white">GOLD</span></div>
-  <div class="nav-tabs">
-    <button class="ntab on" id="tab-search" onclick="go('search')">🔍 Investigar</button>
-    <button class="ntab" id="tab-podcast" onclick="go('podcasts')">🎙️ LexPodcast</button>
+  <div class="nav-brand" onclick="go('search')">
+    Lex<span class="ns">Search</span><sup>Argentina</sup>
   </div>
+  <div class="nav-center">
+    <button class="ntab on" data-p="search" onclick="go('search')"><span class="ntab-ic">⌕</span> Buscador</button>
+    <button class="ntab" data-p="podcast" onclick="go('podcast')"><span class="ntab-ic">🎙</span> LexPodcast</button>
+    <button class="ntab" data-p="tools" onclick="go('tools')"><span class="ntab-ic">⚙</span> Herramientas <span class="nbadge">Beta</span></button>
+  </div>
+  <div><button class="nav-cta">Acceder →</button></div>
 </nav>
 
-<!-- BUSCADOR (Landing) -->
+<!-- ════ PAGE 1 — BUSCADOR ════ -->
 <div class="page on" id="pg-search">
-  <div class="center">
-    <h1 style="font-family: 'Cormorant Garamond', serif; font-size: 3.5rem; color: var(--gold); margin-bottom: 10px;">Sovereign Search</h1>
-    <p style="color: var(--muted); font-size: 1.1rem;">Inyección Multimedia Finalizada: 19 Assets Inyectados.</p>
-  </div>
-  <div class="grid">
-    <div class="card" onclick="go('podcasts')" style="cursor:pointer; text-align:center;">
-        <span class="card-tag">Acceso Directo</span>
-        <h3 class="card-title">Explorar Podcasts & Clases</h3>
-        <p class="card-desc">10 Podcasts y 9 Clases integradas con tecnología Cloudinary.</p>
+  <div class="sbg"></div>
+  <div class="orb orb1"></div>
+  <div class="orb orb2"></div>
+
+  <div class="search-scene">
+    <div class="h-badge">Legislación · Jurisprudencia · Doctrina Argentina</div>
+
+    <div class="hero-mark">
+      <span class="hm-lex">Lex</span><span class="hm-srch">Search</span>
+    </div>
+    <p class="hero-tagline">El buscador legal de la Argentina</p>
+
+    <div class="sbar-wrap">
+      <div class="sbar">
+        <div class="sbar-ico">⌕</div>
+        <input id="si" type="text" placeholder="Ley, decreto, fallo, artículo…"
+          onkeydown="if(event.key==='Enter')doSearch()"
+          oninput="liveInput(this.value)" />
+        <div class="sbar-sep"></div>
+        <select id="stype">
+          <option value="all">Todo</option>
+          <option value="ley">Leyes</option>
+          <option value="decreto">Decretos</option>
+          <option value="fallo">Fallos</option>
+        </select>
+        <button class="sbar-btn" onclick="doSearch()">Buscar</button>
+      </div>
+
+      <div class="sbar-hints">
+        <span class="hint" onclick="qs('Código Civil')">Código Civil</span>
+        <span class="hint" onclick="qs('Derecho Administrativo')">D. Administrativo</span>
+        <span class="hint" onclick="qs('fallo CSJN')">Fallos CSJN</span>
+        <span class="hint" onclick="qs('contrato')">Contratos</span>
+        <span class="hint" onclick="qs('consumidor')">Consumidor</span>
+      </div>
+
+      <div class="rp" id="rp"></div>
+    </div>
+
+    <div class="hero-stats" id="hstats">
+      <div class="stc"><div class="stn">48<sup>k</sup></div><div class="stl">Leyes</div></div>
+      <div class="stc"><div class="stn">320<sup>k</sup></div><div class="stl">Fallos</div></div>
+      <div class="stc"><div class="stn">24</div><div class="stl">Provincias</div></div>
+      <div class="stc"><div class="stn">∞</div><div class="stl">Gratis</div></div>
     </div>
   </div>
+
+  <footer class="footer">
+    <div class="footer-in">
+      <div class="fbrand">Lex<span class="fs">Search</span> Argentina</div>
+      <nav class="fnav"><a onclick="go('podcast')">LexPodcast</a><a onclick="go('tools')">Herramientas</a></nav>
+      <div class="fcopy">© 2026 LexSearch — Un proyecto de <em>Franklin Zaldaña</em><br>Libre para estudiantes del Derecho</div>
+    </div>
+  </footer>
 </div>
 
-<!-- PODCASTS -->
-<div class="page" id="pg-podcasts">
-  <div class="center">
-    <h1 style="font-family: 'Cormorant Garamond', serif; font-size: 3rem; color: var(--gold);">LexPodcast Intelligence</h1>
-    <p style="color: var(--muted);">Repositorio Académico Soberano · Franklin Zaldaña</p>
+<!-- ════ PAGE 2 — LEXPODCAST ════ -->
+<div class="page" id="pg-podcast">
+  <div class="pg-hdr reveal">
+    <div>
+      <div class="pg-eye"><span></span> Parte de LexSearch</div>
+      <h1 class="pg-ttl">Lex<em>Podcast</em></h1>
+      <p class="pg-sub">Clases de Derecho Administrativo y Contratos en formato audio. Escuchalas en cualquier lugar y dominá los temas de cátedra.</p>
+    </div>
+    <div class="free-b">Acceso libre · Sin registro</div>
   </div>
-  <div class="grid" id="container"></div>
+
+  <div class="subjs">
+    <div class="subj reveal">
+      <div class="subj-hd">
+        <div class="subj-ico">📋</div>
+        <div><div class="subj-nm">Derecho Administrativo</div><div class="subj-ds">Clases grabadas de cátedra</div></div>
+        <div class="subj-ct">5 unidades</div>
+      </div>
+      <div>
+        <div class="ep">
+          <div class="ep-n">01</div><div class="ep-ln"></div>
+          <div class="ep-if"><div class="ep-tt">Legalidad Exorbitante</div><div class="ep-mt">Unidad 1 · Multimedia</div></div>
+          <div class="ep-ac">
+            <button class="pill pb" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1773923327/Derecho_exorbitante_y_principio_de_legalidad_cll8wx.mp4','Legalidad Exorbitante','🎙️ Podcast')">▶ Pod</button>
+            <button class="pill pb" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1773923339/Jerarqu%C3%ADa_normativa_y_tipos_de_decretos_kttkgm.mp4','Legalidad Exorbitante','👨‍🏫 Clase')">▶ Cls</button>
+          </div>
+        </div>
+        <div class="ep">
+          <div class="ep-n">02</div><div class="ep-ln"></div>
+          <div class="ep-if"><div class="ep-tt">Jerarquía y Decretos</div><div class="ep-mt">Unidad 2 · Multimedia</div></div>
+          <div class="ep-ac">
+            <button class="pill pb" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1773923339/Jerarqu%C3%ADa_normativa_y_tipos_de_decretos_kttkgm.mp4','Jerarquía y Decretos','🎙️ Podcast')">▶ Pod</button>
+            <button class="pill pb" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1774060302/Teor%C3%ADa_del_%C3%B3rgano_y_competencia_administrativa_eitrzd.mp4','Jerarquía y Decretos','👨‍🏫 Clase')">▶ Cls</button>
+          </div>
+        </div>
+        <div class="ep">
+          <div class="ep-n">03</div><div class="ep-ln"></div>
+          <div class="ep-if"><div class="ep-tt">Teoría del Órgano</div><div class="ep-mt">Unidad 3 · Multimedia</div></div>
+          <div class="ep-ac">
+            <button class="pill pb" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1774060302/Teor%C3%ADa_del_%C3%B3rgano_y_competencia_administrativa_eitrzd.mp4','Teoría del Órgano','🎙️ Podcast')">▶ Pod</button>
+            <button class="pill pb" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1773923327/Derecho_exorbitante_y_principio_de_legalidad_cll8wx.mp4','Teoría del Órgano','👨‍🏫 Clase')">▶ Cls</button>
+          </div>
+        </div>
+        <div class="ep">
+          <div class="ep-n">04</div><div class="ep-ln"></div>
+          <div class="ep-if"><div class="ep-tt">Acto Administrativo</div><div class="ep-mt">Unidad 4 · Multimedia</div></div>
+          <div class="ep-ac">
+            <button class="pill pb" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1774838420/Elementos_del_Acto_Administrativo_y_Nulidades_m2z8v1.mp4','Acto Administrativo','🎙️ Podcast')">▶ Pod</button>
+            <button class="pill pb" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1774838420/Elementos_del_Acto_Administrativo_y_Nulidades_m2z8v1.mp4','Acto Administrativo','👨‍🏫 Clase')">▶ Cls</button>
+          </div>
+        </div>
+        <div class="ep">
+          <div class="ep-n">05</div><div class="ep-ln"></div>
+          <div class="ep-if"><div class="ep-tt">Procedimientos Nacionales</div><div class="ep-mt">Unidad 5 · Multimedia</div></div>
+          <div class="ep-ac">
+            <button class="pill pb" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1774838430/Procedimientos_Administrativos_y_Recursos_Nacionales_p9x3k1.mp4','Procedimientos Nacionales','🎙️ Podcast')">▶ Pod</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="subj reveal" data-d="1">
+      <div class="subj-hd">
+        <div class="subj-ico">📜</div>
+        <div><div class="subj-nm">Derecho de los Contratos</div><div class="subj-ds">Clases grabadas de cátedra</div></div>
+        <div class="subj-ct">5 unidades</div>
+      </div>
+      <div>
+        <div class="ep">
+          <div class="ep-n">01</div><div class="ep-ln"></div>
+          <div class="ep-if"><div class="ep-tt">Concepto y Naturaleza</div><div class="ep-mt">Unidad 1 · Multimedia</div></div>
+          <div class="ep-ac">
+            <button class="pill pb" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1773923360/Anatom%C3%ADa_y_clasificaci%C3%B3n_de_los_contratos_k4dapl.mp4','Concepto y Naturaleza','🎙️ Podcast')">▶ Pod</button>
+            <button class="pill pb" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1774060346/Consentimiento_silencio_y_requisitos_de_la_oferta_ajwwaz.mp4','Concepto y Naturaleza','👨‍🏫 Clase')">▶ Cls</button>
+          </div>
+        </div>
+        <div class="ep">
+          <div class="ep-n">02</div><div class="ep-ln"></div>
+          <div class="ep-if"><div class="ep-tt">Clasificación General</div><div class="ep-mt">Unidad 2 · Multimedia</div></div>
+          <div class="ep-ac">
+            <button class="pill pb" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1773923370/Clasificaci%C3%B3n_de_contratos_y_claves_para_aprobar_dt8azq.mp4','Clasificación General','🎙️ Podcast')">▶ Pod</button>
+            <button class="pill pb" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1774838400/Objeto_Causa_y_Forma_en_el_CCyC_k9x2w8.mp4','Clasificación General','👨‍🏫 Clase')">▶ Cls</button>
+          </div>
+        </div>
+        <div class="ep">
+          <div class="ep-n">03</div><div class="ep-ln"></div>
+          <div class="ep-if"><div class="ep-tt">Consentimiento y Oferta</div><div class="ep-mt">Unidad 3 · Multimedia</div></div>
+          <div class="ep-ac">
+            <button class="pill pb" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1774060346/Consentimiento_silencio_y_requisitos_de_la_oferta_ajwwaz.mp4','Consentimiento y Oferta','🎙️ Podcast')">▶ Pod</button>
+            <button class="pill pb" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1773923370/Clasificaci%C3%B3n_de_contratos_y_claves_para_aprobar_dt8azq.mp4','Consentimiento y Oferta','👨‍🏫 Clase')">▶ Cls</button>
+          </div>
+        </div>
+        <div class="ep">
+          <div class="ep-n">04</div><div class="ep-ln"></div>
+          <div class="ep-if"><div class="ep-tt">Objeto y Causa (CCyC)</div><div class="ep-mt">Unidad 4 · Multimedia</div></div>
+          <div class="ep-ac">
+            <button class="pill pb" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1774838400/Objeto_Causa_y_Forma_en_el_CCyC_k9x2w8.mp4','Objeto y Causa','🎙️ Podcast')">▶ Pod</button>
+            <button class="pill pb" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1774838410/Prueba_y_Efectos_de_los_Contratos_l4q9z1.mp4','Objeto y Causa','👨‍🏫 Clase')">▶ Cls</button>
+          </div>
+        </div>
+        <div class="ep">
+          <div class="ep-n">05</div><div class="ep-ln"></div>
+          <div class="ep-if"><div class="ep-tt">Prueba y Efectos</div><div class="ep-mt">Unidad 5 · Multimedia</div></div>
+          <div class="ep-ac">
+            <button class="pill pb" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1774838410/Prueba_y_Efectos_de_los_Contratos_l4q9z1.mp4','Prueba y Efectos','🎙️ Podcast')">▶ Pod</button>
+            <button class="pill pb" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1773923360/Anatom%C3%ADa_y_clasificaci%C3%B3n_de_los_contratos_k4dapl.mp4','Prueba y Efectos','👨‍🏫 Clase')">▶ Cls</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-in">
+      <div class="fbrand">Lex<span class="fs">Search</span> Argentina</div>
+      <nav class="fnav"><a onclick="go('search')">Buscador</a><a onclick="go('tools')">Herramientas</a></nav>
+      <div class="fcopy">© 2026 — Un proyecto de <em>Franklin Zaldaña</em></div>
+    </div>
+  </footer>
 </div>
 
-<!-- PLAYER -->
-<div class="player" id="ap">
-  <div class="player-info">
-    <div class="player-title" id="ap-title">—</div>
-    <div class="player-sub" id="ap-sub">—</div>
+<!-- ════ PAGE 3 — HERRAMIENTAS ════ -->
+<div class="page" id="pg-tools">
+  <div class="pg-hdr reveal">
+    <div>
+      <div class="pg-eye"><span></span> Utilidades jurídicas</div>
+      <h1 class="pg-ttl">Herramientas <span class="ge">legales</span></h1>
+      <p class="pg-sub">Calculadoras, modelos y utilidades para agilizar tu trabajo. Algunas ya disponibles, otras muy pronto.</p>
+    </div>
   </div>
-  <audio id="apa" controls controlsList="nodownload"></audio>
-  <button onclick="stopAudio()" style="background:none; border:none; color:var(--gold); cursor:pointer; font-size:1.2rem; margin-left:20px;">✕</button>
+
+  <div class="tools-body">
+    <div class="tsec">
+      <div class="tsec-lbl">Disponible ahora</div>
+      <div class="tgrid">
+        <div class="tool feat reveal" onclick="go('search')">
+          <div class="tool-ar">↗</div>
+          <div class="tool-ic">⌕</div>
+          <div class="tool-nm">Buscador Legal LexSearch</div>
+          <div class="tool-ds">Encontrá leyes nacionales y provinciales, decretos, resoluciones y fallos judiciales. Búsqueda inteligente con filtros por jurisdicción, materia y año. El motor central de la plataforma.</div>
+          <div class="tool-st sl"><span class="dot dg"></span> Disponible</div>
+        </div>
+        <div class="tool reveal" data-d="1" onclick="go('podcast')">
+          <div class="tool-ar">↗</div>
+          <div class="tool-ic">🎙</div>
+          <div class="tool-nm">LexPodcast</div>
+          <div class="tool-ds">Clases de Derecho Administrativo y Contratos en formato audio. Gratis para todos los estudiantes, sin registro.</div>
+          <div class="tool-st sl"><span class="dot dg"></span> Disponible</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tsec">
+      <div class="tsec-lbl">Próximamente</div>
+      <div class="tgrid">
+        <div class="tool reveal">
+          <div class="tool-ic">📅</div>
+          <div class="tool-nm">Calculadora de Plazos</div>
+          <div class="tool-ds">Calculá plazos procesales, prescripciones y términos legales considerando días hábiles y feriados nacionales y provinciales.</div>
+          <div class="tool-st ss"><span class="dot da"></span> Próximamente</div>
+        </div>
+        <div class="tool reveal" data-d="1">
+          <div class="tool-ic">📝</div>
+          <div class="tool-nm">Modelos de Escritos</div>
+          <div class="tool-ds">Biblioteca de demandas, contestaciones, recursos y escritos procesales listos para adaptar y usar en cualquier fuero.</div>
+          <div class="tool-st ss"><span class="dot da"></span> Próximamente</div>
+        </div>
+        <div class="tool reveal" data-d="2">
+          <div class="tool-ic">📈</div>
+          <div class="tool-nm">Índices de Actualización</div>
+          <div class="tool-ds">Consultá CER, UVA, IPC y actualizadores judiciales para liquidaciones, indemnizaciones y pasivos previsionales.</div>
+          <div class="tool-st ss"><span class="dot da"></span> Próximamente</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="tsec">
+      <div class="tsec-lbl">En planificación</div>
+      <div class="tgrid">
+        <div class="tool dim reveal">
+          <div class="tool-ic">🤖</div>
+          <div class="tool-nm">Análisis con IA</div>
+          <div class="tool-ds">Cargá un fallo o norma y obtené resúmenes, puntos clave y doctrina relacionada de forma automática.</div>
+          <div class="tool-st sp"><span class="dot dm"></span> En planificación</div>
+        </div>
+        <div class="tool dim reveal" data-d="1">
+          <div class="tool-ic">📊</div>
+          <div class="tool-nm">Estadísticas Judiciales</div>
+          <div class="tool-ds">Tendencias de jurisprudencia, evolución de criterios y tribunales más citados en Argentina.</div>
+          <div class="tool-st sp"><span class="dot dm"></span> En planificación</div>
+        </div>
+        <div class="tool dim reveal" data-d="2">
+          <div class="tool-ic">🔔</div>
+          <div class="tool-nm">Alertas de Cambios</div>
+          <div class="tool-ds">Notificaciones cuando se modifique una ley o aparezca jurisprudencia sobre un tema de tu interés.</div>
+          <div class="tool-st sp"><span class="dot dm"></span> En planificación</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <footer class="footer">
+    <div class="footer-in">
+      <div class="fbrand">Lex<span class="fs">Search</span> Argentina</div>
+      <nav class="fnav"><a onclick="go('search')">Buscador</a><a onclick="go('podcast')">LexPodcast</a></nav>
+      <div class="fcopy">© 2026 — Un proyecto de <em>Franklin Zaldaña</em></div>
+    </div>
+  </footer>
+</div>
+
+<!-- Mobile nav -->
+<div class="mob-nav">
+  <button class="mob-btn on" data-p="search" onclick="go('search')"><span class="mob-ic">⌕</span>Buscador</button>
+  <button class="mob-btn" data-p="podcast" onclick="go('podcast')"><span class="mob-ic">🎙</span>Podcast</button>
+  <button class="mob-btn" data-p="tools" onclick="go('tools')"><span class="mob-ic">⚙</span>Tools</button>
+</div>
+
+<!-- Audio player -->
+<div class="ap" id="ap">
+  <div class="ap-tr"><div class="ap-nm" id="apNm">—</div><div class="ap-ct" id="apCt">—</div></div>
+  <audio id="apA" controls></audio>
+  <button class="ap-x" onclick="stopAudio()">✕</button>
 </div>
 
 <script>
-const BASE = "https://res.cloudinary.com/dhdsklult/video/upload/";
+/* ── Navigation ── */
+let cur = 'search';
+function go(page) {
+  if (page === cur) return;
+  const from = document.getElementById('pg-' + cur);
+  const to   = document.getElementById('pg-' + page);
+  from.classList.add('out');
+  setTimeout(() => {
+    from.classList.remove('on','out');
+    to.classList.add('on');
+    window.scrollTo({top:0,behavior:'instant'});
+    initRev();
+  }, 300);
+  cur = page;
+  document.querySelectorAll('[data-p]').forEach(el => el.classList.toggle('on', el.dataset.p === page));
+}
+
+/* ── Dataset ── */
 const DATA = [
-  // CONTRATOS (5 Pod / 5 Cl)
-  { materia: 'Contratos', id: 1, title: 'Concepto y Naturaleza', pod: 'v1773923360/Anatom%C3%ADa_y_clasificaci%C3%B3n_de_los_contratos_k4dapl.mp4', cls: 'v1774060346/Consentimiento_silencio_y_requisitos_de_la_oferta_ajwwaz.mp4' },
-  { materia: 'Contratos', id: 2, title: 'Clasificación General', pod: 'v1773923370/Clasificaci%C3%B3n_de_contratos_y_claves_para_aprobar_dt8azq.mp4', cls: 'v1774838400/Objeto_Causa_y_Forma_en_el_CCyC_k9x2w8.mp4' },
-  { materia: 'Contratos', id: 3, title: 'Consentimiento y Oferta', pod: 'v1774060346/Consentimiento_silencio_y_requisitos_de_la_oferta_ajwwaz.mp4', cls: 'v1773923370/Clasificaci%C3%B3n_de_contratos_y_claves_para_aprobar_dt8azq.mp4' },
-  { materia: 'Contratos', id: 4, title: 'Objeto y Causa (CCyC)', pod: 'v1774838400/Objeto_Causa_y_Forma_en_el_CCyC_k9x2w8.mp4', cls: 'v1774838410/Prueba_y_Efectos_de_los_Contratos_l4q9z1.mp4' },
-  { materia: 'Contratos', id: 5, title: 'Prueba y Efectos', pod: 'v1774838410/Prueba_y_Efectos_de_los_Contratos_l4q9z1.mp4', cls: 'v1773923360/Anatom%C3%ADa_y_clasificaci%C3%B3n_de_los_contratos_k4dapl.mp4' },
-  
-  // ADMINISTRATIVO (5 Pod / 4 Cl)
-  { materia: 'Administrativo', id: 1, title: 'Legalidad Exorbitante', pod: 'v1773923327/Derecho_exorbitante_y_principio_de_legalidad_cll8wx.mp4', cls: 'v1773923339/Jerarqu%C3%ADa_normativa_y_tipos_de_decretos_kttkgm.mp4' },
-  { materia: 'Administrativo', id: 2, title: 'Jerarquía y Decretos', pod: 'v1773923339/Jerarqu%C3%ADa_normativa_y_tipos_de_decretos_kttkgm.mp4', cls: 'v1774060302/Teor%C3%ADa_del_%C3%B3rgano_y_competencia_administrativa_eitrzd.mp4' },
-  { materia: 'Administrativo', id: 3, title: 'Teoría del Órgano', pod: 'v1774060302/Teor%C3%ADa_del_%C3%B3rgano_y_competencia_administrativa_eitrzd.mp4', cls: 'v1773923327/Derecho_exorbitante_y_principio_de_legalidad_cll8wx.mp4' },
-  { materia: 'Administrativo', id: 4, title: 'Acto Administrativo', pod: 'v1774838420/Elementos_del_Acto_Administrativo_y_Nulidades_m2z8v1.mp4', cls: 'v1774838420/Elementos_del_Acto_Administrativo_y_Nulidades_m2z8v1.mp4' },
-  { materia: 'Administrativo', id: 5, title: 'Procedimientos Nacionales', pod: 'v1774838430/Procedimientos_Administrativos_y_Recursos_Nacionales_p9x3k1.mp4', cls: null }
+  {icon:'📋',type:'Ley Nacional',title:'Ley 19.549 — Procedimiento Administrativo',snip:'Regula el procedimiento administrativo ante la Administración Pública Nacional. Principios de celeridad, informalismo y eficacia.',tags:['Nacional','Administrativo','1972']},
+  {icon:'📋',type:'Ley Nacional',title:'Ley 26.994 — Código Civil y Comercial',snip:'Unifica el Código Civil y el Código Comercial. Regula personas, bienes, hechos jurídicos, obligaciones y contratos en toda la Nación.',tags:['Nacional','Civil','Comercial','2014']},
+  {icon:'📋',type:'Ley Nacional',title:'Ley 26.944 — Responsabilidad del Estado',snip:'Regula la responsabilidad del Estado por los daños que su actividad o inactividad produzca a los bienes y derechos de las personas.',tags:['Nacional','Administrativo','2014']},
+  {icon:'📋',type:'Ley Nacional',title:'Ley 24.156 — Administración Financiera',snip:'Establece y regula la administración financiera y los sistemas de control del sector público nacional argentino.',tags:['Nacional','Financiero','1992']},
+  {icon:'📋',type:'Ley Nacional',title:'Ley 19.550 — Sociedades Comerciales',snip:'Regula la constitución, funcionamiento y disolución de las sociedades comerciales en la República Argentina.',tags:['Nacional','Comercial','1972']},
+  {icon:'📋',type:'Ley Nacional',title:'Ley 25.326 — Protección de Datos Personales',snip:'Regula la protección integral de los datos personales asentados en archivos, registros, bancos de datos u otros medios de tratamiento.',tags:['Nacional','Privacidad','2000']},
+  {icon:'📋',type:'Ley Nacional',title:'Ley 24.240 — Defensa del Consumidor',snip:'Establece los derechos y deberes de consumidores y proveedores. Regula información, trato digno, seguridad y prácticas abusivas.',tags:['Nacional','Consumidor','1993']},
+  {icon:'📄',type:'Decreto',title:'Decreto 1759/72 — Reglamento de Procedimiento Administrativo',snip:'Reglamenta la Ley 19.549. Normas para la tramitación de expedientes administrativos y el ejercicio del derecho de defensa.',tags:['Nacional','Administrativo','1972']},
+  {icon:'📄',type:'Decreto',title:'Decreto 70/2023 — Desregulación Económica',snip:'Dispone medidas de desregulación económica orientadas a la libertad de mercado y la reforma estructural del Estado Nacional.',tags:['Nacional','Economía','2023']},
+  {icon:'⚖',type:'Fallo — CSJN',title:'Cencosud S.A. c/ GCBA s/ acción declarativa',snip:'La Corte Suprema resolvió sobre la aplicación del principio de razonabilidad en actos administrativos de alcance general.',tags:['CSJN','Administrativo','2016']},
+  {icon:'⚖',type:'Fallo — CSJN',title:'Halabi, Ernesto c/ PEN s/ amparo',snip:'La Corte reconoce la acción de clase y el derecho a la intimidad frente a la intercepción de comunicaciones sin orden judicial.',tags:['CSJN','Constitucional','2009']},
+  {icon:'⚖',type:'Fallo — CÁMARA',title:'García Méndez c/ ANSES s/ prestaciones varias',snip:'La Cámara Federal resolvió sobre el reajuste de haberes previsionales conforme a la garantía constitucional de movilidad.',tags:['Cámara Federal','Previsional','2022']},
 ];
 
-function init() {
-  const container = document.getElementById('container');
-  DATA.forEach(d => {
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.innerHTML = `
-      <span class="card-tag">${d.materia} · EP. ${d.id}</span>
-      <h3 class="card-title">${d.title}</h3>
-      <div class="btn-group">
-        <button class="btn-audio" onclick="play('${BASE}${d.pod}','${d.title}','🎙️ PODCAST — ${d.materia.toUpperCase()}')">🎙️ PODCAST</button>
-        <button class="btn-audio" ${d.cls ? `onclick="play('${BASE}${d.cls}','${d.title}','👨‍🏫 CLASE — ${d.materia.toUpperCase()}')"` : 'disabled'}>👨‍🏫 CLASE</button>
-      </div>
-    `;
-    container.appendChild(card);
+function esc(s){ return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;'); }
+function hl(txt,q){
+  if(!q) return esc(txt);
+  const re=new RegExp(`(${q.replace(/[.*+?^${}()|[\]\\]/g,'\\$&')})`,'gi');
+  return esc(txt).replace(re,'<mark>$1</mark>');
+}
+
+function doSearch(){
+  const q=document.getElementById('si').value.trim();
+  const t=document.getElementById('stype').value;
+  if(!q) return;
+  const res=DATA.filter(r=>{
+    const mq=r.title.toLowerCase().includes(q.toLowerCase())||r.snip.toLowerCase().includes(q.toLowerCase())||r.type.toLowerCase().includes(q.toLowerCase())||r.tags.join(' ').toLowerCase().includes(q.toLowerCase());
+    const mt=t==='all'?true:t==='ley'?r.type.startsWith('Ley'):t==='decreto'?r.type.startsWith('Dec'):t==='fallo'?r.type.startsWith('Fallo'):true;
+    return mq&&mt;
   });
+  document.getElementById('hstats').style.display='none';
+  render(res,q);
 }
 
-function play(url, title, sub) {
-  const ap = document.getElementById('ap');
-  const aud = document.getElementById('apa');
-  document.getElementById('ap-title').innerText = title;
-  document.getElementById('ap-sub').innerText = sub;
-  aud.src = url;
-  ap.classList.add('on');
-  aud.play();
+function liveInput(v){
+  if(!v){
+    document.getElementById('rp').style.display='none';
+    document.getElementById('hstats').style.display='flex';
+  }
 }
 
-function stopAudio() {
-  const ap = document.getElementById('ap');
-  const aud = document.getElementById('apa');
-  aud.pause();
-  ap.classList.remove('on');
+function qs(q){ document.getElementById('si').value=q; doSearch(); }
+
+function render(res,q){
+  const box=document.getElementById('rp');
+  box.style.display='block';
+  if(!res.length){
+    box.innerHTML=`<div class="r-empty"><span class="r-empty-ic">⌕</span>Sin resultados para "<strong>${esc(q)}</strong>"<br><span style="font-size:0.72rem;opacity:0.6;margin-top:6px;display:block">Probá términos distintos o cambiá el tipo</span></div>`;
+    return;
+  }
+  const header=`<div class="rbar"><div class="rcount"><strong>${res.length}</strong> resultado${res.length>1?'s':''}</div></div>`;
+  const cards=res.map(r=>{
+    const tags=r.tags.map(t=>`<span class="rc-tag">${t}</span>`).join('');
+    return `<div class="rc"><div class="rc-ico">${r.icon}</div><div class="rc-body"><div class="rc-type">${esc(r.type)}</div><div class="rc-title">${hl(r.title,q)}</div><div class="rc-snip">${hl(r.snip,q)}</div><div class="rc-tags">${tags}</div></div><div class="rc-arr">↗</div></div>`;
+  }).join('');
+  box.innerHTML=header+cards;
 }
 
-function go(pg) {
-    document.querySelectorAll('.page').forEach(p => p.classList.remove('on'));
-    document.getElementById('pg-' + pg).classList.add('on');
-    document.querySelectorAll('.ntab').forEach(t => t.classList.remove('on'));
-    document.getElementById('tab-' + (pg==='podcasts'?'podcast':'search')).classList.add('on');
+/* ── Audio ── */
+function playAudio(url,name,cat){
+  if(!url||url.startsWith('LINK')){ alert('⚠️ Episodio sin audio cargado.\nReemplazá el link de Google Drive en el HTML.'); return; }
+  document.getElementById('apNm').textContent=name;
+  document.getElementById('apCt').textContent=cat;
+  const a=document.getElementById('apA'); a.src=url; a.play();
+  document.getElementById('ap').classList.add('on');
 }
+function stopAudio(){ document.getElementById('apA').pause(); document.getElementById('ap').classList.remove('on'); }
 
-window.onload = init;
+/* ── Scroll reveal ── */
+const rio=new IntersectionObserver(es=>{es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('vis');rio.unobserve(e.target);}});},{threshold:0.07});
+function initRev(){ document.querySelectorAll('.reveal:not(.vis)').forEach(el=>rio.observe(el)); }
+initRev();
+
+/* ── Keyboard ── */
+document.addEventListener('keydown',e=>{
+  if(e.key==='/'&&cur==='search'&&document.activeElement.tagName!=='INPUT'){ e.preventDefault(); document.getElementById('si').focus(); }
+  if(e.key==='Escape'){ document.getElementById('si').value=''; document.getElementById('rp').style.display='none'; document.getElementById('hstats').style.display='flex'; }
+});
 </script>
 </body>
 </html>
