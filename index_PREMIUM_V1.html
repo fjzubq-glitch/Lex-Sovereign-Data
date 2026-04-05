@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LexSearch Premium — El Estándar de Élite</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;1,300;1,400;1,500&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600&family=Lora:ital,wght@0,400;0,500;1,400;1,500&display=swap" rel="stylesheet">
+<style>
+/* ═══════════════════════════════════════════════════
+   PREMIUM DESIGN TOKENS (21st.dev inspired)
+   ═══════════════════════════════════════════════════ */
+:root {
+  --abyss:    #020617;
+  --deep:     #08182c;
+  --mid:      #0c2038;
+  --card:     rgba(30, 41, 59, 0.4);
+  --gold:     #d4af37;
+  --gold-hi:  #f0d898;
+  --white:    #f8fafc;
+  --muted:    #94a3b8;
+  --glass:    rgba(15, 23, 42, 0.7);
+  --border:   rgba(255, 255, 255, 0.08);
+  --shimmer:  linear-gradient(90deg, transparent, rgba(212, 175, 55, 0.1), transparent);
+  
+  --serif:    'Cormorant Garamond', Georgia, serif;
+  --ui:       'DM Sans', sans-serif;
+  --spring:   cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+body { 
+  background-color: var(--abyss); 
+  color: var(--white); 
+  font-family: var(--ui); 
+  overflow-x: hidden; 
+  min-height: 100vh;
+  background-image: 
+    radial-gradient(circle at 10% 20%, rgba(212, 175, 55, 0.03) 0%, transparent 40%),
+    radial-gradient(circle at 90% 80%, rgba(30, 58, 138, 0.05) 0%, transparent 40%);
+}
+
+/* ═══════════════════════════════════════════════════
+   GLASS NAV
+   ═══════════════════════════════════════════════════ */
+.nav {
+  position: fixed; top: 20px; left: 50%; transform: translateX(-50%);
+  width: 90%; max-width: 1200px; height: 64px; z-index: 1000;
+  background: var(--glass);
+  backdrop-filter: blur(20px);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 0 32px;
+  box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+}
+
+.nav-brand { font-family: var(--serif); font-size: 1.6rem; color: var(--gold); cursor: pointer; text-decoration: none; }
+.nav-links { display: flex; gap: 24px; }
+.nav-link { color: var(--muted); text-decoration: none; font-size: 0.85rem; letter-spacing: 1px; transition: color 0.3s; cursor: pointer; }
+.nav-link:hover, .nav-link.on { color: var(--gold); }
+
+/* ═══════════════════════════════════════════════════
+   BENTO GRID SYSTEM
+   ═══════════════════════════════════════════════════ */
+.bento-container {
+  max-width: 1200px; margin: 120px auto 60px; padding: 0 20px;
+  display: grid;
+  grid-template-columns: repeat(12, 1fr);
+  grid-auto-rows: minmax(180px, auto);
+  gap: 20px;
+}
+
+.bento-item {
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 24px;
+  padding: 32px;
+  position: relative;
+  overflow: hidden;
+  transition: transform 0.4s var(--spring), border-color 0.4s;
+}
+
+.bento-item::before {
+  content: ''; position: absolute; inset: 0;
+  background: var(--shimmer);
+  transform: translateX(-100%);
+  transition: transform 0.6s;
+}
+
+.bento-item:hover { 
+  transform: translateY(-8px); 
+  border-color: rgba(212, 175, 55, 0.3);
+}
+
+.bento-item:hover::before { transform: translateX(100%); }
+
+/* Grid layout rules */
+.span-6 { grid-column: span 6; }
+.span-4 { grid-column: span 4; }
+.span-8 { grid-column: span 8; }
+.span-12 { grid-column: span 12; }
+.row-2 { grid-row: span 2; }
+
+@media (max-width: 900px) {
+  .span-6, .span-4, .span-8 { grid-column: span 12; }
+}
+
+/* ═══════════════════════════════════════════════════
+   HERO / SEARCH
+   ═══════════════════════════════════════════════════ */
+.hero { text-align: center; margin-top: 160px; margin-bottom: 80px; }
+.hero-title { font-family: var(--serif); font-size: 5rem; font-weight: 300; letter-spacing: -2px; margin-bottom: 16px; }
+.hero-title em { color: var(--gold); font-style: italic; }
+.hero-sub { color: var(--muted); font-size: 1.1rem; letter-spacing: 2px; text-transform: uppercase; }
+
+.search-wrap { max-width: 700px; margin: 40px auto; position: relative; }
+.search-bar {
+  background: rgba(15, 23, 42, 0.8);
+  border: 1px solid var(--border);
+  border-radius: 100px;
+  padding: 12px 12px 12px 32px;
+  display: flex; align-items: center; gap: 16px;
+  transition: border-color 0.3s;
+}
+.search-bar:focus-within { border-color: var(--gold); }
+.search-bar input { background: none; border: none; outline: none; color: white; flex: 1; font-size: 1rem; }
+.search-btn { background: var(--gold); color: black; border: none; border-radius: 100px; padding: 12px 32px; font-weight: 600; cursor: pointer; transition: transform 0.2s; }
+.search-btn:hover { transform: scale(1.05); }
+
+/* ═══════════════════════════════════════════════════
+   PODCAST EPISODES IN BENTO
+   ═══════════════════════════════════════════════════ */
+.ep { display: flex; flex-direction: column; gap: 16px; height: 100%; justify-content: space-between; }
+.ep-header { display: flex; justify-content: space-between; align-items: center; }
+.ep-date { font-size: 0.7rem; color: var(--gold); letter-spacing: 2px; }
+.ep-title { font-family: var(--serif); font-size: 1.4rem; color: var(--white); }
+.ep-actions { display: flex; gap: 10px; }
+.pill { 
+  background: rgba(212, 175, 55, 0.1); 
+  border: 1px solid rgba(212, 175, 55, 0.2); 
+  color: var(--gold); 
+  padding: 8px 16px; 
+  border-radius: 100px; 
+  font-size: 0.75rem; 
+  cursor: pointer; 
+  transition: all 0.3s;
+}
+.pill:hover { background: var(--gold); color: black; }
+
+/* ═══════════════════════════════════════════════════
+   RESULTS
+   ═══════════════════════════════════════════════════ */
+#rp { display: none; margin-top: 20px; }
+.rc { 
+  background: var(--card); border: 1px solid var(--border); border-radius: 16px; padding: 20px; margin-bottom: 12px; cursor: pointer; transition: border-color 0.3s;
+}
+.rc:hover { border-color: var(--gold); }
+.rc-title { font-family: var(--serif); font-size: 1.2rem; color: var(--gold); margin-bottom: 8px; }
+.rc-snip { font-size: 0.85rem; color: var(--muted); line-height: 1.6; }
+
+/* ═══════════════════════════════════════════════════
+   PLAYER
+   ═══════════════════════════════════════════════════ */
+.ap { 
+  position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%); width: 90%; max-width: 600px; 
+  background: var(--glass); backdrop-filter: blur(20px); border: 1px solid var(--border); border-radius: 100px;
+  padding: 12px 32px; display: none; align-items: center; gap: 20px; z-index: 2000;
+}
+.ap.on { display: flex; }
+
+.page { display: none; min-height: 100vh; }
+.page.on { display: block; animation: fadeIn 0.8s var(--spring); }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+</style>
+</head>
+<body>
+
+<nav class="nav">
+  <div class="nav-brand" onclick="go('search')">Lex<em>Search</em></div>
+  <div class="nav-links">
+    <div class="nav-link on" data-p="search" onclick="go('search')">BUSCADOR</div>
+    <div class="nav-link" data-p="podcast" onclick="go('podcast')">PODCAST</div>
+    <div class="nav-link" data-p="holdings" onclick="go('holdings')">HOLDINGS</div>
+  </div>
+  <div class="nav-link">PREMIUM V1</div>
+</nav>
+
+<div class="page on" id="pg-search">
+  <div class="hero">
+    <p class="hero-sub">Soberanía Jurídica Argentina</p>
+    <h1 class="hero-title">Lex<em>Search</em> Gold</h1>
+    <div class="search-wrap">
+      <div class="search-bar">
+        <input id="si" type="text" placeholder="Buscar leyes, decretos o holdings..." onkeydown="if(event.key==='Enter')doSearch()" />
+        <button class="search-btn" onclick="doSearch()">BUSCAR</button>
+      </div>
+      <div id="rp"></div>
+    </div>
+  </div>
+</div>
+
+<div class="page" id="pg-podcast">
+  <div class="hero">
+    <p class="hero-sub">Clases & Multimedia</p>
+    <h1 class="hero-title">Lex<em>Podcast</em></h1>
+  </div>
+  
+  <div class="bento-container">
+    <!-- Admin Bento items -->
+    <div class="bento-item span-6 row-2">
+      <div class="ep">
+        <div class="ep-header"><span class="ep-date">12/03 · SESIÓN 1</span></div>
+        <h2 class="ep-title">Legalidad Exorbitante</h2>
+        <div class="ep-actions">
+          <button class="pill" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1773923327/Derecho_exorbitante_y_principio_de_legalidad_cll8wx.mp4','Legalidad Exorbitante','🎙️ Podcast')">🎙️ Podcast</button>
+          <button class="pill" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1773923339/Jerarqu%C3%ADa_normativa_y_tipos_de_decretos_kttkgm.mp4','Legalidad Exorbitante','👨‍🏫 Clase')">👨‍🏫 Clase</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bento-item span-6">
+      <div class="ep">
+        <div class="ep-header"><span class="ep-date">16/03 · SESIÓN 2</span></div>
+        <h2 class="ep-title">Jerarquía y Decretos</h2>
+        <div class="ep-actions">
+          <button class="pill" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1773923339/Jerarqu%C3%ADa_normativa_y_tipos_de_decretos_kttkgm.mp4','Jerarquía y Decretos','🎙️ Podcast')">🎙️ Podcast</button>
+          <button class="pill" disabled>👨‍🏫 (Próximamente)</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="bento-item span-6">
+      <div class="ep">
+        <div class="ep-header"><span class="ep-date">19/03 · SESIÓN 3</span></div>
+        <h2 class="ep-title">Teoría del Órgano</h2>
+        <div class="ep-actions">
+          <button class="pill" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1774060302/Teor%C3%ADa_del_%C3%B3rgano_y_competencia_administrativa_eitrzd.mp4','Teoría del Órgano','🎙️ Podcast')">🎙️ Podcast</button>
+          <button class="pill" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1773923327/Derecho_exorbitante_y_principio_de_legalidad_cll8wx.mp4','Teoría del Órgano','👨‍🏫 Clase')">👨‍🏫 Clase</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contratos Bento items -->
+    <div class="bento-item span-4 row-2">
+      <div class="ep">
+        <div class="ep-header"><span class="ep-date">12/03 · CONTRATOS</span></div>
+        <h2 class="ep-title">Anatomía & Clasificación</h2>
+        <div class="ep-actions">
+          <button class="pill" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1773923360/Anatom%C3%ADa_y_clasificaci%C3%B3n_de_los_contratos_k4dapl.mp4','Anatomía y Clasificación','🎙️ Podcast')">🎙️ Pod</button>
+        </div>
+      </div>
+    </div>
+    
+    <div class="bento-item span-8">
+      <div class="ep">
+        <div class="ep-header"><span class="ep-date">26/03 · SESIÓN 4</span></div>
+        <h2 class="ep-title">Acto Administrativo & Nulidades</h2>
+        <div class="ep-actions">
+          <button class="pill" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1774838420/Elementos_del_Acto_Administrativo_y_Nulidades_m2z8v1.mp4','Acto Administrativo','🎙️ Podcast')">🎙️ Podcast</button>
+          <button class="pill" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1774838420/Elementos_del_Acto_Administrativo_y_Nulidades_m2z8v1.mp4','Acto Administrativo','👨‍🏫 Clase')">👨‍🏫 Clase</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="bento-item span-8">
+      <div class="ep">
+        <div class="ep-header"><span class="ep-date">30/03 · SESIÓN 5</span></div>
+        <h2 class="ep-title">Procedimientos Nacionales</h2>
+        <div class="ep-actions">
+          <button class="pill" onclick="playAudio('https://res.cloudinary.com/dhdsklult/video/upload/v1774838430/Procedimientos_Administrativos_y_Recursos_Nacionales_p9x3k1.mp4','Procedimientos','🎙️ Podcast')">🎙️ Podcast</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="ap" id="ap">
+  <div id="apNm" style="font-size:0.8rem; color:var(--gold); flex:1;">—</div>
+  <audio id="apA" controls style="width:200px; height:30px;"></audio>
+  <button onclick="stopAudio()" style="background:none; border:none; color:white; cursor:pointer;">✕</button>
+</div>
+
+<script>
+let cur = 'search';
+function go(page) {
+  document.getElementById('pg-' + cur).classList.remove('on');
+  document.getElementById('pg-' + page).classList.add('on');
+  cur = page;
+  document.querySelectorAll('.nav-link').forEach(el => el.classList.toggle('on', el.dataset.p === page));
+}
+
+const DATA = [
+  {icon:'📋',type:'Ley Nacional',title:'Ley 19.549 — Procedimiento Administrativo',snip:'Regula el procedimiento administrativo ante la APN. Principios de celeridad, informalismo y eficacia.',tags:['Nacional','Administrativo']},
+  {icon:'⚖',type:'Fallo — CSJN',title:'Halabi, Ernesto c/ PEN s/ amparo',snip:'La Corte reconoce la acción de clase y el derecho a la intimidad.',tags:['CSJN','Constitucional','2009']},
+  {icon:'⚖',type:'Fallo — CSJN',title:'Cencosud S.A. c/ GCBA s/ acción declarativa',snip:'La Corte resolvió sobre la aplicación del principio de razonabilidad.',tags:['CSJN','Administrativo','2016']},
+];
+
+function doSearch(){
+  const q=document.getElementById('si').value.trim();
+  if(!q) return;
+  const box=document.getElementById('rp');
+  box.style.display='block';
+  const res = DATA.filter(r => r.title.toLowerCase().includes(q.toLowerCase()) || r.snip.toLowerCase().includes(q.toLowerCase()));
+  box.innerHTML = res.map(r => `
+    <div class="rc">
+      <div class="rc-title">${r.title}</div>
+      <div class="rc-snip">${r.snip}</div>
+    </div>
+  `).join('');
+}
+
+function playAudio(url,name,cat){
+  document.getElementById('apNm').textContent = name + ' (' + cat + ')';
+  const a=document.getElementById('apA'); a.src=url; a.play();
+  document.getElementById('ap').classList.add('on');
+}
+function stopAudio(){ document.getElementById('apA').pause(); document.getElementById('ap').classList.remove('on'); }
+</script>
+
+</body>
+</html>
