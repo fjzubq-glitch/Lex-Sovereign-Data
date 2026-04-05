@@ -118,14 +118,27 @@ body::after {
 /* Search Results UI */
 .rp {
   display: none; width: 100%; max-width: 700px; margin-top: 28px; text-align: left;
-  background: rgba(8,20,36,0.75); border: 1px solid var(--rim); border-radius: 16px; overflow: hidden;
-  backdrop-filter: blur(12px); box-shadow: 0 32px 80px rgba(0,0,0,0.45);
-  animation: panelIn 0.4s var(--spring) both;
+.rc-snip { font-size:0.75rem; color:var(--muted); line-height:1.6; }
+.rc-type { font-size:0.55rem; letter-spacing:1px; text-transform:uppercase; color:var(--gold); margin-bottom:4px; font-weight:bold; }
+.rc-link { display:inline-block; margin-top:10px; font-size:0.6rem; color:var(--sky); text-decoration:none; border:1px solid var(--rim-hi); padding:4px 10px; border-radius:100px; transition:all 0.2s; }
+.rc-link:hover { background:var(--sapp); color:white; border-color:transparent; }
+
+/* GOLDEN BUTTONS */
+.btn-gold { 
+  background: linear-gradient(135deg, var(--gold2), var(--gold3)); 
+  color: var(--abyss); border: none; padding: 12px 28px; border-radius: 100px; 
+  font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px;
+  transition: all 0.3s var(--spring); box-shadow: 0 8px 20px rgba(184, 136, 48, 0.2);
+  font-size: 0.85rem;
 }
-.rc { display: flex; align-items: flex-start; gap: 16px; padding: 18px 22px; border-bottom: 1px solid var(--rim); cursor: pointer; transition: background 0.2s; position: relative; }
-.rc:hover { background: rgba(20,60,120,0.1); }
-.rc-title { font-family:var(--lora); font-size:0.92rem; font-weight:500; color:var(--pale); margin-bottom:6px; line-height:1.35; }
-.rc-snip { font-size:0.76rem; color:var(--muted); line-height:1.65; }
+.btn-gold:hover { transform: translateY(-2px); box-shadow: 0 12px 24px rgba(184, 136, 48, 0.4); filter: brightness(1.1); }
+.btn-sapp { 
+  background: linear-gradient(135deg, var(--mid), var(--deep)); 
+  color: var(--white); border: 1px solid var(--rim-hi); padding: 12px 28px; border-radius: 100px; 
+  font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 8px;
+  transition: all 0.3s var(--spring); font-size: 0.85rem;
+}
+.btn-sapp:hover { background: var(--mid); border-color: var(--gold); transform: translateY(-2px); }
 
 /* LUXURY CARD V2 (Shadcn-Inspired) */
 .audio-card { 
@@ -211,10 +224,13 @@ body::after {
   <div class="search-scene">
     <div class="hero-mark"><span class="hm-lex">Lex</span><span class="hm-srch">Search</span></div>
     <p style="color:var(--muted); font-size:1.1rem; margin-bottom:40px;" class="reveal">El buscador soberano impulsado por IA</p>
-    <div style="width:100%; max-width:700px;" class="reveal" data-d="1">
-      <div style="display:flex; background:rgba(8,22,40,0.85); border:1px solid var(--rim); border-radius:60px; overflow:hidden; padding:5px;">
-        <input id="si" type="text" placeholder="¿Qué ley o fallo buscas?" style="flex:1; background:none; border:none; outline:none; padding:15px 25px; color:var(--white);" onkeydown="if(event.key==='Enter')doSearch()">
-        <button onclick="doSearch()" style="background:var(--cobalt); color:white; border:none; padding:0 30px; border-radius:100px; font-weight:600; cursor:pointer;">Buscar</button>
+    <div style="width:100%; max-width:850px;" class="reveal" data-d="1">
+      <div style="background:rgba(8,22,40,0.85); border:1px solid var(--rim); border-radius:30px; overflow:hidden; padding:8px; margin-bottom:20px; display:flex;">
+        <input id="si" type="text" placeholder="¿Qué ley, fallo o concepto jurídico buscas?" style="flex:1; background:none; border:none; outline:none; padding:15px 25px; color:var(--white); font-size:1.1rem;" onkeydown="if(event.key==='Enter')executeLegalSearch()">
+      </div>
+      <div style="display:flex; justify-content:center; gap:16px;">
+        <button onclick="executeLegalSearch()" class="btn-gold">🔍 BUSCAR LEY / FALLO</button>
+        <button onclick="activateStudyMode()" class="btn-sapp">🎓 MODO ESTUDIO AI</button>
       </div>
       <div id="rp" class="rp"></div>
     </div>
@@ -349,32 +365,99 @@ function loadKeys() {
 }
 
 /* ── SEARCH & IA ── */
-const DATA = [
-  {type:'Ley Nacional', title:'Ley 19.549 — Procedimiento Administrativo', snip:'Regula el obrar de la APN, recursos y plazos procesales fundamentales.'},
-  {type:'Ley Nacional', title:'Ley 26.994 — Código Civil y Comercial', snip:'Unificación histórica del régimen civil y comercial argentina vigente desde 2015.'},
-  {type:'Fallo — CSJN', title:'Halabi, Ernesto c/ PEN s/ amparo', snip:'Acciones de clase y protección de la intimidad frente a la injerencia estatal.'}
+const HOLDINGS = [
+  "01_DerechoAdministrativo_Arizu.md", "02_DerechoAdministrativo_Delfino.md", "03_DerechoAdministrativo_Prattico.md",
+  "04_DerechoAdministrativo_Mouviel.md", "05_DerechoAdministrativo_Peralta.md", "06_DerechoAdministrativo_Massa.md",
+  "07_DerechoAdministrativo_Hortel.md", "08_DerechoAdministrativo_Pustelnik.md", "09_DerechoAdministrativo_Almagro.md",
+  "10_DerechoAdministrativo_CarmanDeCanton.md", "11_DerechoAdministrativo_Devoto.md", "12_DerechoAdministrativo_FerrocarrilOeste.md",
+  "13_DerechoAdministrativo_Vadell.md", "14_DerechoAdministrativo_Barreto.md", "15_DerechoAdministrativo_Zaccaria.md",
+  "16_DerechoAdministrativo_Cinplast.md", "17_DerechoAdministrativo_GasNaturalBan.md", "18_DerechoAdministrativo_CEPIS.md",
+  "19_DerechoAdministrativo_FernandezArias.md", "20_DerechoAdministrativo_LitoralGas.md", "21_DerechoAdministrativo_Gorordo.md",
+  "22_DerechoAdministrativo_AstorgaBracht.md", "61_DerechoProcesalPenal_Tarifeno.md", "62_DerechoProcesalPenal_Mostaccio.md",
+  "63_DerechoConstitucional_Montenegro.md", "64_DerechoConstitucional_Fiorentino.md", "65_DerechoProcesalPenal_Rayford.md",
+  "66_DerechoConstitucional_VazquezFerra.md", "67_DerechoProcesalPenal_Mendez.md", "68_DerechoProcesalPenal_Mattei.md",
+  "69_DerechoProcesalPenal_Casal.md", "70_DerechoProcesalPenal_Cura.md", "71_DerechoCivil_Ledesma.md",
+  "72_DerechoAdministrativo_Flybondi.md", "73_DerechoCivil_Padilla.md", "74_DerechoAdministrativo_Bunge.md",
+  "75_DerechoCivil_Flynn.md", "23_DerechoCivil_Colavita.md", "24_DerechoCivil_SantaColoma.md",
+  "25_DerechoLaboral_Aquino.md", "26_DerechoLaboral_Rodriguez.md", "27_DerechoAdministrativo_Bustos.md",
+  "28_DerechoConstitucional_ProvinciaSanLuis.md", "29_DerechoCivil_Lozano.md", "30_DerechoCivil_Eckhardt.md",
+  "31_DerechoLaboral_Vizzoti.md", "32_DerechoFamilia_PAS_E.md", "33_DerechoConstitucional_Sojo.md",
+  "34_DerechoConstitucional_Elortondo.md", "35_DerechoConstitucional_MarburyMadison.md", "36_DerechoConstitucional_Siri.md",
+  "37_DerechoConstitucional_Kot.md", "38_DerechoConstitucional_EkmekdjianSofovich.md", "39_DerechoConstitucional_Fayad.md",
+  "40_DerechoConstitucional_Halabi.md", "41_DerechoConstitucional_PonzettiBalbin.md", "42_DerechoConstitucional_Bazterrica.md",
+  "43_DerechoConstitucional_Arriola.md", "44_DerechoConstitucional_Simon.md", "45_DerechoConstitucional_Schiffrin.md",
+  "46_DerechoConstitucional_Fontevecchia.md", "47_DerechoConstitucional_CullenLerena.md", "48_DerechoConstitucional_Montalvo.md",
+  "49_DerechoAdministrativo_Bailillo.md", "50_DerechoAdministrativo_Badaro.md", "51_DerechoAdministrativo_Rousseau.md",
+  "52_DerechoConstitucional_Alegre.md", "53_DerechoConstitucional_Castillo.md", "54_DerechoCivil_SaguirDib.md",
+  "55_DerechoConstitucional_Albarracini.md", "56_DerechoConstitucional_FAL.md", "57_DerechoAdministrativo_Mendoza.md",
+  "58_DerechoConstitucional_Kersich.md", "59_DerechoAdministrativo_Chocobar.md", "60_DerechoConstitucional_Peralta.md"
 ];
 
-function doSearch() {
-  const q = document.getElementById('si').value.trim(); if(!q) return;
-  const res = DATA.filter(r => r.title.toLowerCase().includes(q.toLowerCase()));
-  const box = document.getElementById('rp'); box.style.display = 'block';
-  if(res.length === 0) {
-    box.innerHTML = `<div class="rc" style="cursor:wait; color:var(--gold3); font-style:italic;">Consultando Cerebro 8-Core e IA Soberana para "${q}"...</div>`;
-    openStudyMode(q);
-    return;
-  }
-  box.innerHTML = res.map(r => `
-    <div class="rc" onclick="openStudyMode('${r.title}: ${r.snip}')">
-      <div style="flex:1">
-        <div class="rc-type">${r.type}</div>
-        <div class="rc-title">${r.title}</div>
-        <div class="rc-snip">${r.snip}</div>
-      </div>
-      <div style="color:var(--gold); font-size:0.7rem; font-weight:bold;">MODO ESTUDIO ↗</div>
-    </div>
-  `).join('');
+function generateOfficialLink(q) {
+  const ln = q.match(/ley\s+(\d+)/i);
+  if(ln) return `http://servicios.infoleg.gob.ar/infolegInternet/anexos/consulta_por_numero.do?numero=${ln[1]}`;
+  if(q.toLowerCase().includes('fallo') || q.toLowerCase().includes('csjn')) return `https://sj.csjn.gov.ar/sj/consulta/busquedaRapida.do`;
+  return null;
 }
+
+function executeLegalSearch() {
+  const q = document.getElementById('si').value.trim(); if(!q) return;
+  const box = document.getElementById('rp'); box.style.display = 'block';
+  box.innerHTML = `<div style="padding:20px; color:var(--gold3); font-style:italic;">Escaneando Holdings y DB de Leyes Soberanas...</div>`;
+  
+  setTimeout(() => {
+    let results = [];
+    
+    // Prioridad Hernán: Silencio Administrativo
+    if(q.toLowerCase().includes('silencio') || q.toLowerCase().includes('administrativo')) {
+      results.push({
+        type: 'Ley Nacional (Prioridad)',
+        title: 'Ley 19.549 — Art. 10: Silencio Administrativo',
+        snip: 'El silencio o la ambigüedad de la Administración frente a pretensiones que requieran de ella un pronunciamiento concreto, se interpretarán como negativa. Solo por ley podrá atribuirse valor positivo al silencio.',
+        link: 'http://servicios.infoleg.gob.ar/infolegInternet/anexos/20000-24999/20349/norma.htm'
+      });
+    }
+
+    // Match en DATA
+    const dataMatches = DATA.filter(r => r.title.toLowerCase().includes(q.toLowerCase()) || r.snip.toLowerCase().includes(q.toLowerCase()));
+    dataMatches.forEach(m => results.push({...m, link: generateOfficialLink(m.title)}));
+
+    // Match en HOLDINGS
+    const holdingMatches = HOLDINGS.filter(h => h.toLowerCase().includes(q.toLowerCase()));
+    holdingMatches.forEach(h => results.push({
+      type: 'Holding / Fallo',
+      title: h.replace(/_/g, ' ').replace('.md',''),
+      snip: 'Resumen técnico disponible en repositorio soberano. Analiza fundamentos de hecho y derecho aplicado.',
+      link: 'https://github.com/fjzubq-glitch/Lex-Sovereign-Data.'
+    }));
+
+    if(results.length === 0) {
+      box.innerHTML = `<div style="padding:20px; color:var(--muted);">No hay coincidencias técnicas. Sugerencia: Use 🎓 Modo Estudio.</div>`;
+      return;
+    }
+
+    box.innerHTML = results.map(r => `
+      <div class="rc" onclick="openStudyMode('${r.title}: ${r.snip}')">
+        <div style="flex:1">
+          <div class="rc-type">${r.type}</div>
+          <div class="rc-title">${r.title}</div>
+          <div class="rc-snip">${r.snip}</div>
+          ${r.link ? `<a href="${r.link}" target="_blank" class="rc-link" onclick="event.stopPropagation()">🌐 VER EN FUENTE OFICIAL</a>` : ''}
+        </div>
+        <div style="color:var(--gold); font-size:0.7rem; font-weight:bold;">MODO ESTUDIO ↗</div>
+      </div>
+    `).join('');
+  }, 300);
+}
+
+async function activateStudyMode() {
+  const q = document.getElementById('si').value.trim(); if(!q) return;
+  const box = document.getElementById('rp'); box.style.display = 'block';
+  box.innerHTML = `<div style="padding:20px; color:var(--sky); font-style:italic;">Invocando Razonamiento de Cátedra (Borda/Corvalán) para "${q}"...</div>`;
+  openStudyMode(q);
+}
+
+function doSearch() { executeLegalSearch(); } // Backward compatibility
 
 async function openStudyMode(ctx) {
   const m = document.getElementById('modal-study'); const c = document.getElementById('study-content');
