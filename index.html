@@ -54,14 +54,14 @@ body::after {
   height: 62px;
   display: flex; align-items: center; justify-content: space-between;
   padding: 0 48px;
-  background: rgba(4,14,28,0.93);
-  backdrop-filter: blur(24px) saturate(160%);
+  background: rgba(4,14,28,0.96);
+  backdrop-filter: blur(8px) saturate(140%);
   border-bottom: 1px solid var(--rim);
 }
 .nav::before {
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px;
   background: linear-gradient(90deg, transparent 0%, var(--gold) 30%, var(--gold3) 50%, var(--gold) 70%, transparent 100%);
-  opacity: 0.45;
+  opacity: 0.25;
 }
 .nav-brand { display: flex; align-items: baseline; gap: 1px; font-family: var(--serif); font-size: 1.5rem; font-weight: 500; color: var(--white); cursor: pointer; letter-spacing: 0.2px; text-decoration: none; user-select: none; }
 .nav-brand .ns {
@@ -107,13 +107,12 @@ body::after {
   content: ''; position: absolute; inset: -50%;
   background-image: linear-gradient(rgba(74,168,240,0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(74,168,240,0.03) 1px, transparent 1px);
   background-size: 80px 80px;
-  animation: gridDrift 40s linear infinite;
   mask-image: radial-gradient(ellipse 70% 55% at 50% 40%, black 20%, transparent 75%);
 }
 @keyframes gridDrift { from{transform:translate(0,0)} to{transform:translate(80px,80px)} }
 .search-scene { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 100px 24px 72px; text-align: center; position: relative; z-index: 2; }
 .hero-mark { font-family: var(--serif); font-size: clamp(3.5rem,10vw,7.5rem); font-weight: 300; line-height: 0.95; letter-spacing: -2px; margin-bottom: 16px; animation: fadeUp 0.9s 0.07s var(--spring) both; }
-.hm-srch { font-style: italic; background: linear-gradient(125deg, var(--gold) 0%, var(--gold3) 45%, var(--gold-p) 70%, var(--gold3) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; background-size: 200% 200%; animation: shimmer 6s ease-in-out infinite; }
+.hm-srch { font-style: italic; background: linear-gradient(125deg, var(--gold) 0%, var(--gold3) 45%, var(--gold-p) 70%, var(--gold3) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; background-size: 200% 200%; }
 @keyframes shimmer { 0%,100%{background-position:0% 50%} 50%{background-position:100% 50%} }
 
 /* Search Results UI */
@@ -130,12 +129,12 @@ body::after {
 
 /* LUXURY CARD V2 (Shadcn-Inspired) */
 .audio-card { 
-  background: rgba(9, 30, 53, 0.6); 
-  backdrop-filter: blur(20px); 
-  border: 1px solid rgba(247, 231, 206, 0.15); 
-  border-radius: 24px; 
-  padding: 20px; 
-  transition: all 0.4s var(--spring); 
+  background: rgba(9, 30, 53, 0.7); 
+  backdrop-filter: blur(10px); 
+  border: 1px solid rgba(247, 231, 206, 0.12); 
+  border-radius: 16px; 
+  padding: 12px; 
+  transition: all 0.3s var(--spring); 
   position: relative; 
   overflow: hidden; 
 }
@@ -145,12 +144,12 @@ body::after {
   box-shadow: 0 25px 50px rgba(0,0,0,0.5); 
 }
 .card-img { 
-  width: 100%; height: 180px; object-fit: cover; border-radius: 16px; margin-bottom: 20px; 
+  width: 100%; height: 120px; object-fit: cover; border-radius: 12px; margin-bottom: 12px; 
   opacity: 0.85; transition: opacity 0.3s; 
 }
 .audio-card:hover .card-img { opacity: 1; }
-.card-title { font-family: var(--serif); font-size: 1.35rem; color: var(--gold-p); margin-bottom: 6px; line-height: 1.2; }
-.card-meta { font-family: var(--ui); font-size: 0.65rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 20px; display: flex; justify-content: space-between; }
+.card-title { font-family: var(--serif); font-size: 1rem; color: var(--gold-p); margin-bottom: 4px; line-height: 1.2; text-overflow: ellipsis; white-space: nowrap; overflow: hidden; }
+.card-meta { font-family: var(--ui); font-size: 0.6rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 12px; display: flex; justify-content: space-between; }
 .prog-container { background: rgba(255,255,255,0.05); height: 6px; border-radius: 10px; cursor: pointer; position: relative; margin-bottom: 16px; }
 .prog-fill { background: #f7e7ce; height: 100%; border-radius: 10px; width: 0%; transition: width 0.1s linear; box-shadow: 0 0 12px rgba(247, 231, 206, 0.4); }
 .card-ctrls { display: flex; align-items: center; justify-content: space-between; }
@@ -163,7 +162,12 @@ body::after {
 .btn-play:hover { background: var(--gold); color: var(--abyss); border-color: transparent; transform: scale(1.1); }
 .card-time { font-size: 0.65rem; color: var(--muted); font-family: var(--ui); font-weight: 500; }
 
-.audio-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 32px; }
+.audio-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 20px; }
+
+/* SUBJECT TABS */
+.subject-tabs { display: flex; gap: 8px; margin-bottom: 25px; background: rgba(8,24,44,0.4); padding: 5px; border-radius: 12px; border: 1px solid var(--rim); width: fit-content; }
+.stab { background: none; border: none; color: var(--muted); padding: 8px 16px; border-radius: 8px; cursor: pointer; transition: all 0.3s; font-family: var(--ui); font-size: 0.8rem; font-weight: 500; }
+.stab.on { background: var(--sapp); color: var(--white); box-shadow: 0 4px 12px rgba(20,96,176,0.3); }
 
 /* SUBJECT TITLES */
 .subject-header { 
@@ -220,18 +224,21 @@ body::after {
 <!-- PODCAST -->
 <div class="page" id="pg-podcast">
   <div style="max-width:1400px; margin:0 auto; padding:120px 52px;">
-    <header style="margin-bottom:60px;">
-      <h1 style="font-family:var(--serif); font-size:4.5rem; color:var(--gold-p); line-height:1; margin-bottom:15px;">Lex<span style="font-style:italic">Podcast</span></h1>
-      <p style="font-family:var(--ui); color:var(--muted); letter-spacing:1px; text-transform:uppercase; font-size:0.8rem;">Resúmenes de fallos y doctrina en audio</p>
+    <header style="margin-bottom:40px;">
+      <h1 style="font-family:var(--serif); font-size:3.5rem; color:var(--gold-p); line-height:1; margin-bottom:12px;">Lex<span style="font-style:italic">Podcast</span></h1>
+      <p style="font-family:var(--ui); color:var(--muted); letter-spacing:1px; text-transform:uppercase; font-size:0.75rem;">Resúmenes de doctrina y fallos clave</p>
     </header>
     
-    <section>
-      <h2 class="subject-header">🏛️ Cátedra: Dr. Corvalán (Administrativo)</h2>
+    <div class="subject-tabs">
+      <button class="stab on" data-sb="ADMIN" onclick="setSubject('ADMIN')">🏛️ Administrativo (Corvalán)</button>
+      <button class="stab" data-sb="CONTRATOS" onclick="setSubject('CONTRATOS')">📜 Contratos (Borda)</button>
+    </div>
+
+    <section id="sect-pod-ADMIN">
       <div id="grid-podcast-admin" class="audio-grid reveal"></div>
     </section>
 
-    <section>
-      <h2 class="subject-header">📜 Cátedra: Dr. Borda (Contratos)</h2>
+    <section id="sect-pod-CONTRATOS" style="display:none">
       <div id="grid-podcast-contratos" class="audio-grid reveal"></div>
     </section>
   </div>
@@ -240,18 +247,21 @@ body::after {
 <!-- AULA MAGNA (TOOLS) -->
 <div class="page" id="pg-tools">
   <div style="max-width:1400px; margin:0 auto; padding:120px 52px;">
-    <header style="margin-bottom:60px;">
-      <h1 style="font-family:var(--serif); font-size:4.5rem; color:var(--gold-p); line-height:1; margin-bottom:15px;">Aula<span style="font-style:italic">Magna</span></h1>
-      <p style="font-family:var(--ui); color:var(--muted); letter-spacing:1px; text-transform:uppercase; font-size:0.8rem;">Clases magistrales grabadas en vivo</p>
+    <header style="margin-bottom:40px;">
+      <h1 style="font-family:var(--serif); font-size:3.5rem; color:var(--gold-p); line-height:1; margin-bottom:12px;">Aula<span style="font-style:italic">Magna</span></h1>
+      <p style="font-family:var(--ui); color:var(--muted); letter-spacing:1px; text-transform:uppercase; font-size:0.75rem;">Clases magistrales y recursos de cátedra</p>
     </header>
 
-    <section>
-      <h2 class="subject-header">🏛️ Cátedra: Dr. Corvalán (Administrativo)</h2>
+    <div class="subject-tabs">
+      <button class="stab on" data-sb="ADMIN" onclick="setSubject('ADMIN')">🏛️ Administrativo (Corvalán)</button>
+      <button class="stab" data-sb="CONTRATOS" onclick="setSubject('CONTRATOS')">📜 Contratos (Borda)</button>
+    </div>
+
+    <section id="sect-clase-ADMIN">
       <div id="grid-clases-admin" class="audio-grid reveal"></div>
     </section>
 
-    <section>
-      <h2 class="subject-header">📜 Cátedra: Dr. Borda (Contratos)</h2>
+    <section id="sect-clase-CONTRATOS" style="display:none">
       <div id="grid-clases-contratos" class="audio-grid reveal"></div>
     </section>
   </div>
@@ -349,6 +359,11 @@ function doSearch() {
   const q = document.getElementById('si').value.trim(); if(!q) return;
   const res = DATA.filter(r => r.title.toLowerCase().includes(q.toLowerCase()));
   const box = document.getElementById('rp'); box.style.display = 'block';
+  if(res.length === 0) {
+    box.innerHTML = `<div class="rc" style="cursor:wait; color:var(--gold3); font-style:italic;">Consultando Cerebro 8-Core e IA Soberana para "${q}"...</div>`;
+    openStudyMode(q);
+    return;
+  }
   box.innerHTML = res.map(r => `
     <div class="rc" onclick="openStudyMode('${r.title}: ${r.snip}')">
       <div style="flex:1">
@@ -370,28 +385,58 @@ async function openStudyMode(ctx) {
 }
 
 async function callSovereignAI(p) {
-  const d = localStorage.getItem('lex_keys'); if(!d) throw new Error("Sincronizá tus llaves en Configuración.");
+  const d = localStorage.getItem('lex_keys'); 
+  if(!d) throw new Error("Sincronizá tus llaves (8-Core) en Configuración.");
   const k = JSON.parse(d); let pool = [];
   if(k.g) k.g.forEach(v => { if(v) pool.push({type:'google', key:v}); });
   if(k.groq) pool.push({type:'groq', key:k.groq});
-  if(pool.length === 0) throw new Error("No hay nodos activos.");
+  if(k.openrouter) pool.push({type:'openrouter', key:k.openrouter});
+  if(pool.length === 0) throw new Error("Cerebro inactivo: No hay llaves configuradas.");
+  
   for(let node of pool) {
     try {
       if(node.type === 'google') {
         const r = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${node.key}`, {
-          method:'POST', body:JSON.stringify({contents:[{parts:[{text:p}]}]})
+          method:'POST', headers:{'Content-Type':'application/json'},
+          body:JSON.stringify({contents:[{parts:[{text:p}]}]})
         });
-        if(r.status === 429) continue; const j = await r.json(); return j.candidates[0].content.parts[0].text;
+        if(r.status === 429) continue;
+        const j = await r.json(); return j.candidates[0].content.parts[0].text;
       }
       if(node.type === 'groq') {
         const r = await fetch('https://api.groq.com/openai/v1/chat/completions', {
           method:'POST', headers:{'Authorization':`Bearer ${node.key}`, 'Content-Type':'application/json'},
           body:JSON.stringify({model:'llama-3.3-70b-versatile', messages:[{role:'user', content:p}]})
         });
+        if(r.status === 429) continue;
         const j = await r.json(); return j.choices[0].message.content;
       }
-    } catch(e) { continue; }
+      if(node.type === 'openrouter') {
+        const r = await fetch('https://openrouter.ai/api/v1/chat/completions', {
+          method:'POST', headers:{'Authorization':`Bearer ${node.key}`, 'Content-Type':'application/json'},
+          body:JSON.stringify({model:'google/gemini-2.0-flash-001', messages:[{role:'user', content:p}]})
+        });
+        if(r.status === 429) continue;
+        const j = await r.json(); return j.choices[0].message.content;
+      }
+    } catch(e) { console.warn("Nodo fallido:", node.type, e); continue; }
   }
+  throw new Error("Agotado: Todos los nodos (8-Core) están saturados o fallaron.");
+}
+
+function setSubject(sub) {
+  const isPod = cur === 'podcast';
+  const prefix = isPod ? 'sect-pod-' : 'sect-clase-';
+  const other = sub === 'ADMIN' ? 'CONTRATOS' : 'ADMIN';
+  
+  document.getElementById(prefix + sub).style.display = 'block';
+  document.getElementById(prefix + other).style.display = 'none';
+  
+  // UI Tabs sync
+  document.getElementById('pg-'+cur).querySelectorAll('.stab').forEach(b => {
+    b.classList.toggle('on', b.dataset.sb === sub);
+  });
+  initRev();
 }
 
 /* ── DATABASE SOBERANA (AGRUPADA POR CÁTEDRA) ── */
